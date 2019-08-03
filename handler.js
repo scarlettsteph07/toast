@@ -6,6 +6,11 @@ const randomArrayIndex = array => {
   return Math.floor(Math.random() * array.length);
 };
 
+const headers = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true,
+};
+
 const errorResponse = message => {
   return {
     statusCode: 403,
@@ -50,6 +55,7 @@ module.exports.getIngredients = async (event, context) => {
     statusCode: 200,
     body: JSON.stringify({
       ingredients: toast
-    })
+    }),
+    headers
   };
 };
