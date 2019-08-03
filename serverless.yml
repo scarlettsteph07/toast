@@ -13,7 +13,7 @@
 
 tenant: saegey
 app: toast
-service: my-service
+service: ingredients
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -58,11 +58,11 @@ provider:
 
 functions:
   hello:
-    handler: handler.hello
+    handler: handler.getIngredients
     
     events:
       - http:
-          path: hello
+          path: ingredients
           method: post
 
 #    The following are a few example events you can configure
