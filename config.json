@@ -1,67 +1,67 @@
 {
   "requiredIngredients": ["avocado"],
-	"requiredIngredient2": [
-		"bagel",
-		"como bread",
-		"honey wheat bread",
-		"baguette"
+  "requiredIngredient2": [
+    "bagel",
+    "como bread",
+    "honey wheat bread",
+    "baguette"
   ],
-	"optionalIngredients": [
-		{
-			"name": "egg",
-			"style": ["poached egg", "fried egg", "scrambled egg"]
-		},
-		{
-			"name": "cheese",
-			"style": ["cheddar cheese", "monterrey jack cheese"]
-		},
-		{
-			"name": "meat",
-			"style": ["bacon", "ham", "sausage"]
-		},
-		{
-			"name": "tomato",
-			"style": ["fresh tomato", "roasted tomato", "sauté tomato"]
-		},
-		{
-			"name": "herbs",
-			"style": ["cilantro", "basil"]
-		},
-		{
-			"name": "salt",
-			"style": ["sea salt"]
-		},
-		{
-			"name": "black pepper",
-			"style": ["black pepper"]
-		},
-		{
-			"name": "lemon juice",
-			"style": ["lemon juice"]
-		},
-		{
-			"name": "spread",
-			"style": ["olive oil", "butter"]
-		},
-		{
-			"name": "red pepper flakes",
-			"style": ["red pepper flakes"]
-		},
-		{
-			"name": "beans",
-			"style": ["fried beans", "whole beans"]
-		},
-		{
-			"name": "jalapeños",
-			"style": ["pickled jalapeños", "minced jalapeños"]
-		},
-		{
-			"name": "garlic",
-			"style": ["roasted garlic", "minced garlic"]
-		},
-		{
-			"name": "seeds",
-			"style": ["toasted sunflower seeds", "sesame seeds"]
-		}
-	]
+  "optionalIngredients": [
+    {
+      "name": "egg",
+      "style": ["poached egg", "fried egg", "scrambled egg"]
+    },
+    {
+      "name": "cheese",
+      "style": ["cheddar cheese", "monterrey jack cheese"]
+    },
+    {
+      "name": "meat",
+      "style": ["bacon", "ham", "sausage"]
+    },
+    {
+      "name": "tomato",
+      "style": ["fresh tomato", "roasted tomato", "sauté tomato"]
+    },
+    {
+      "name": "herbs",
+      "style": ["cilantro", "basil"]
+    },
+    {
+      "name": "salt",
+      "style": ["sea salt"]
+    },
+    {
+      "name": "black pepper",
+      "style": ["black pepper"]
+    },
+    {
+      "name": "lemon juice",
+      "style": ["lemon juice"]
+    },
+    {
+      "name": "spread",
+      "style": ["olive oil", "butter"]
+    },
+    {
+      "name": "red pepper flakes",
+      "style": ["red pepper flakes"]
+    },
+    {
+      "name": "beans",
+      "style": ["fried beans", "whole beans"]
+    },
+    {
+      "name": "jalapeños",
+      "style": ["pickled jalapeños", "minced jalapeños"]
+    },
+    {
+      "name": "garlic",
+      "style": ["roasted garlic", "minced garlic"]
+    },
+    {
+      "name": "seeds",
+      "style": ["toasted sunflower seeds", "sesame seeds"]
+    }
+  ]
 }
