@@ -1,4 +1,8 @@
 {
+  "defaultPreferences": {
+    "isCarnivore": false,
+    "numOfOptionalIngredients": 1
+  },
   "requiredIngredients": ["avocado"],
   "requiredIngredient2": [
     "bagel",
