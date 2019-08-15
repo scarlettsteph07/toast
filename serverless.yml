@@ -61,7 +61,7 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  hello:
+  getIngredients:
     handler: handler.getIngredients
 
     events:
