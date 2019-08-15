@@ -41,8 +41,12 @@ build/Release
 node_modules/
 jspm_packages/
 
+# Webpack directories
+.webpack/
+
 # TypeScript v1 declaration files
 typings/
+lib/
 
 # TypeScript cache
 *.tsbuildinfo
@@ -80,6 +84,7 @@ typings/
 
 # Serverless directories
 .serverless/
+serverless_sdk/
 
 # FuseBox cache
 .fusebox/

@@ -1,8 +1,14 @@
+import { APIGatewayProxyEvent, Context } from 'aws-lambda'
 "use strict";
+
+type Ingredient = {
+  name: string,
+  style: Array<string>,
+}
 
 const { requiredIngredients, requiredIngredient2 } = require("./config.json");
 
-const randomArrayIndex = array => {
+const randomArrayIndex = (array: Array<string>) => {
   return Math.floor(Math.random() * array.length);
 };
 
@@ -11,7 +17,7 @@ const headers = {
   'Access-Control-Allow-Credentials': true,
 };
 
-const errorResponse = message => {
+const errorResponse = (message: string) => {
   return {
     statusCode: 403,
     body: {
@@ -20,7 +26,7 @@ const errorResponse = message => {
   };
 };
 
-module.exports.getIngredients = async (event, context) => {
+module.exports.getIngredients = async (event: APIGatewayProxyEvent, _context: Context) => {
   let { optionalIngredients } = require("./config.json");
 
   if (!event.body) {
@@ -34,7 +40,7 @@ module.exports.getIngredients = async (event, context) => {
 
   if (isCarnivore) {
     const meat = optionalIngredients.find(
-      ingredient => ingredient.name === "meat"
+      (ingredient: Ingredient) => ingredient.name === "meat"
     );
     console.log(meat);
     toast.push(meat.style[randomArrayIndex(meat.style)]);
@@ -46,7 +52,7 @@ module.exports.getIngredients = async (event, context) => {
     const optionalIngredient = optionalIngredients[optionalIngredientIndex];
     const optionalStyleIndex = randomArrayIndex(optionalIngredient.style);
     toast.push(optionalIngredient.style[optionalStyleIndex]);
-    optionalIngredients = optionalIngredients.filter((value, i) => {
+    optionalIngredients = optionalIngredients.filter((value: Ingredient) => {
       return value !== optionalIngredients[optionalIngredientIndex];
     });
   }
