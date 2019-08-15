@@ -1,6 +1,7 @@
 "use strict"
 
 import { getIngredientsHelper } from './helperMethods'
+import { defaultPreferences }  from './config.json'
 
 import { APIGatewayProxyEvent, Context } from 'aws-lambda'
 
@@ -9,21 +10,8 @@ const headers = {
   'Access-Control-Allow-Credentials': true,
 }
 
-const getErrorResponse = (message: string) => {
-  return {
-    statusCode: 403,
-    body: {
-      message
-    }
-  }
-}
-
 export const getIngredients = async (event: APIGatewayProxyEvent, _context: Context) => {
-  if (!event.body) {
-    return getErrorResponse("Missing event body!")
-  }
-
-  let { isCarnivore, numOfOptionalIngredients } = JSON.parse(event.body)
+  let { isCarnivore, numOfOptionalIngredients } = event.body ? JSON.parse(event.body) : defaultPreferences
 
   const ingredients = getIngredientsHelper({ isCarnivore, numOfOptionalIngredients })
 
