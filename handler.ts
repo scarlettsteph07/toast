@@ -10,17 +10,25 @@ const headers = {
   "Access-Control-Allow-Credentials": true
 };
 
+type Response = {
+  statusCode: Number,
+  body: String,
+  headers: Object
+}
+
 export const getIngredients = async (
   event: APIGatewayProxyEvent,
   _context: Context
-) => {
+) : Promise<Response> => {
   const body =
     typeof event.body === "string" ? JSON.parse(event.body) : event.body;
-  console.log(body);
 
   let { dietPreference, numOfOptionalIngredients } = body
     ? body
     : defaultPreferences;
+
+  dietPreference = dietPreference ? dietPreference : 'carnivore'
+
 
   const ingredients = getIngredientsHelper({
     dietPreference,

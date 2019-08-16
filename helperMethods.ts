@@ -1,6 +1,6 @@
 import { requiredIngredients, optionalIngredients } from "./config.json";
 
-type DietType = "Carnivore" | "Vegan" | "Vegetarian";
+export type DietType = "Carnivore" | "Vegan" | "Vegetarian";
 
 type Preferences = {
   dietPreference?: DietType;
