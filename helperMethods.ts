@@ -1,4 +1,4 @@
-import { requiredIngredients } from './config.json'
+import { requiredIngredients, optionalIngredients } from './config.json'
 
 import { Ingredient, Preferences } from './types/'
 
@@ -17,7 +17,6 @@ export const getIngredientsHelper = ({ isCarnivore, numOfOptionalIngredients }: 
   })
   const ingredientsArray = [...initialIngredients]
 
-  let { optionalIngredients } = require("./config.json")
   if (isCarnivore) {
     const meat = optionalIngredients.find(
       (ingredient: Ingredient) => ingredient.name === "meat"
@@ -26,13 +25,14 @@ export const getIngredientsHelper = ({ isCarnivore, numOfOptionalIngredients }: 
     numOfOptionalIngredients--
   }
 
+  let additionalIngredients = optionalIngredients
   for (let x = 0; x < numOfOptionalIngredients; x++) {
-    const optionalIngredientIndex = getRandomArrayIndex(optionalIngredients)
-    const optionalIngredient = optionalIngredients[optionalIngredientIndex]
+    const optionalIngredientIndex = getRandomArrayIndex(additionalIngredients)
+    const optionalIngredient = additionalIngredients[optionalIngredientIndex]
     ingredientsArray.push(getIngredientStyle(optionalIngredient.style))
 
-    optionalIngredients = optionalIngredients.filter((ingredient: Ingredient) => {
-      return ingredient !== optionalIngredients[optionalIngredientIndex]
+    additionalIngredients = additionalIngredients.filter((ingredient: Ingredient) => {
+      return ingredient !== additionalIngredients[optionalIngredientIndex]
     })
   }
 
