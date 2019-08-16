@@ -14,12 +14,16 @@ export const getIngredients = async (
   event: APIGatewayProxyEvent,
   _context: Context
 ) => {
-  let { isCarnivore, numOfOptionalIngredients } = event.body
-    ? JSON.parse(event.body)
+  const body =
+    typeof event.body === "string" ? JSON.parse(event.body) : event.body;
+  console.log(body);
+
+  let { dietPreference, numOfOptionalIngredients } = body
+    ? body
     : defaultPreferences;
 
   const ingredients = getIngredientsHelper({
-    isCarnivore,
+    dietPreference,
     numOfOptionalIngredients
   });
 
