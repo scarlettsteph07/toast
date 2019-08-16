@@ -1,6 +1,14 @@
 import { requiredIngredients, optionalIngredients } from './config.json'
 
-import { Ingredient, Preferences } from './types/'
+export type Preferences = {
+  isCarnivore: boolean,
+  numOfOptionalIngredients: number
+}
+
+export type Ingredient = {
+  name: string,
+  style: Array<string>,
+}
 
 export const getRandomArrayIndex = (array: Array<string> | Array<Ingredient>): number => {
   return Math.floor(Math.random() * array.length)
