@@ -1,10 +1,17 @@
 {
-  "requiredIngredients": ["avocado"],
-  "requiredIngredient2": [
-    "bagel",
-    "como bread",
-    "honey wheat bread",
-    "baguette"
+  "defaultPreferences": {
+    "isCarnivore": false,
+    "numOfOptionalIngredients": 1
+  },
+  "requiredIngredients": [
+    {
+      "name": "avocado",
+      "style": ["avocado"]
+    },
+    {
+      "name": "bread",
+      "style": ["bagel", "como bread", "honey wheat bread", "baguette"]
+    }
   ],
   "optionalIngredients": [
     {
