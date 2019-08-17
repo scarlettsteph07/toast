@@ -1,6 +1,4 @@
 version: 2.1
-# orbs:
-#   serverless-orb: arthrex/serverless-orb@0.0.10
 jobs:
   build:
     docker:
@@ -47,7 +45,7 @@ jobs:
         name: Deploy application
         command: sls deploy --stage stage
   
-  deploy-stage:
+  deploy-production:
     docker:
       - image: circleci/node:8.10
 
