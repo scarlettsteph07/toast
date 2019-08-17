@@ -74,6 +74,31 @@ jobs:
 
     working_directory: ~/repo
     steps:
+      - checkout
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run:
+          name: Install Serverless CLI and dependencies
+          command: |
+            sudo npm i -g serverless
+            npm install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-
+      
+      - run:
+          name: Configure credentials
+          command: sls config credentials --provider aws --key $AWS_ACCESS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY
+
+    working_directory: ~/repo
+    steps:
       - run:
           name: Deploy application
           command: sls deploy --stage production
