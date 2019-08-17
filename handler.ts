@@ -1,19 +1,40 @@
-"use strict"
+"use strict";
 
-import { getIngredientsHelper } from './helperMethods'
-import { defaultPreferences }  from './config.json'
+import { getIngredientsHelper } from "./helperMethods";
+import { defaultPreferences } from "./config.json";
 
-import { APIGatewayProxyEvent, Context } from 'aws-lambda'
+import { APIGatewayProxyEvent, Context } from "aws-lambda";
 
 const headers = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Credentials': true,
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Credentials": true
+};
+
+type Response = {
+  statusCode: Number,
+  body: String,
+  headers: Object
 }
 
-export const getIngredients = async (event: APIGatewayProxyEvent, _context: Context) => {
-  let { isCarnivore, numOfOptionalIngredients } = event.body ? JSON.parse(event.body) : defaultPreferences
+export const getIngredients = async (
+  event: APIGatewayProxyEvent,
+  _context: Context
+) : Promise<Response> => {
+  console.log(event.body);
+  const body =
+    typeof event.body === "string" ? JSON.parse(event.body) : event.body;
 
-  const ingredients = getIngredientsHelper({ isCarnivore, numOfOptionalIngredients })
+  let { dietPreference, numOfOptionalIngredients } = body
+    ? body
+    : defaultPreferences;
+
+  dietPreference = dietPreference ? dietPreference : 'carnivore'
+
+
+  const ingredients = getIngredientsHelper({
+    dietPreference,
+    numOfOptionalIngredients
+  });
 
   return {
     statusCode: 200,
@@ -21,5 +42,5 @@ export const getIngredients = async (event: APIGatewayProxyEvent, _context: Cont
       ingredients
     }),
     headers
-  }
-}
+  };
+};

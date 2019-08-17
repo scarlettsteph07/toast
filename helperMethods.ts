@@ -1,52 +1,73 @@
-import { requiredIngredients, optionalIngredients } from './config.json'
+import { requiredIngredients, optionalIngredients } from "./config.json";
 
-export type Preferences = {
-  isCarnivore: boolean,
-  numOfOptionalIngredients: number
-}
+export type DietType = "Carnivore" | "Vegan" | "Vegetarian";
 
-export type Ingredient = {
-  name: string,
-  style: Array<string>,
-}
+type Preferences = {
+  dietPreference?: DietType;
+  numOfOptionalIngredients: number;
+};
 
-export const getRandomArrayIndex = (array: Array<string> | Array<Ingredient>): number => {
-  return Math.floor(Math.random() * array.length)
-}
+type Ingredient = {
+  name: String;
+  style: Array<String>;
+  type: Array<String>;
+};
 
-export const getIngredientStyle = (styleArray: Array<string>) => {
-  const index = getRandomArrayIndex(styleArray)
-  return styleArray[index]
-}
+type RecipeItem = {
+  name: String;
+};
 
-export const getIngredientsHelper = ({ isCarnivore, numOfOptionalIngredients }: Preferences) => {
-  const initialIngredients = requiredIngredients.map(requiredIngredient => {
-    return getIngredientStyle(requiredIngredient.style)
-  })
-  const ingredientsArray = [...initialIngredients]
+const getRandomArrayIndex = (
+  array: Array<String> | Array<Ingredient>
+): number => {
+  return Math.floor(Math.random() * array.length);
+};
 
-  if (isCarnivore) {
-    const meat = optionalIngredients.find(
-      (ingredient: Ingredient) => ingredient.name === "meat"
-    )
-    meat !== undefined && meat !== null && ingredientsArray.push(getIngredientStyle(meat.style))
-    numOfOptionalIngredients--
-  }
+const getRandomIngredientStyle = (styleArray: Array<String>): String => {
+  const index = getRandomArrayIndex(styleArray);
+  return styleArray[index];
+};
 
-  let additionalIngredients = optionalIngredients
+export const filterByType = (
+  ingredients: Array<Ingredient>,
+  type: DietType
+): Array<Ingredient> => {
+  return ingredients.filter((ingredient: Ingredient) => {
+    if (ingredient.type.includes(type)) {
+      return ingredient;
+    }
+  });
+};
+
+export const randomizeRequiredIngredients = (
+  ingredients: Array<Ingredient>
+): Array<String> => {
+  return ingredients.map(requiredIngredient => {
+    return getRandomIngredientStyle(requiredIngredient.style);
+  });
+};
+
+export const getIngredientsHelper = ({
+  dietPreference,
+  numOfOptionalIngredients
+}: Preferences): Array<RecipeItem> => {
+  const initialIngredients = randomizeRequiredIngredients(requiredIngredients);
+  const ingredientsArray = [...initialIngredients];
+
+  let additionalIngredients = dietPreference
+    ? filterByType(optionalIngredients, dietPreference)
+    : optionalIngredients;
+
   for (let x = 0; x < numOfOptionalIngredients; x++) {
-    const optionalIngredientIndex = getRandomArrayIndex(additionalIngredients)
-    const optionalIngredient = additionalIngredients[optionalIngredientIndex]
-    ingredientsArray.push(getIngredientStyle(optionalIngredient.style))
+    const optionalIngredientIndex = getRandomArrayIndex(additionalIngredients);
+    const optionalIngredient = additionalIngredients[optionalIngredientIndex];
 
-    additionalIngredients = additionalIngredients.filter((ingredient: Ingredient) => {
-      return ingredient !== additionalIngredients[optionalIngredientIndex]
-    })
+    ingredientsArray.push(getRandomIngredientStyle(optionalIngredient.style));
+
+    additionalIngredients.splice(optionalIngredientIndex, 1);
   }
 
-  const ingredients = ingredientsArray.map(ingredient => {
-    return { name: ingredient }
-  })
-
-  return ingredients
-}
+  return ingredientsArray.map(ingredient => {
+    return { name: ingredient };
+  });
+};

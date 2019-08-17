@@ -1,0 +1,104 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: circleci/node:8.10
+
+    working_directory: ~/repo
+
+    environment:
+      TEST_ENV: foobar
+
+
+    steps:
+      - checkout
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run:
+          name: Install Serverless CLI and dependencies
+          command: |
+            sudo npm i -g serverless
+            npm install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-
+        
+      # run tests!
+      - run: 
+          name: Run tests with coverage
+          command: npm test --coverage
+  
+  deploy-stage:
+    docker:
+      - image: circleci/node:8.10
+
+    working_directory: ~/repo
+    steps:
+      - checkout
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run:
+          name: Install Serverless CLI and dependencies
+          command: |
+            sudo npm i -g serverless
+            npm install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-
+      
+      - run:
+          name: Configure credentials
+          command: sls config credentials --provider aws --key $AWS_ACCESS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY
+      
+      - run:
+          name: Deploy application
+          command: sls deploy --stage stage
+    
+  deploy-production:
+    docker:
+      - image: circleci/node:8.10
+
+    working_directory: ~/repo
+    steps:
+      - run:
+          name: Deploy application
+          command: sls deploy --stage production
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore:
+                - develop
+                - /feature-.*/
+      - deploy-stage:
+          context: toast
+          requires:
+            - build
+          filters:
+            branches:
+              only: staging
+      - deploy-production:
+          context: toast
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
