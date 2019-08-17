@@ -61,6 +61,10 @@ jobs:
           key: v1-dependencies-
       
       - run:
+          name: Configure credentials
+          command: sls config credentials --provider aws --key $AWS_ACCESS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY
+      
+      - run:
           name: Deploy application
           command: sls deploy --stage stage
     
