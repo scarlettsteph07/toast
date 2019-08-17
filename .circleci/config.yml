@@ -1,12 +1,16 @@
 version: 2.1
-orbs:
-  serverless-orb: arthrex/serverless-orb@0.0.10
+# orbs:
+#   serverless-orb: arthrex/serverless-orb@0.0.10
 jobs:
   build:
     docker:
       - image: circleci/node:8.10
 
     working_directory: ~/repo
+
+    environment:
+      TEST_ENV: foobar
+
 
     steps:
       - checkout
@@ -32,7 +36,47 @@ jobs:
       - run: 
           name: Run tests with coverage
           command: npm test --coverage
+  
+  deploy-stage:
+    docker:
+      - image: circleci/node:8.10
 
+    working_directory: ~/repo
+    steps:
       - run:
-          name: Deploy application
-          command: sls deploy --stage pre
+        name: Deploy application
+        command: sls deploy --stage stage
+  
+  deploy-stage:
+    docker:
+      - image: circleci/node:8.10
+
+    working_directory: ~/repo
+    steps:
+      - run:
+        name: Deploy application
+        command: sls deploy --stage production
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore:
+                - develop
+                - /feature-.*/
+      - deploy-stage:
+          context: toast
+          requires:
+            - build
+          filters:
+            branches:
+              only: staging
+      - deploy-prod:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
