@@ -40,8 +40,8 @@ export const filterByType = (
 };
 
 export const randomizeRequiredIngredients = (
-  ingredients: Array<Ingredient> | Array<Ingredient>
-) : Array<String> => {
+  ingredients: Array<Ingredient>
+): Array<String> => {
   return ingredients.map(requiredIngredient => {
     return getRandomIngredientStyle(requiredIngredient.style);
   });
