@@ -42,9 +42,9 @@ jobs:
     working_directory: ~/repo
     steps:
       - run:
-        name: Deploy application
-        command: sls deploy --stage stage
-  
+          name: Deploy application
+          command: sls deploy --stage stage
+    
   deploy-production:
     docker:
       - image: circleci/node:8.10
@@ -52,8 +52,8 @@ jobs:
     working_directory: ~/repo
     steps:
       - run:
-        name: Deploy application
-        command: sls deploy --stage production
+          name: Deploy application
+          command: sls deploy --stage production
 
 workflows:
   version: 2
