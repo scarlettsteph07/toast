@@ -11,8 +11,6 @@
 #
 # Happy Coding!
 
-tenant: saegey
-app: toast
 service: ingredients
 
 # You can pin your service to only deploy with a specific Serverless version
