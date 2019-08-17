@@ -20,6 +20,7 @@ export const getIngredients = async (
   event: APIGatewayProxyEvent,
   _context: Context
 ) : Promise<Response> => {
+  console.log(event.body);
   const body =
     typeof event.body === "string" ? JSON.parse(event.body) : event.body;
 
