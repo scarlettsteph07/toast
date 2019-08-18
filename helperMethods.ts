@@ -15,6 +15,7 @@ type Ingredient = {
 
 type RecipeItem = {
   name: String;
+  style: String;
 };
 
 const getRandomArrayIndex = (
@@ -41,9 +42,12 @@ export const filterByType = (
 
 export const randomizeRequiredIngredients = (
   ingredients: Array<Ingredient>
-): Array<String> => {
+): Array<RecipeItem> => {
   return ingredients.map(requiredIngredient => {
-    return getRandomIngredientStyle(requiredIngredient.style);
+    return {
+      style: getRandomIngredientStyle(requiredIngredient.style),
+      name: requiredIngredient.name
+    };
   });
 };
 
@@ -62,12 +66,13 @@ export const getIngredientsHelper = ({
     const optionalIngredientIndex = getRandomArrayIndex(additionalIngredients);
     const optionalIngredient = additionalIngredients[optionalIngredientIndex];
 
-    ingredientsArray.push(getRandomIngredientStyle(optionalIngredient.style));
+    ingredientsArray.push({
+      style: getRandomIngredientStyle(optionalIngredient.style),
+      name: optionalIngredient.name
+    });
 
     additionalIngredients.splice(optionalIngredientIndex, 1);
   }
 
-  return ingredientsArray.map(ingredient => {
-    return { name: ingredient };
-  });
+  return ingredientsArray;
 };
