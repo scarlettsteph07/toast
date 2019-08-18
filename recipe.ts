@@ -7,17 +7,19 @@ type IngredientTemplate = {
   required: Boolean;
 };
 
-type RecipeItem = {
+export type RecipeItem = {
   name: string;
   style: string;
   required: boolean;
 };
 
+type DietPreference = "carnivore" | "vegan" | "vegetarian";
+
 const getRandomArrayIndex = (array: Array<string | Object>): number => {
   return Math.floor(Math.random() * array.length);
 };
 
-class Recipe {
+export class Recipe {
   ingredients: Array<IngredientTemplate>;
   numOfItems: number;
   ignoreRequiredItems: Array<RecipeItem>;
@@ -27,8 +29,9 @@ class Recipe {
   chosenIngredients: Array<RecipeItem>;
   requiredIngredients: Array<IngredientTemplate>;
   optionalIngredients: Array<IngredientTemplate>;
+  dietPreference: DietPreference;
 
-  constructor(numOfItems: number) {
+  constructor(numOfItems: number, dietPreference?: DietPreference | undefined) {
     this.ingredients = ingredients;
     this.numOfItems = numOfItems;
     this.ignoreRequiredItems = new Array();
@@ -38,6 +41,17 @@ class Recipe {
     this.chosenIngredients = new Array();
     this.requiredIngredients = this.filterRequiredIngredients();
     this.optionalIngredients = this.filterOptionalIngredients();
+    this.dietPreference = dietPreference ? dietPreference : "carnivore";
+  }
+
+  setDietPreference(dietPreference: DietPreference): void {
+    this.dietPreference = dietPreference;
+    this.requiredIngredients = this.filterRequiredIngredients(
+      this.dietPreference
+    );
+    this.optionalIngredients = this.filterOptionalIngredients(
+      this.dietPreference
+    );
   }
 
   calculateOptionalIngredients(): void {
@@ -56,24 +70,16 @@ class Recipe {
           x.style.includes(this.ignoreOptionalItems[i].style)
         ) {
           x.style = x.style.filter(y => y != this.ignoreOptionalItems[i].style);
-          
+
           if (x.style.length == 0) {
             this.optionalIngredients.splice(index, 1);
           }
         }
       });
     }
-    // console.log("optional ingredients", this.requiredIngredients);
 
     const numRequiredMissing: number =
-      this.numOfItems -
-      this.chosenIngredients.length
-
-    // console.log(
-    //   "numreq",
-    //   this.numOfItems,
-    //   this.chosenIngredients.length
-    // );
+      this.numOfItems - this.chosenIngredients.length;
 
     this.optionalIngredients = this.optionalIngredients.filter(i => {
       if (this.requestOptionalItems.map(x => x.name).includes(i.name)) {
@@ -82,8 +88,6 @@ class Recipe {
         return i;
       }
     });
-
-    //console.log('optional ingredients', this.optionalIngredients)
 
     for (let i: number = 0; i < numRequiredMissing; i++) {
       const randomArrayIndex = getRandomArrayIndex(this.optionalIngredients);
@@ -102,9 +106,7 @@ class Recipe {
       });
 
       this.optionalIngredients.splice(randomArrayIndex, 1);
-      //console.log("optional ingredients", this.optionalIngredients);
     }
-    //console.log(this.chosenIngredients);
   }
 
   calculateRequiredIngredients(): void {
@@ -125,7 +127,6 @@ class Recipe {
         }
       });
     }
-    // console.log("requiredIngredients", this.requiredIngredients);
 
     const numRequiredMissing: number =
       this.requiredIngredients.length - this.requestRequiredItems.length;
@@ -182,28 +183,35 @@ class Recipe {
     }
   }
 
-  filterOptionalIngredients() {
-    return this.ingredients.filter(i => i.required === false);
+  filterOptionalIngredients(dietPreference?: DietPreference) {
+    return this.ingredients.filter(i => {
+      return i.required === false &&
+        (!dietPreference || i.type.includes(dietPreference));
+    });
   }
 
-  filterRequiredIngredients() {
-    return this.ingredients.filter(i => i.required === true);
+  filterRequiredIngredients(dietPreference?: DietPreference) {
+    return this.ingredients.filter(i => {
+      return i.required === true &&
+        (!dietPreference || i.type.includes(dietPreference));
+    });
   }
 }
 
-let recipe = new Recipe(7);
+// let recipe = new Recipe(5);
 // recipe.requestIngredient({ style: "bagel", name: "bread", required: true });
 //recipe.ignoreIngredient({ style: "baguette", name: "bread", required: true });
-recipe.requestIngredient({
-  style: "red pepper flakes",
-  name: "red pepper flakes",
-  required: false
-});
-recipe.ignoreIngredient({
-  style: "scrambled egg",
-  name: "egg",
-  required: false
-});
-recipe.calculateRequiredIngredients();
-recipe.calculateOptionalIngredients();
-console.log(recipe.recipe());
+// recipe.requestIngredient({
+//   style: "scrambled egg",
+//   name: "egg",
+//   required: false
+// });
+// recipe.ignoreIngredient({
+//   style: "scrambled egg",
+//   name: "egg",
+//   required: false
+// });
+// recipe.setDietPreference('vegan');
+// recipe.calculateRequiredIngredients();
+// recipe.calculateOptionalIngredients();
+// console.log(recipe.recipe());

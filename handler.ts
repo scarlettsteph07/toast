@@ -1,7 +1,5 @@
 "use strict";
-
-import { getIngredientsHelper } from "./helperMethods";
-import { defaultPreferences } from "./config.json";
+import { Recipe, RecipeItem } from "./recipe";
 
 import { APIGatewayProxyEvent, Context } from "aws-lambda";
 
@@ -24,25 +22,29 @@ export const getIngredients = async (
   const body =
     typeof event.body === "string" ? JSON.parse(event.body) : event.body;
 
-  const { ignoredIngredients, requestedIngredients } = body;
-
-  let { dietPreference, numOfOptionalIngredients } = body
-    ? body
-    : defaultPreferences;
-
-  dietPreference = dietPreference ? dietPreference : "carnivore";
-
-  const ingredients = getIngredientsHelper({
-    dietPreference,
-    numOfOptionalIngredients,
+  const {
     ignoredIngredients,
-    requestedIngredients
-  });
+    requestedIngredients,
+    dietPreference,
+    numOfOptionalIngredients
+  } = body;
+
+  const recipe = new Recipe(numOfOptionalIngredients, dietPreference);
+  if (ignoredIngredients) {
+    ignoredIngredients.forEach((i : RecipeItem)  => recipe.ignoreIngredient(i));
+  }
+
+  if (requestedIngredients) {
+    requestedIngredients.forEach((i : RecipeItem) => recipe.requestIngredient(i));
+  }
+
+  recipe.calculateRequiredIngredients();
+  recipe.calculateOptionalIngredients();
 
   return {
     statusCode: 200,
     body: JSON.stringify({
-      ingredients
+      ingredients: recipe.recipe()
     }),
     headers
   };
