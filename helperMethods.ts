@@ -1,78 +1,77 @@
-import { requiredIngredients, optionalIngredients } from "./config.json";
+import { ingredients } from "./config.json";
 
 export type DietType = "Carnivore" | "Vegan" | "Vegetarian";
 
-type Preferences = {
+export type Preferences = {
   dietPreference?: DietType;
   numOfOptionalIngredients: number;
+  ignoredIngredients?: Array<RecipeItem> | undefined | null;
+  requestedIngredients?: Array<RecipeItem> | undefined | null;
 };
 
-type Ingredient = {
-  name: String;
-  style: Array<String>;
-  type: Array<String>;
+type IngredientTemplate = {
+  name: string;
+  style: Array<string>;
+  type: Array<string>;
+  required: Boolean;
 };
 
 type RecipeItem = {
-  name: String;
-  style: String;
+  name: string;
+  style: string;
+  required: boolean;
 };
 
-const getRandomArrayIndex = (
-  array: Array<String> | Array<Ingredient>
-): number => {
+const getRandomArrayIndex = (array: Array<object>): number => {
   return Math.floor(Math.random() * array.length);
 };
 
-const getRandomIngredientStyle = (styleArray: Array<String>): String => {
+const getReguiredIngredient = (styleArray: Array<string>): string => {
   const index = getRandomArrayIndex(styleArray);
   return styleArray[index];
 };
 
-export const filterByType = (
-  ingredients: Array<Ingredient>,
+const filterByType = (
+  ingredients: Array<IngredientTemplate>,
   type: DietType
-): Array<Ingredient> => {
-  return ingredients.filter((ingredient: Ingredient) => {
+): Array<IngredientTemplate> => {
+  return ingredients.filter((ingredient: IngredientTemplate) => {
     if (ingredient.type.includes(type)) {
       return ingredient;
     }
   });
-};
 
-export const randomizeRequiredIngredients = (
-  ingredients: Array<Ingredient>
-): Array<RecipeItem> => {
-  return ingredients.map(requiredIngredient => {
-    return {
-      style: getRandomIngredientStyle(requiredIngredient.style),
-      name: requiredIngredient.name
-    };
-  });
-};
 
 export const getIngredientsHelper = ({
-  dietPreference,
-  numOfOptionalIngredients
-}: Preferences): Array<RecipeItem> => {
-  const initialIngredients = randomizeRequiredIngredients(requiredIngredients);
+  //dietPreference,
+  //numOfOptionalIngredients,
+  ignoredIngredients
+}: //requestedIngredients
+Preferences): Array<RecipeItem> => {
+  const numOfRequiredIngredients = 
+  const initialIngredients = randomizeRequiredIngredients(
+    ingredients,
+    ignoredIngredients
+    //requestedIngredients
+  );
   const ingredientsArray = [...initialIngredients];
 
-  let additionalIngredients = dietPreference
-    ? filterByType(optionalIngredients, dietPreference)
-    : optionalIngredients;
+  // let additionalIngredients = dietPreference
+  //   ? filterByType(ingredients, dietPreference)
+  //   : ingredients;
 
-  for (let x = 0; x < numOfOptionalIngredients; x++) {
-    const optionalIngredientIndex = getRandomArrayIndex(additionalIngredients);
-    const optionalIngredient = additionalIngredients[optionalIngredientIndex];
+  // for (let x = 0; x < numOfOptionalIngredients; x++) {
+  //   const optionalIngredientIndex = getRandomArrayIndex(additionalIngredients);
+  //   const optionalIngredient = additionalIngredients[optionalIngredientIndex];
 
-    ingredientsArray.push({
-      style: getRandomIngredientStyle(optionalIngredient.style),
-      name: optionalIngredient.name
-    });
+  //   ingredientsArray.push({
+  //     style: getRandomIngredientStyle(optionalIngredient.style),
+  //     name: optionalIngredient.name,
+  //     required: false
+  //   });
 
-    additionalIngredients.splice(optionalIngredientIndex, 1);
-  }
+  //   additionalIngredients.splice(optionalIngredientIndex, 1);
+  // }
 
   return ingredientsArray;
 };

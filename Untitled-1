@@ -1,0 +1,7 @@
+choose one of each required ingredients
+ - automatically select requested ingredient and style that is requested
+ - if required requested ingredients == num of required ingredients available
+      - then just lookup requested from json and return those
+ - if requested ingredients array is null use normall logic
+ - if requested ingredients is less than num of required ingredients than look up 
+   ingredient and style and dont choose a new one

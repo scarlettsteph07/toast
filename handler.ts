@@ -11,29 +11,32 @@ const headers = {
 };
 
 type Response = {
-  statusCode: Number,
-  body: String,
-  headers: Object
-}
+  statusCode: Number;
+  body: String;
+  headers: Object;
+};
 
 export const getIngredients = async (
   event: APIGatewayProxyEvent,
   _context: Context
-) : Promise<Response> => {
+): Promise<Response> => {
   console.log(event.body);
   const body =
     typeof event.body === "string" ? JSON.parse(event.body) : event.body;
+
+  const { ignoredIngredients, requestedIngredients } = body;
 
   let { dietPreference, numOfOptionalIngredients } = body
     ? body
     : defaultPreferences;
 
-  dietPreference = dietPreference ? dietPreference : 'carnivore'
-
+  dietPreference = dietPreference ? dietPreference : "carnivore";
 
   const ingredients = getIngredientsHelper({
     dietPreference,
-    numOfOptionalIngredients
+    numOfOptionalIngredients,
+    ignoredIngredients,
+    requestedIngredients
   });
 
   return {
