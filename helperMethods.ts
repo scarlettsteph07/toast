@@ -9,12 +9,6 @@ export type Preferences = {
   requestedIngredients?: Array<RecipeItem> | undefined | null;
 };
 
-type IngredientTemplate = {
-  name: string;
-  style: Array<string>;
-  type: Array<string>;
-  required: Boolean;
-};
 
 type RecipeItem = {
   name: string;
@@ -22,9 +16,7 @@ type RecipeItem = {
   required: boolean;
 };
 
-const getRandomArrayIndex = (array: Array<object>): number => {
-  return Math.floor(Math.random() * array.length);
-};
+
 
 const getReguiredIngredient = (styleArray: Array<string>): string => {
   const index = getRandomArrayIndex(styleArray);
