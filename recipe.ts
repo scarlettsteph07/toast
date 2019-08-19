@@ -31,8 +31,8 @@ export class Recipe {
   optionalIngredients: Array<IngredientTemplate>;
   dietPreference: DietPreference;
 
-  constructor(numOfItems: number, dietPreference?: DietPreference | undefined) {
-    this.ingredients = ingredients;
+  constructor(numOfItems: number) {
+    this.ingredients = Object.assign({}, ingredients);
     this.numOfItems = numOfItems;
     this.ignoreRequiredItems = new Array();
     this.ignoreOptionalItems = new Array();
@@ -41,7 +41,7 @@ export class Recipe {
     this.chosenIngredients = new Array();
     this.requiredIngredients = this.filterRequiredIngredients();
     this.optionalIngredients = this.filterOptionalIngredients();
-    this.dietPreference = dietPreference ? dietPreference : "carnivore";
+    this.dietPreference = "carnivore";
   }
 
   setDietPreference(dietPreference: DietPreference): void {

@@ -18,24 +18,23 @@ export const getIngredients = async (
   event: APIGatewayProxyEvent,
   _context: Context
 ): Promise<Response> => {
-  console.log(event.body);
+  
   const body =
     typeof event.body === "string" ? JSON.parse(event.body) : event.body;
+    console.log(event.body, body.dietPreference);
+    
 
-  const {
-    ignoredIngredients,
-    requestedIngredients,
-    dietPreference,
-    numOfOptionalIngredients
-  } = body;
+  const recipe = new Recipe(body.numOfOptionalIngredients);
+  recipe.setDietPreference(body.dietPreference)
 
-  const recipe = new Recipe(numOfOptionalIngredients, dietPreference);
-  if (ignoredIngredients) {
-    ignoredIngredients.forEach((i: RecipeItem)  => recipe.ignoreIngredient(i));
+  if (body.ignoredIngredients && body.ignoredIngredients.length > 0) {
+    body.ignoredIngredients.forEach((i: RecipeItem) => recipe.ignoreIngredient(i));
   }
 
-  if (requestedIngredients) {
-    requestedIngredients.forEach((i: RecipeItem) => recipe.requestIngredient(i));
+  if (body.requestedIngredients && body.requestedIngredients.length > 0) {
+    body.requestedIngredients.forEach((i: RecipeItem) =>
+      recipe.requestIngredient(i)
+    );
   }
 
   recipe.calculateRequiredIngredients();
