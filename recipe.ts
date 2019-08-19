@@ -1,5 +1,3 @@
-import { ingredients } from "./config.json";
-
 type IngredientTemplate = {
   name: string;
   style: Array<string>;
@@ -31,7 +29,7 @@ export class Recipe {
   optionalIngredients: Array<IngredientTemplate>;
   dietPreference: DietPreference;
 
-  constructor(numOfItems: number) {
+  constructor(ingredients: Array<IngredientTemplate>, numOfItems: number) {
     this.ingredients = [...ingredients]
     this.numOfItems = numOfItems;
     this.ignoreRequiredItems = new Array();
