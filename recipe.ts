@@ -32,7 +32,7 @@ export class Recipe {
   dietPreference: DietPreference;
 
   constructor(numOfItems: number) {
-    this.ingredients = Object.assign({}, ingredients);
+    this.ingredients = [...ingredients]
     this.numOfItems = numOfItems;
     this.ignoreRequiredItems = new Array();
     this.ignoreOptionalItems = new Array();
