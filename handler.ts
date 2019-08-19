@@ -31,15 +31,17 @@ export const getIngredients = async (
 
   const recipe = new Recipe(numOfOptionalIngredients, dietPreference);
   if (ignoredIngredients) {
-    ignoredIngredients.forEach((i : RecipeItem)  => recipe.ignoreIngredient(i));
+    ignoredIngredients.forEach((i: RecipeItem)  => recipe.ignoreIngredient(i));
   }
 
   if (requestedIngredients) {
-    requestedIngredients.forEach((i : RecipeItem) => recipe.requestIngredient(i));
+    requestedIngredients.forEach((i: RecipeItem) => recipe.requestIngredient(i));
   }
 
   recipe.calculateRequiredIngredients();
   recipe.calculateOptionalIngredients();
+
+  console.log(recipe.recipe());
 
   return {
     statusCode: 200,
