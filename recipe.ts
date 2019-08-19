@@ -39,8 +39,8 @@ export class Recipe {
     this.requestRequiredItems = new Array();
     this.requestOptionalItems = new Array();
     this.chosenIngredients = new Array();
-    this.requiredIngredients = this.filterRequiredIngredients();
-    this.optionalIngredients = this.filterOptionalIngredients();
+    this.requiredIngredients = [...this.filterRequiredIngredients()];
+    this.optionalIngredients = [...this.filterOptionalIngredients()];
     this.dietPreference = "carnivore";
   }
 
@@ -165,9 +165,9 @@ export class Recipe {
 
   ignoreIngredient(ingredient: RecipeItem) {
     if (ingredient.required) {
-      this.ignoreRequiredItems.push(ingredient);
+      this.ignoreRequiredItems.push(Object.assign({}, ingredient));
     } else {
-      this.ignoreOptionalItems.push(ingredient);
+      this.ignoreOptionalItems.push(Object.assign({}, ingredient));
     }
   }
 
@@ -177,9 +177,9 @@ export class Recipe {
 
   requestIngredient(itemToRequest: RecipeItem) {
     if (itemToRequest.required) {
-      this.requestRequiredItems.push(itemToRequest);
+      this.requestRequiredItems.push(Object.assign({}, itemToRequest));
     } else {
-      this.requestOptionalItems.push(itemToRequest);
+      this.requestOptionalItems.push(Object.assign({}, itemToRequest));
     }
   }
 
