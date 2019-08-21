@@ -121,7 +121,12 @@ export class Recipe {
           x.name === this.ignoreRequiredItems[i].name &&
           x.style.includes(this.ignoreRequiredItems[i].style)
         ) {
-          x.style = x.style.filter(y => y != this.ignoreRequiredItems[i].style);
+          if (x.style.length > 1) {
+            x.style = x.style.filter(
+              y => y != this.ignoreRequiredItems[i].style
+            );
+          }
+          
         }
       });
     }
