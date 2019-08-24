@@ -21,6 +21,10 @@ export const getIngredients = async (
 ): Promise<Response> => {
   const body =
     typeof event.body === "string" ? JSON.parse(event.body) : event.body;
+  
+  console.log("Request Headers:", event.headers);
+  console.log("Request Body", event.body);
+
   const recipe = new Recipe(ingredients(), body.numOfOptionalIngredients);
   recipe.setDietPreference(body.dietPreference);
 
