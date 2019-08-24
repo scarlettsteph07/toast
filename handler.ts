@@ -52,6 +52,7 @@ const deleteUserIngredientStyle = async (
     return ingredient;
   }
   const styles = ingredient.Item.style;
+  console.log(ingredient);
   if (styles.length === 0) {
     console.log("deleted item", params);
     return dynamoDbClient.delete(params).promise();
@@ -80,6 +81,29 @@ const createIngredient = async (userKey: String, ingredient: Ingredient) => {
     }
   };
   return dynamoDbClient.put(params).promise();
+};
+
+export const addIngredient = async (
+  event: APIGatewayProxyEvent,
+  _context: Context
+): Promise<Response> => {
+  const body =
+    typeof event.body === "string" ? JSON.parse(event.body) : event.body;
+  const headers =
+    typeof event.headers === "string"
+      ? JSON.parse(event.headers)
+      : event.headers;
+  const userKey = headers["X-User-Key"];
+
+  const newIngredient = await createIngredient(userKey, body);
+  console.log(body, headers);
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      ingredient: newIngredient
+    }),
+    headers: DEFAULT_HEADERS
+  };
 };
 
 export const removeIngredient = async (
@@ -138,6 +162,7 @@ export const getIngredients = async (
 
   const userKey = headers["X-User-Key"];
   const userRows = await getUserIngredientsFromDynamo(userKey);
+  console.log('userRows', userRows);
 
   const recipeItems =
     userRows.Items.length === 0 ? ingredients() : userRows.Items;
