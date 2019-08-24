@@ -85,7 +85,7 @@ functions:
           path: ingredients
           method: delete
           cors: true
-      - cloudwatchLog: '/aws/lambda/removeIngredient'
+      # - cloudwatchLog: '/aws/lambda/removeIngredient'
   
   addIngredient:
     handler: handler.addIngredient
@@ -95,7 +95,7 @@ functions:
           path: ingredients/new
           method: post
           cors: true
-      - cloudwatchLog: '/aws/lambda/newIngredient'
+      # - cloudwatchLog: '/aws/lambda/newIngredient'
 
   getIngredients:
     handler: handler.getIngredients
@@ -105,7 +105,7 @@ functions:
           path: ingredients
           method: post
           cors: true
-      - cloudwatchLog: '/aws/lambda/getIngredients'
+      # - cloudwatchLog: '/aws/lambda/getIngredients'
 
 resources:
   Resources:
