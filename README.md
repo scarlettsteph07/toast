@@ -4,7 +4,7 @@ This template is designed to help you get started with the [Serverless Framework
 
 # Get ingredient list
 ```
-curl -X POST http://localhost:3000/ingredients --data '{"dietType": "vegetarian", "numOfOptionalIngredients": 5, "requestedIngredients": [], "ignoredIngredients": [], "dietPreference": "vegan"}' --header ""X-User-Key: 34444" | jq .
+curl -X POST https://99iva9ikm2.execute-api.us-east-1.amazonaws.com/stage/ingredients --data '{"dietType": "vegetarian", "numOfOptionalIngredients": 5, "requestedIngredients": [], "ignoredIngredients": [], "dietPreference": "vegan"}' --header "X-User-Key: 34444" | jq .
 ```
 
 # Delete a Style from an Ingredient
@@ -14,5 +14,5 @@ curl -X DELETE "http://localhost:3000/ingredients" --data '{"name": "xxx", "styl
 
 # Add a New Ingredient
 ```
-curl -X POST --header 'X-User-Key: 34444' --data '{"name": "xxx", "style": ["mxxxxxx"], "type": ["carnivore", "vegan"],"required": true}' "http://localhost:3000/ingredients/new"
+curl -X POST --header 'X-User-Key: 8C3B6E09-3ECA-420B-A33C-092BEE7F7D0F' --data '{"name": "Beer", "style": ["Tecate"], "type": ["carnivore", "vegan"],"required": true}' "https://99iva9ikm2.execute-api.us-east-1.amazonaws.com/stage/ingredients/new"
 ```

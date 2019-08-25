@@ -28,6 +28,7 @@ const getUserIngredientsFromDynamo = async (
       ":userId": userKey
     }
   };
+  console.log('getuserPArams', params);
   return dynamoDbClient.query(params).promise();
 };
 
@@ -93,7 +94,7 @@ export const addIngredient = async (
     typeof event.headers === "string"
       ? JSON.parse(event.headers)
       : event.headers;
-  const userKey = headers["X-User-Key".toLowerCase()];
+  const userKey = headers["X-User-Key"] || headers["x-user-key"] || 'demo';
 
   const newIngredient = await createIngredient(userKey, body);
   console.log(body, headers);
@@ -120,7 +121,7 @@ export const removeIngredient = async (
   console.log("Request Headers:", headers);
   console.log("Request Body", body);
 
-  const userKey = headers["X-User-Key".toLowerCase()];
+  const userKey = headers["X-User-Key"] || headers["x-user-key"] || "demo";
   const result = await deleteUserIngredientStyle(
     userKey,
     body.name,
@@ -160,7 +161,7 @@ export const getIngredients = async (
   console.log("Request Headers:", headers);
   console.log("Request Body", body);
 
-  const userKey = headers["X-User-Key".toLowerCase()];
+    const userKey = headers["X-User-Key"] || headers["x-user-key"] || "demo";
   const userRows = await getUserIngredientsFromDynamo(userKey);
   console.log('userRows', userRows);
 
@@ -192,17 +193,6 @@ export const getIngredients = async (
 
   recipe.calculateRequiredIngredients();
   recipe.calculateOptionalIngredients();
-
-  var params = {
-    TableName: TABLE_NAME,
-    Key: {
-      userId: userKey,
-      name: "avocado"
-    }
-  };
-
-  const data = await dynamoDbClient.get(params).promise();
-  console.log(data);
 
   return {
     statusCode: 200,

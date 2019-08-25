@@ -111,6 +111,7 @@ export class Recipe {
     this.chosenIngredients = this.chosenIngredients.concat(
       this.requestRequiredItems
     );
+    console.log('this.chosenIngredients', this.chosenIngredients);
     if (this.requiredIngredients.length == this.requestRequiredItems.length) {
       return;
     }
