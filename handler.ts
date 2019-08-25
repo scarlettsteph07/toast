@@ -93,7 +93,7 @@ export const addIngredient = async (
     typeof event.headers === "string"
       ? JSON.parse(event.headers)
       : event.headers;
-  const userKey = headers["X-User-Key"];
+  const userKey = headers["X-User-Key".toLowerCase()];
 
   const newIngredient = await createIngredient(userKey, body);
   console.log(body, headers);
@@ -120,7 +120,7 @@ export const removeIngredient = async (
   console.log("Request Headers:", headers);
   console.log("Request Body", body);
 
-  const userKey = headers["X-User-Key"];
+  const userKey = headers["X-User-Key".toLowerCase()];
   const result = await deleteUserIngredientStyle(
     userKey,
     body.name,
@@ -160,7 +160,7 @@ export const getIngredients = async (
   console.log("Request Headers:", headers);
   console.log("Request Body", body);
 
-  const userKey = headers["X-User-Key"];
+  const userKey = headers["X-User-Key".toLowerCase()];
   const userRows = await getUserIngredientsFromDynamo(userKey);
   console.log('userRows', userRows);
 
