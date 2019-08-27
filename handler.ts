@@ -1,9 +1,8 @@
 "use strict";
-
-import { getIngredientsHelper } from "./helperMethods";
-import { defaultPreferences } from "./config.json";
+import { Recipe, RecipeItem } from "./recipe";
 
 import { APIGatewayProxyEvent, Context } from "aws-lambda";
+import { ingredients } from "./config";
 
 const headers = {
   "Access-Control-Allow-Origin": "*",
@@ -11,35 +10,41 @@ const headers = {
 };
 
 type Response = {
-  statusCode: Number,
-  body: String,
-  headers: Object
-}
+  statusCode: Number;
+  body: String;
+  headers: Object;
+};
 
 export const getIngredients = async (
   event: APIGatewayProxyEvent,
   _context: Context
-) : Promise<Response> => {
-  console.log(event.body);
+): Promise<Response> => {
   const body =
     typeof event.body === "string" ? JSON.parse(event.body) : event.body;
+  const recipe = new Recipe(ingredients(), body.numOfOptionalIngredients);
+  recipe.setDietPreference(body.dietPreference);
 
-  let { dietPreference, numOfOptionalIngredients } = body
-    ? body
-    : defaultPreferences;
+  if (body.ignoredIngredients && body.ignoredIngredients.length > 0) {
+    body.ignoredIngredients.forEach((i: RecipeItem) =>
+      recipe.ignoreIngredient(i)
+    );
+  }
 
-  dietPreference = dietPreference ? dietPreference : 'carnivore'
+  if (body.requestedIngredients && body.requestedIngredients.length > 0) {
+    body.requestedIngredients.forEach((i: RecipeItem) =>
+      recipe.requestIngredient(i)
+    );
+  }
 
+  recipe.calculateRequiredIngredients();
+  recipe.calculateOptionalIngredients();
 
-  const ingredients = getIngredientsHelper({
-    dietPreference,
-    numOfOptionalIngredients
-  });
+  console.log(recipe.recipe());
 
   return {
     statusCode: 200,
     body: JSON.stringify({
-      ingredients
+      ingredients: recipe.recipe()
     }),
     headers
   };
