@@ -30,7 +30,7 @@ export class Recipe {
   dietPreference: DietPreference;
 
   constructor(ingredients: Array<IngredientTemplate>, numOfItems: number) {
-    this.ingredients = [...ingredients]
+    this.ingredients = [...ingredients];
     this.numOfItems = numOfItems;
     this.ignoreRequiredItems = new Array();
     this.ignoreOptionalItems = new Array();
@@ -111,6 +111,7 @@ export class Recipe {
     this.chosenIngredients = this.chosenIngredients.concat(
       this.requestRequiredItems
     );
+    console.log("this.chosenIngredients", this.chosenIngredients);
     if (this.requiredIngredients.length == this.requestRequiredItems.length) {
       return;
     }
@@ -126,13 +127,14 @@ export class Recipe {
               y => y != this.ignoreRequiredItems[i].style
             );
           }
-          
         }
       });
     }
 
     const numRequiredMissing: number =
       this.requiredIngredients.length - this.requestRequiredItems.length;
+
+    console.log("numRequiredMissing", numRequiredMissing);
 
     this.requiredIngredients = this.requiredIngredients.filter(i => {
       if (this.requestRequiredItems.map(x => x.name).includes(i.name)) {
@@ -158,12 +160,8 @@ export class Recipe {
         required: true
       });
 
-      this.requiredIngredients = this.requiredIngredients.splice(
-        randomArrayIndex - 1,
-        1
-      );
+      this.requiredIngredients.splice(randomArrayIndex, 1);
     }
-    //console.log(this.chosenIngredients);
   }
 
   ignoreIngredient(ingredient: RecipeItem) {
@@ -188,15 +186,19 @@ export class Recipe {
 
   filterOptionalIngredients(dietPreference?: DietPreference) {
     return this.ingredients.filter(i => {
-      return i.required === false &&
-        (!dietPreference || i.type.includes(dietPreference));
+      return (
+        i.required === false &&
+        (!dietPreference || i.type.includes(dietPreference))
+      );
     });
   }
 
   filterRequiredIngredients(dietPreference?: DietPreference) {
     return this.ingredients.filter(i => {
-      return i.required === true &&
-        (!dietPreference || i.type.includes(dietPreference));
+      return (
+        i.required === true &&
+        (!dietPreference || i.type.includes(dietPreference))
+      );
     });
   }
 }

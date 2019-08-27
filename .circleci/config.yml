@@ -3,13 +3,9 @@ jobs:
   build:
     docker:
       - image: circleci/node:8.10
-
+    
     working_directory: ~/repo
-
-    environment:
-      TEST_ENV: foobar
-
-
+    
     steps:
       - checkout
       # Download and cache dependencies
@@ -18,17 +14,16 @@ jobs:
           - v1-dependencies-
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
-
-      - run:
-          name: Install Serverless CLI and dependencies
-          command: |
-            sudo npm i -g serverless
-            npm install
-
+      
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-
+
+      - run:
+          name: Install dependencies
+          command: |
+            npm install
         
       # run tests!
       - run: 
