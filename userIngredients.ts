@@ -120,7 +120,6 @@ export class UserIngredients {
       ReturnValues: "ALL_OLD"
     };
     const res = await dynamoDbClient.put(params).promise();
-    console.log(res);
     return new Promise((resolve, reject) => {
       resolve(res["Attributes"]);
       reject({error: "blah"});

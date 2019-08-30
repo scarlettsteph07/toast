@@ -7,7 +7,7 @@ import { defaultIngredients } from "./config";
 
 import { EventSanitizer } from "./eventSanitizer";
 import { validateSchema } from "./schema";
-// import { defaultEvent } from './api';
+import { eventWrapper } from './utils';
 
 import { Response, RecipeItem } from "./types";
 
@@ -36,35 +36,19 @@ const validate = validateSchema`
     - style
 `;
 
-export const addIngredient = async (
+export const addIngredientEvent = async (
   event: APIGatewayProxyEvent, _context: Context) => {
   const { ingredient, userKey } = new EventSanitizer(
     event
-    ).eventFilterAddIngredient();
-  try {
-    validate(ingredient);
-  } catch(e) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify(e),
-      headers: DEFAULT_HEADERS
-    }
-  }
+  ).eventFilterAddIngredient();
+  validate(ingredient);
 
-  const newIngredient = await new UserIngredients(userKey).createIngredient(
+  return await new UserIngredients(userKey).createIngredient(
     ingredient
   );
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      ingredient: newIngredient
-    }),
-    headers: DEFAULT_HEADERS
-  };
 };
 
-//export const addIngredient = defaultEvent(addIngredientEvent);
+export const addIngredient = eventWrapper(addIngredientEvent);
 
 export const deleteIngredientStyle = async (
   event: APIGatewayProxyEvent,

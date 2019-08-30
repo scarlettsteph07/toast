@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent, Context } from "aws-lambda";
 
-export const defaultEvent = async (originalFunction: Function) =>
+export const eventWrapper = (originalFunction: Function) =>
   async (event: APIGatewayProxyEvent, _context: Context) => {
   try {
     const data = await originalFunction(event, _context);
