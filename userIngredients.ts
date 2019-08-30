@@ -116,8 +116,15 @@ export class UserIngredients {
       Item: {
         userId: this.userKey,
         ...ingredient
-      }
+      },
+      ReturnValues: "ALL_OLD"
     };
-    return dynamoDbClient.put(params).promise();
+    const res = await dynamoDbClient.put(params).promise();
+    console.log(res);
+    return new Promise((resolve, reject) => {
+      resolve(res["Attributes"]);
+      reject({error: "blah"});
+    });
+
   }
 }

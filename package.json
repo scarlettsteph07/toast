@@ -24,7 +24,9 @@
   },
   "homepage": "https://github.com/serverless/enterprise-template#readme",
   "dependencies": {
+    "@types/js-yaml": "^3.12.1",
     "aws-sdk": "^2.517.0",
+    "jsonschema": "^1.2.4",
     "serverless-dynamodb-client": "0.0.2",
     "source-map-support": "^0.5.10"
   },

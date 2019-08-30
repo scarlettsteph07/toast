@@ -6,6 +6,8 @@ import { UserIngredients } from "./userIngredients";
 import { defaultIngredients } from "./config";
 
 import { EventSanitizer } from "./eventSanitizer";
+import { validateSchema } from "./schema";
+// import { defaultEvent } from './api';
 
 import { Response, RecipeItem } from "./types";
 
@@ -14,13 +16,40 @@ const DEFAULT_HEADERS = {
   "Access-Control-Allow-Credentials": true
 };
 
+const validate = validateSchema`
+  type: object
+  properties:
+    name:
+      type: string
+    style:
+      type: array
+      items:
+        type: string
+    type:
+      type: array
+      items:
+        type: string
+    required:
+      type: boolean
+  required:
+    - name
+    - style
+`;
+
 export const addIngredient = async (
-  event: APIGatewayProxyEvent,
-  _context: Context
-): Promise<Response> => {
+  event: APIGatewayProxyEvent, _context: Context) => {
   const { ingredient, userKey } = new EventSanitizer(
     event
-  ).eventFilterAddIngredient();
+    ).eventFilterAddIngredient();
+  try {
+    validate(ingredient);
+  } catch(e) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify(e),
+      headers: DEFAULT_HEADERS
+    }
+  }
 
   const newIngredient = await new UserIngredients(userKey).createIngredient(
     ingredient
@@ -34,6 +63,8 @@ export const addIngredient = async (
     headers: DEFAULT_HEADERS
   };
 };
+
+//export const addIngredient = defaultEvent(addIngredientEvent);
 
 export const deleteIngredientStyle = async (
   event: APIGatewayProxyEvent,
