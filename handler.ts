@@ -1,88 +1,15 @@
 "use strict";
 import { APIGatewayProxyEvent, Context } from "aws-lambda";
-const dynamodb = require("serverless-dynamodb-client");
 
 import { Recipe, RecipeItem } from "./recipe";
+import { UserIngredients } from "./userIngredients"
 import { ingredients } from "./config";
 import { getEventData, getUserKey } from "./handlerHelperMethods";
-import { DynamoResponse, Ingredient, Response } from "./types";
-
-const dynamoDbClient = dynamodb.doc;
+import { Ingredient, Response } from "./types";
 
 const DEFAULT_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Credentials": true
-};
-
-const TABLE_NAME = "UserIngredients";
-
-const getUserIngredientsFromDynamo = async (
-  userKey: String
-): Promise<DynamoResponse> => {
-  const params = {
-    TableName: TABLE_NAME,
-    KeyConditionExpression: "#userId = :userId",
-    ExpressionAttributeNames: {
-      "#userId": "userId"
-    },
-    ExpressionAttributeValues: {
-      ":userId": userKey
-    }
-  };
-  console.log('getuserPArams', params);
-  return dynamoDbClient.query(params).promise();
-};
-
-const deleteUserIngredientStyle = async (
-  userKey: String,
-  name: String,
-  style: String
-): Promise<DynamoResponse> => {
-  const params = {
-    TableName: TABLE_NAME,
-    Key: {
-      userId: userKey,
-      name
-    }
-  };
-  const ingredient = await dynamoDbClient.get(params).promise();
-  console.log(ingredient);
-  if (
-    Object.keys(ingredient).length === 0 &&
-    ingredient.constructor === Object
-  ) {
-    return ingredient;
-  }
-  const styles = ingredient.Item.style;
-  console.log(ingredient);
-  if (styles.length === 0) {
-    console.log("deleted item", params);
-    return dynamoDbClient.delete(params).promise();
-  } else {
-    const updateParams = {
-      UpdateExpression: "set #style = :styles",
-      ExpressionAttributeNames: {
-        "#style": "style"
-      },
-      ExpressionAttributeValues: {
-        ":styles": styles.filter((s: String) => s !== style)
-      },
-      ReturnValues: "UPDATED_NEW",
-      ...params
-    };
-    return dynamoDbClient.update(updateParams).promise();
-  }
-};
-
-const createIngredient = async (userKey: String, ingredient: Ingredient) => {
-  const params = {
-    TableName: "UserIngredients",
-    Item: {
-      userId: userKey,
-      ...ingredient
-    }
-  };
-  return dynamoDbClient.put(params).promise();
 };
 
 export const addIngredient = async (
@@ -97,7 +24,7 @@ export const addIngredient = async (
       : event.headers;
   const userKey = headers["X-User-Key"] || headers["x-user-key"] || 'demo';
 
-  const newIngredient = await createIngredient(userKey, body);
+  const newIngredient = await new UserIngredients(userKey).createIngredient(body);
   console.log(body, headers);
   return {
     statusCode: 200,
@@ -123,8 +50,7 @@ export const removeIngredient = async (
   console.log("Request Body", body);
 
   const userKey = headers["X-User-Key"] || headers["x-user-key"] || "demo";
-  const result = await deleteUserIngredientStyle(
-    userKey,
+  const result = await new UserIngredients(userKey).deleteUserIngredientStyle(
     body.name,
     body.style
   );
@@ -154,7 +80,7 @@ export const getIngredientsByUserId = async (
 ): Promise<Response> => {
   const headers = getEventData(event.headers);
   const userKey = getUserKey(headers);
-  const userIngredients = await getUserIngredientsFromDynamo(userKey);
+  const userIngredients = await new UserIngredients(userKey).getAll()
   return {
     statusCode: 200,
     body: JSON.stringify({
@@ -179,7 +105,7 @@ export const getIngredients = async (
   console.log("Request Body", body);
 
     const userKey = headers["X-User-Key"] || headers["x-user-key"] || "demo";
-  const userRows = await getUserIngredientsFromDynamo(userKey);
+  const userRows = await new UserIngredients(userKey).getAll()
   console.log('userRows', userRows);
 
   const recipeItems =
@@ -189,7 +115,7 @@ export const getIngredients = async (
     const ingredientsData: Array<Ingredient> = ingredients();
 
     for (let i: number = 0; i <= ingredientsData.length - 1; i++) {
-      await createIngredient(userKey, ingredientsData[i]);
+      await new UserIngredients(userKey).createIngredient(ingredientsData[i]);
     }
   }
 

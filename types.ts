@@ -19,8 +19,23 @@ export type Ingredient = {
   required: Boolean;
 };
 
-export type DynamoResponse = {
+export type DynamoQueryResponse = {
   Items: Array<Item>;
   Count: number;
   ScannedCount: number;
 };
+
+export type DynamoGetResponse = {
+  Item: Item;
+  Items: Array<Item>;
+  Count: number;
+  ScannedCount: number;
+};
+
+export type IngredientNameParams = {
+  TableName: string,
+  Key: {
+    userId: string,
+    name: string,
+  }
+}
