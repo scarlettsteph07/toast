@@ -94,7 +94,7 @@ custom:
 
 functions:
   removeIngredient:
-    handler: handler.removeIngredient
+    handler: handler.deleteIngredientStyle
 
     events:
       - http:

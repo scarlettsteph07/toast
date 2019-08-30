@@ -5,6 +5,8 @@ import { Recipe, RecipeItem } from "./recipe";
 import { UserIngredients } from "./userIngredients"
 import { ingredients } from "./config";
 import { getEventData, getUserKey } from "./handlerHelperMethods";
+import { eventFilter, eventFilterDeleteIngredientStyle } from "./eventFilter";
+
 import { Ingredient, Response } from "./types";
 
 const DEFAULT_HEADERS = {
@@ -16,16 +18,11 @@ export const addIngredient = async (
   event: APIGatewayProxyEvent,
   _context: Context
 ): Promise<Response> => {
-  const body =
-    typeof event.body === "string" ? JSON.parse(event.body) : event.body;
-  const headers =
-    typeof event.headers === "string"
-      ? JSON.parse(event.headers)
-      : event.headers;
-  const userKey = headers["X-User-Key"] || headers["x-user-key"] || 'demo';
+  const { ingredient, userKey }  = eventFilter(event);
+  const newIngredient = await new UserIngredients(
+    userKey
+  ).createIngredient(ingredient);
 
-  const newIngredient = await new UserIngredients(userKey).createIngredient(body);
-  console.log(body, headers);
   return {
     statusCode: 200,
     body: JSON.stringify({
@@ -35,25 +32,18 @@ export const addIngredient = async (
   };
 };
 
-export const removeIngredient = async (
+export const deleteIngredientStyle = async (
   event: APIGatewayProxyEvent,
   _context: Context
 ): Promise<Response> => {
-  const body =
-    typeof event.body === "string" ? JSON.parse(event.body) : event.body;
-  const headers =
-    typeof event.headers === "string"
-      ? JSON.parse(event.headers)
-      : event.headers;
-
-  console.log("Request Headers:", headers);
-  console.log("Request Body", body);
-
-  const userKey = headers["X-User-Key"] || headers["x-user-key"] || "demo";
-  const result = await new UserIngredients(userKey).deleteUserIngredientStyle(
-    body.name,
-    body.style
+  const { name, style, userKey } = eventFilterDeleteIngredientStyle(event);
+  const result = await new UserIngredients(
+    userKey
+  ).deleteUserIngredientStyle(
+    name,
+    style
   );
+
   if (Object.keys(result).length === 0 && result.constructor === Object) {
     return {
       statusCode: 404,
@@ -63,7 +53,6 @@ export const removeIngredient = async (
       headers: DEFAULT_HEADERS
     };
   }
-  console.log("result:", result);
 
   return {
     statusCode: 200,

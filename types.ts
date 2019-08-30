@@ -19,6 +19,10 @@ export type Ingredient = {
   required: Boolean;
 };
 
+export type UserIngredient = {
+  userKey: string
+} & Ingredient
+
 export type DynamoQueryResponse = {
   Items: Array<Item>;
   Count: number;
@@ -38,4 +42,15 @@ export type IngredientNameParams = {
     userId: string,
     name: string,
   }
+};
+
+export type AddIngredientEvent = {
+  ingredient: UserIngredient;
+  userKey: string;
+};
+
+export type DeleteIngredientStyleEvent = {
+  name: string,
+  style: string,
+  userKey: string
 }
