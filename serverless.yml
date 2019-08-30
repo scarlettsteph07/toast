@@ -118,19 +118,19 @@ functions:
 
     events:
       - http:
-          path: getIngredientsByUserId/ #TBD
-          method: post
+          path: ingredients
+          method: get
           cors: true
 
-  getIngredients:
+  getNewRecipe:
     handler: handler.getNewRecipe
 
     events:
       - http:
-          path: ingredients
+          path: recipes
           method: post
           cors: true
-      # - cloudwatchLog: '/aws/lambda/getIngredients'
+      # - cloudwatchLog: '/aws/lambda/getNewRecipe'
 
 resources:
   Resources:
