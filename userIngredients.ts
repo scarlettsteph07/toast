@@ -5,6 +5,7 @@ import {
   DynamoGetResponse,
   IngredientNameParams,
   Ingredient,
+  IngredientTemplate
 } from "./types";
 
 export const TABLE_NAME = "UserIngredients";
@@ -41,13 +42,39 @@ export class UserIngredients {
     };
   }
 
-  async getItemByName(name: string): Promise<DynamoGetResponse> {
-    return await dynamoDbClient.get(
-      this.getIngredientNameParams(name)
-    ).promise();
+  async bulkCreateIngredients(
+    recipeItems: Array<IngredientTemplate>
+  ): Promise<DynamoQueryResponse> {
+    const params = {
+      RequestItems: {
+        [TABLE_NAME]: recipeItems.map((i: IngredientTemplate) => {
+          return {
+            PutRequest: {
+              Item: {
+                name: i.name,
+                style: i.style,
+                type: i.type,
+                required: i.required,
+                userId: this.userKey
+              }
+            }
+          };
+        })
+      }
+    };
+    return await dynamoDbClient.batchWrite(params).promise();
   }
 
-  async deleteUserIngredientStyle(name: string, style: string): Promise<DynamoQueryResponse> {
+  async getItemByName(name: string): Promise<DynamoGetResponse> {
+    return await dynamoDbClient
+      .get(this.getIngredientNameParams(name))
+      .promise();
+  }
+
+  async deleteUserIngredientStyle(
+    name: string,
+    style: string
+  ): Promise<DynamoQueryResponse> {
     const ingredient = await this.getItemByName(name);
     console.log(ingredient);
     if (
@@ -60,7 +87,9 @@ export class UserIngredients {
     console.log(ingredient);
     if (styles.length === 0) {
       console.log("deleted item", this.getIngredientNameParams(name));
-      return dynamoDbClient.delete(this.getIngredientNameParams(name)).promise();
+      return dynamoDbClient
+        .delete(this.getIngredientNameParams(name))
+        .promise();
     } else {
       const updateParams = {
         UpdateExpression: "set #style = :styles",
@@ -79,9 +108,9 @@ export class UserIngredients {
       };
       return dynamoDbClient.update(updateParams).promise();
     }
-  };
+  }
 
-  async createIngredient(ingredient: Ingredient) {
+  async createIngredient(ingredient: Ingredient): Promise<DynamoGetResponse> {
     const params = {
       TableName: TABLE_NAME,
       Item: {
@@ -90,6 +119,5 @@ export class UserIngredients {
       }
     };
     return dynamoDbClient.put(params).promise();
-  };
-
+  }
 }

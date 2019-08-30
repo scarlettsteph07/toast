@@ -1,4 +1,6 @@
-export const ingredients = () => {
+import { IngredientTemplate } from "./types";
+
+export const defaultIngredients = (): Array<IngredientTemplate> => {
   return [
     {
       name: "avocado",

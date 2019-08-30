@@ -1,17 +1,4 @@
-type IngredientTemplate = {
-  name: string;
-  style: Array<string>;
-  type: Array<string>;
-  required: Boolean;
-};
-
-export type RecipeItem = {
-  name: string;
-  style: string;
-  required: boolean;
-};
-
-type DietPreference = "carnivore" | "vegan" | "vegetarian";
+import { RecipeItem, IngredientTemplate, DietPreference } from "./types";
 
 const getRandomArrayIndex = (array: Array<string | Object>): number => {
   return Math.floor(Math.random() * array.length);
@@ -173,6 +160,9 @@ export class Recipe {
   }
 
   recipe() {
+    this.calculateRequiredIngredients();
+    this.calculateOptionalIngredients();
+    
     return this.chosenIngredients;
   }
 
@@ -202,21 +192,3 @@ export class Recipe {
     });
   }
 }
-
-// let recipe = new Recipe(5);
-// recipe.requestIngredient({ style: "bagel", name: "bread", required: true });
-//recipe.ignoreIngredient({ style: "baguette", name: "bread", required: true });
-// recipe.requestIngredient({
-//   style: "scrambled egg",
-//   name: "egg",
-//   required: false
-// });
-// recipe.ignoreIngredient({
-//   style: "scrambled egg",
-//   name: "egg",
-//   required: false
-// });
-// recipe.setDietPreference('vegan');
-// recipe.calculateRequiredIngredients();
-// recipe.calculateOptionalIngredients();
-// console.log(recipe.recipe());

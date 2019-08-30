@@ -1,13 +1,13 @@
 "use strict";
 import { APIGatewayProxyEvent, Context } from "aws-lambda";
 
-import { Recipe, RecipeItem } from "./recipe";
-import { UserIngredients } from "./userIngredients"
-import { ingredients } from "./config";
-import { getEventData, getUserKey } from "./handlerHelperMethods";
-import { eventFilter, eventFilterDeleteIngredientStyle } from "./eventFilter";
+import { Recipe } from "./recipe";
+import { UserIngredients } from "./userIngredients";
+import { defaultIngredients } from "./config";
 
-import { Ingredient, Response } from "./types";
+import { EventSanitizer } from "./eventSanitizer";
+
+import { Response, RecipeItem } from "./types";
 
 const DEFAULT_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -18,10 +18,13 @@ export const addIngredient = async (
   event: APIGatewayProxyEvent,
   _context: Context
 ): Promise<Response> => {
-  const { ingredient, userKey }  = eventFilter(event);
-  const newIngredient = await new UserIngredients(
-    userKey
-  ).createIngredient(ingredient);
+  const { ingredient, userKey } = new EventSanitizer(
+    event
+  ).eventFilterAddIngredient();
+
+  const newIngredient = await new UserIngredients(userKey).createIngredient(
+    ingredient
+  );
 
   return {
     statusCode: 200,
@@ -36,10 +39,11 @@ export const deleteIngredientStyle = async (
   event: APIGatewayProxyEvent,
   _context: Context
 ): Promise<Response> => {
-  const { name, style, userKey } = eventFilterDeleteIngredientStyle(event);
-  const result = await new UserIngredients(
-    userKey
-  ).deleteUserIngredientStyle(
+  const { name, style, userKey } = new EventSanitizer(
+    event
+  ).eventFilterDeleteIngredientStyle();
+
+  const result = await new UserIngredients(userKey).deleteUserIngredientStyle(
     name,
     style
   );
@@ -63,13 +67,13 @@ export const deleteIngredientStyle = async (
   };
 };
 
-
 export const getIngredientsByUserId = async (
-  event: APIGatewayProxyEvent,
+  event: APIGatewayProxyEvent
 ): Promise<Response> => {
-  const headers = getEventData(event.headers);
-  const userKey = getUserKey(headers);
-  const userIngredients = await new UserIngredients(userKey).getAll()
+  const { userKey } = new EventSanitizer(event).listIngredientsParams();
+
+  const userIngredients = await new UserIngredients(userKey).getAll();
+
   return {
     statusCode: 200,
     body: JSON.stringify({
@@ -79,52 +83,35 @@ export const getIngredientsByUserId = async (
   };
 };
 
-export const getIngredients = async (
+export const getNewRecipe = async (
   event: APIGatewayProxyEvent,
   _context: Context
 ): Promise<Response> => {
-  const body =
-    typeof event.body === "string" ? JSON.parse(event.body) : event.body;
-  const headers =
-    typeof event.headers === "string"
-      ? JSON.parse(event.headers)
-      : event.headers;
+  const {
+    userKey,
+    numOfOptionalIngredients,
+    requestedIngredients,
+    ignoredIngredients,
+    dietPreference
+  } = new EventSanitizer(event).eventFilterNewRecipe();
 
-  console.log("Request Headers:", headers);
-  console.log("Request Body", body);
-
-    const userKey = headers["X-User-Key"] || headers["x-user-key"] || "demo";
-  const userRows = await new UserIngredients(userKey).getAll()
-  console.log('userRows', userRows);
+  const userIngredients = await new UserIngredients(userKey).getAll();
 
   const recipeItems =
-    userRows.Items.length === 0 ? ingredients() : userRows.Items;
+    userIngredients.Items.length === 0
+      ? defaultIngredients()
+      : userIngredients.Items;
 
-  if (userRows.Items.length === 0) {
-    const ingredientsData: Array<Ingredient> = ingredients();
-
-    for (let i: number = 0; i <= ingredientsData.length - 1; i++) {
-      await new UserIngredients(userKey).createIngredient(ingredientsData[i]);
-    }
-  }
-
-  const recipe = new Recipe(recipeItems, body.numOfOptionalIngredients);
-  recipe.setDietPreference(body.dietPreference);
-
-  if (body.ignoredIngredients && body.ignoredIngredients.length > 0) {
-    body.ignoredIngredients.forEach((i: RecipeItem) =>
-      recipe.ignoreIngredient(i)
+  if (userIngredients.Items.length === 0) {
+    await new UserIngredients(userKey).bulkCreateIngredients(
+      defaultIngredients()
     );
   }
 
-  if (body.requestedIngredients && body.requestedIngredients.length > 0) {
-    body.requestedIngredients.forEach((i: RecipeItem) =>
-      recipe.requestIngredient(i)
-    );
-  }
-
-  recipe.calculateRequiredIngredients();
-  recipe.calculateOptionalIngredients();
+  const recipe = new Recipe(recipeItems, numOfOptionalIngredients);
+  recipe.setDietPreference(dietPreference);
+  ignoredIngredients.map((i: RecipeItem) => recipe.ignoreIngredient(i));
+  requestedIngredients.map((i: RecipeItem) => recipe.requestIngredient(i));
 
   return {
     statusCode: 200,
