@@ -4,6 +4,7 @@ const dynamodb = require("serverless-dynamodb-client");
 
 import { Recipe, RecipeItem } from "./recipe";
 import { ingredients } from "./config";
+import { getEventData, getUserKey } from "./handlerHelperMethods";
 import { DynamoResponse, Ingredient, Response } from "./types";
 
 const dynamoDbClient = dynamodb.doc;
@@ -142,6 +143,22 @@ export const removeIngredient = async (
     statusCode: 200,
     body: JSON.stringify({
       ingredients: {}
+    }),
+    headers: DEFAULT_HEADERS
+  };
+};
+
+
+export const getIngredientsByUserId = async (
+  event: APIGatewayProxyEvent,
+): Promise<Response> => {
+  const headers = getEventData(event.headers);
+  const userKey = getUserKey(headers);
+  const userIngredients = await getUserIngredientsFromDynamo(userKey);
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      ingredients: userIngredients.Items
     }),
     headers: DEFAULT_HEADERS
   };

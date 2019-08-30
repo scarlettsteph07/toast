@@ -21,7 +21,7 @@ frameworkVersion: ">=1.44.0"
 plugins:
   - serverless-webpack
   - serverless-dynamodb-local
-  - serverless-offline #serverless-offline needs to be last in the list 
+  - serverless-offline #serverless-offline needs to be last in the list
 
 provider:
   name: aws
@@ -95,23 +95,32 @@ custom:
 functions:
   removeIngredient:
     handler: handler.removeIngredient
-    
+
     events:
       - http:
           path: ingredients
           method: delete
           cors: true
       # - cloudwatchLog: '/aws/lambda/removeIngredient'
-  
+
   addIngredient:
     handler: handler.addIngredient
-    
+
     events:
       - http:
           path: ingredients/new
           method: post
           cors: true
       # - cloudwatchLog: '/aws/lambda/newIngredient'
+
+  getIngredientsByUserId:
+    handler: handler.getIngredientsByUserId
+
+    events:
+      - http:
+          path: getIngredientsByUserId/ #TBD
+          method: post
+          cors: true
 
   getIngredients:
     handler: handler.getIngredients
