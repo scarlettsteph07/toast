@@ -5,16 +5,15 @@ import {
   DeleteIngredientStyleEvent,
 } from "./types";
 
-const parseBody = (event: APIGatewayProxyEvent): any => {
-  return typeof event.body === "string"
-      ? JSON.parse(event.body)
-      : event.body;
-}
-
-const parseHeaders = (event: APIGatewayProxyEvent): any => {
-  return typeof event.headers === "string"
+const parseEvent = (event: APIGatewayProxyEvent): any => {
+  return {
+    headers: typeof event.headers === "string"
     ? JSON.parse(event.headers)
-    : event.headers;
+    : event.headers,
+    body: typeof event.body === "string"
+      ? JSON.parse(event.body)
+      : event.body
+  }
 }
 
 const getUserKey = (headers: any): string => {
@@ -22,8 +21,7 @@ const getUserKey = (headers: any): string => {
 }
 
 export const eventFilter = (event: APIGatewayProxyEvent): AddIngredientEvent  => {
-  const body = parseBody(event);
-  const headers= parseHeaders(event);
+  const { body, headers } = parseEvent(event);
 
   return {
     ingredient: {
@@ -40,8 +38,7 @@ export const eventFilter = (event: APIGatewayProxyEvent): AddIngredientEvent  =>
 export const eventFilterDeleteIngredientStyle = (
   event: APIGatewayProxyEvent
 ) : DeleteIngredientStyleEvent => {
-  const body = parseBody(event);
-  const headers= parseHeaders(event);
+  const { body, headers } = parseEvent(event);
 
   return {
     name: body.name,
