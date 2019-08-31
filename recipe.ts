@@ -98,7 +98,6 @@ export class Recipe {
     this.chosenIngredients = this.chosenIngredients.concat(
       this.requestRequiredItems
     );
-    console.log("this.chosenIngredients", this.chosenIngredients);
     if (this.requiredIngredients.length == this.requestRequiredItems.length) {
       return;
     }
@@ -120,8 +119,6 @@ export class Recipe {
 
     const numRequiredMissing: number =
       this.requiredIngredients.length - this.requestRequiredItems.length;
-
-    console.log("numRequiredMissing", numRequiredMissing);
 
     this.requiredIngredients = this.requiredIngredients.filter(i => {
       if (this.requestRequiredItems.map(x => x.name).includes(i.name)) {

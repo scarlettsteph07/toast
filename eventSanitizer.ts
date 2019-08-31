@@ -33,7 +33,11 @@ export class EventSanitizer {
   }
 
   getUserKey(): string {
-    return this.headers["X-User-Key"] || this.headers["x-user-key"];
+    const userKey = this.headers["X-User-Key"] || this.headers["x-user-key"];
+    if (!userKey) {
+      throw new Error({ message: 'User Key is required'});
+    }
+    return userKey;
   }
 
   listIngredientsParams(): BaseIngredientEvent {

@@ -25,12 +25,12 @@ async (event: APIGatewayProxyEvent, _context: Context) => {
       body: JSON.stringify(data),
     }
   } catch (e) {
-    console.log('e:e:e: ', e);
+    console.error('error: ', e);
     return {
       statusCode: '400',
       headers: DEFAULT_HEADERS,
       body: JSON.stringify({
-        error: e,
+        error: `${e.property ? e.property.split(".")[1] + ' ' : ''}${e.message}`,
       }),
     }
   }
