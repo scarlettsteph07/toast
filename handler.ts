@@ -6,42 +6,19 @@ import { UserIngredients } from "./userIngredients";
 import { defaultIngredients } from "./config";
 
 import { EventSanitizer } from "./eventSanitizer";
-import { validateSchema } from "./schema";
+import { RequestValidator } from "./schema";
 import { eventWrapper } from './utils';
 
-import { Response, RecipeItem } from "./types";
+import { RecipeItem } from "./types";
 
-const DEFAULT_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Credentials": true
-};
-
-const validate = validateSchema`
-  type: object
-  properties:
-    name:
-      type: string
-    style:
-      type: array
-      items:
-        type: string
-    type:
-      type: array
-      items:
-        type: string
-    required:
-      type: boolean
-  required:
-    - name
-    - style
-`;
-
-export const addIngredientEvent = async (
-  event: APIGatewayProxyEvent, _context: Context) => {
+const addIngredientEvent = async (
+  event: APIGatewayProxyEvent,
+  _context: Context
+): Promise<any> => {
   const { ingredient, userKey } = new EventSanitizer(
     event
   ).eventFilterAddIngredient();
-  validate(ingredient);
+  new RequestValidator(ingredient).validateAddIngredient();
 
   return await new UserIngredients(userKey).createIngredient(
     ingredient
@@ -50,58 +27,36 @@ export const addIngredientEvent = async (
 
 export const addIngredient = eventWrapper(addIngredientEvent);
 
-export const deleteIngredientStyle = async (
+const deleteIngredientStyleEvent = async (
   event: APIGatewayProxyEvent,
   _context: Context
-): Promise<Response> => {
+): Promise<any> => {
   const { name, style, userKey } = new EventSanitizer(
     event
   ).eventFilterDeleteIngredientStyle();
+  new RequestValidator({ name, style }).validateDeleteIngredientStyle();
 
-  const result = await new UserIngredients(userKey).deleteUserIngredientStyle(
+  return await new UserIngredients(userKey).deleteUserIngredientStyle(
     name,
     style
   );
-
-  if (Object.keys(result).length === 0 && result.constructor === Object) {
-    return {
-      statusCode: 404,
-      body: JSON.stringify({
-        error: "Item not found"
-      }),
-      headers: DEFAULT_HEADERS
-    };
-  }
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      ingredients: {}
-    }),
-    headers: DEFAULT_HEADERS
-  };
 };
 
-export const getIngredientsByUserId = async (
+export const deleteIngredientStyle = eventWrapper(deleteIngredientStyleEvent);
+
+const getIngredientsByUserIdEvent = async (
   event: APIGatewayProxyEvent
-): Promise<Response> => {
+): Promise<any> => {
   const { userKey } = new EventSanitizer(event).listIngredientsParams();
-
-  const userIngredients = await new UserIngredients(userKey).getAll();
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      ingredients: userIngredients.Items
-    }),
-    headers: DEFAULT_HEADERS
-  };
+  return await new UserIngredients(userKey).getAll();
 };
 
-export const getNewRecipe = async (
+export const getIngredientsByUserId = eventWrapper(getIngredientsByUserIdEvent)
+
+export const getNewRecipeEvent = async (
   event: APIGatewayProxyEvent,
   _context: Context
-): Promise<Response> => {
+): Promise<any> => {
   const {
     userKey,
     numOfOptionalIngredients,
@@ -110,14 +65,20 @@ export const getNewRecipe = async (
     dietPreference
   } = new EventSanitizer(event).eventFilterNewRecipe();
 
+  new RequestValidator({
+    numOfOptionalIngredients,
+    requestedIngredients,
+    ignoredIngredients
+  }).validateGetNewRecipeParams();
+
   const userIngredients = await new UserIngredients(userKey).getAll();
 
   const recipeItems =
-    userIngredients.Items.length === 0
+    userIngredients.length === 0
       ? defaultIngredients()
-      : userIngredients.Items;
+      : userIngredients;
 
-  if (userIngredients.Items.length === 0) {
+  if (userIngredients.length === 0) {
     await new UserIngredients(userKey).bulkCreateIngredients(
       defaultIngredients()
     );
@@ -128,11 +89,10 @@ export const getNewRecipe = async (
   ignoredIngredients.map((i: RecipeItem) => recipe.ignoreIngredient(i));
   requestedIngredients.map((i: RecipeItem) => recipe.requestIngredient(i));
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      ingredients: recipe.recipe()
-    }),
-    headers: DEFAULT_HEADERS
-  };
+  return await new Promise((resolve, reject) => {
+    resolve(recipe.recipe());
+    reject({error: "error generating new recipe"});
+  });
 };
+
+export const getNewRecipe = eventWrapper(getNewRecipeEvent)

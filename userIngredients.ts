@@ -18,7 +18,7 @@ export class UserIngredients {
     this.userKey = userKey;
   }
 
-  getAll(): Promise<DynamoQueryResponse> {
+  async getAll(): Promise<any> {
     const params = {
       TableName: TABLE_NAME,
       KeyConditionExpression: "#userId = :userId",
@@ -29,7 +29,23 @@ export class UserIngredients {
         ":userId": this.userKey
       }
     };
-    return dynamoDbClient.query(params).promise();
+    const dynamoResponse = await dynamoDbClient.query(params).promise();
+
+    return new Promise((resolve, reject) => {
+      resolve(
+        dynamoResponse["Items"].map(
+          (item: any) => {
+            return {
+              name: item.name,
+              style: item.style,
+              type: item.type,
+              required: item.required
+            };
+          }
+        )
+      );
+      reject({error: "no results returned"});
+    });
   }
 
   getIngredientNameParams(name: string): IngredientNameParams {
@@ -76,38 +92,44 @@ export class UserIngredients {
     style: string
   ): Promise<DynamoQueryResponse> {
     const ingredient = await this.getItemByName(name);
-    console.log(ingredient);
     if (
       Object.keys(ingredient).length === 0 &&
       ingredient.constructor === Object
     ) {
-      return ingredient;
+      return new Promise((resolve, reject) => {
+        resolve(ingredient);
+        reject({error: "no results returned"});
+      });
     }
     const styles = ingredient.Item.style;
-    console.log(ingredient);
     if (styles.length === 0) {
-      console.log("deleted item", this.getIngredientNameParams(name));
       return dynamoDbClient
         .delete(this.getIngredientNameParams(name))
         .promise();
-    } else {
-      const updateParams = {
-        UpdateExpression: "set #style = :styles",
-        ExpressionAttributeNames: {
-          "#style": "style"
-        },
-        ExpressionAttributeValues: {
-          ":styles": styles.filter((s: String) => s !== style)
-        },
-        ReturnValues: "UPDATED_NEW",
-        TableName: TABLE_NAME,
-        Key: {
-          userId: this.userKey,
-          name
-        }
-      };
-      return dynamoDbClient.update(updateParams).promise();
     }
+
+    const updateParams = {
+      UpdateExpression: "set #style = :styles",
+      ExpressionAttributeNames: {
+        "#style": "style"
+      },
+      ExpressionAttributeValues: {
+        ":styles": styles.filter((s: String) => s !== style)
+      },
+      ReturnValues: "ALL_NEW",
+      TableName: TABLE_NAME,
+      Key: {
+        userId: this.userKey,
+        name
+      }
+    };
+
+    const res = await dynamoDbClient.update(updateParams).promise();
+
+    return new Promise((resolve, reject) => {
+      resolve(res["Attributes"]);
+      reject({error: "error updating from dynamo"});
+    });
   }
 
   async createIngredient(ingredient: Ingredient): Promise<DynamoGetResponse> {
@@ -120,6 +142,7 @@ export class UserIngredients {
       ReturnValues: "ALL_OLD"
     };
     const res = await dynamoDbClient.put(params).promise();
+
     return new Promise((resolve, reject) => {
       resolve(res["Attributes"]);
       reject({error: "blah"});
