@@ -1,12 +1,12 @@
-
-import { validate } from 'jsonschema'
-import yml from 'js-yaml'
+import { validate } from "jsonschema";
+import yml from "js-yaml";
 
 export const validateSchema = (interpolate: TemplateStringsArray): Function => {
   // obtain schema definition
   const definition = interpolate[0];
   // load the yaml
   const schema = yml.safeLoad(definition);
+  console.log(JSON.stringify(schema));
   // return a validation function
   return (src: object) => {
     const { errors } = validate(src, schema);
@@ -15,14 +15,14 @@ export const validateSchema = (interpolate: TemplateStringsArray): Function => {
     }
     // valid return original request
     return src;
-  }
-}
+  };
+};
 
 export class RequestValidator {
-  payload: any
+  payload: any;
 
   constructor(payload: any) {
-    this.payload = payload
+    this.payload = payload;
   }
 
   validateAddIngredient() {
@@ -91,6 +91,9 @@ export class RequestValidator {
               type: string
             style:
               type: string
+          required:
+          - name
+          - style
       ignoredIngredients:
         type: array
         items:
@@ -100,6 +103,9 @@ export class RequestValidator {
               type: string
             style:
               type: string
+          required:
+          - name
+          - style
       dietPreference:
         type: string
     required:
