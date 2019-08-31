@@ -19,10 +19,10 @@ curl -X POST --header 'X-User-Key: 8C3B6E09-3ECA-420B-A33C-092BEE7F7D0F' --data 
 
 # Get new recipe ingredients:
 ```
-curl -X POST http://localhost:3000/recipes  --header "X-User-Key: 34444" --data '{"dietType": "vegetarian", "numOfOptionalIngredients": 5, "requestedIngredients": [], "ignoredIngredients": [], "dietPreference": "vegan"}'
+curl -X POST http://localhost:3000/recipes  --header "X-User-Key: 34444" --data '{"numOfOptionalIngredients": 5, "requestedIngredients": [], "ignoredIngredients": [], "dietPreference": "vegan"}'
 ```
 
 * Get user ingredients
 ```
-curl -X GET http://localhost:3000/ingredients  --header "X-User-Key: 34444" 
+curl -X GET http://localhost:3000/ingredients  --header "X-User-Key: 34444"
 ```
