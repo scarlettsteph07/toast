@@ -19,6 +19,12 @@ export type Ingredient = {
   required: Boolean;
 };
 
+export type RecipeItem = {
+  name: string;
+  style: string;
+  required?: boolean;
+};
+
 export type UserIngredient = 
   BaseIngredientEvent & Ingredient;
 
@@ -27,6 +33,11 @@ export type DynamoQueryResponse = {
   Count: number;
   ScannedCount: number;
 };
+
+export type DynamoResponse = {
+  Item: Item;
+};
+
 
 export type IngredientNameParams = {
   TableName: string;
@@ -61,12 +72,6 @@ export type IngredientTemplate = {
   style: Array<string>;
   type: Array<string>;
   required: Boolean;
-};
-
-export type RecipeItem = {
-  name: string;
-  style: string;
-  required?: boolean;
 };
 
 export type DietPreference = "carnivore" | "vegan" | "vegetarian";

@@ -156,10 +156,10 @@ export class Recipe {
     }
   }
 
-  recipe() {
+  recipe(): Array<RecipeItem> {
     this.calculateRequiredIngredients();
     this.calculateOptionalIngredients();
-    
+
     return this.chosenIngredients;
   }
 

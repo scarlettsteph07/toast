@@ -5,7 +5,8 @@ import {
   IngredientNameParams,
   Ingredient,
   IngredientTemplate,
-  UserIngredient
+  UserIngredient,
+  DynamoResponse
 } from "./types";
 
 export const TABLE_NAME = "UserIngredients";
@@ -18,7 +19,7 @@ export class UserIngredients {
     this.userKey = userKey;
   }
 
-  async getAll(): Promise<any> {
+  async getAll(): Promise<Array<Ingredient>> {
     const params = {
       TableName: TABLE_NAME,
       KeyConditionExpression: "#userId = :userId",
@@ -79,7 +80,7 @@ export class UserIngredients {
     return await dynamoDbClient.batchWrite(params).promise();
   }
 
-  async getItemByName(name: string): Promise<UserIngredient> {
+  async getItemByName(name: string): Promise<DynamoResponse> {
     // TODO: fix this because its probably broken
     return await dynamoDbClient
       .get(this.getIngredientNameParams(name))
@@ -93,7 +94,7 @@ export class UserIngredients {
       ingredient.constructor === Object
     ) {
       return new Promise((resolve, reject) => {
-        resolve(ingredient);
+        resolve(Object.assign({ userKey: this.userKey }, ingredient["Item"]));
         reject({ error: "no results returned" });
       });
     }

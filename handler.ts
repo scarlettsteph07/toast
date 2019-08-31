@@ -9,10 +9,7 @@ import { EventSanitizer } from "./eventSanitizer";
 import { RequestValidator } from "./schema";
 import { eventWrapper } from "./utils";
 
-import {
-  RecipeItem,
-  UserIngredient
-} from "./types";
+import { RecipeItem, UserIngredient, Ingredient } from "./types";
 
 const addIngredientEvent = async (
   event: APIGatewayProxyEvent,
@@ -44,7 +41,7 @@ export const deleteIngredientStyle = eventWrapper(deleteIngredientStyleEvent);
 
 const getIngredientsByUserIdEvent = async (
   event: APIGatewayProxyEvent
-): Promise<Array<UserIngredient>> => {
+): Promise<Array<Ingredient>> => {
   const { userKey } = new EventSanitizer(event).listIngredientsParams();
   return await new UserIngredients(userKey).getAll();
 };
@@ -54,7 +51,7 @@ export const getIngredientsByUserId = eventWrapper(getIngredientsByUserIdEvent);
 export const getNewRecipeEvent = async (
   event: APIGatewayProxyEvent,
   _context: Context
-): Promise<Array<UserIngredient>> => {
+): Promise<Array<RecipeItem>> => {
   const {
     userKey,
     numOfOptionalIngredients,
@@ -78,8 +75,10 @@ export const getNewRecipeEvent = async (
   const invalidIngredients: Array<RecipeItem> = [];
 
   ignoredIngredients.map((i: RecipeItem) => {
-    const ingredient = recipeItems.find(
-      (r: UserIngredient) => r.name === i.name
+    const ingredient: Ingredient | undefined  = recipeItems.find(
+      (r: Ingredient): boolean => {
+        return r.name === i.name;
+      }
     );
     if (!ingredient) {
       invalidIngredients.push(i);
