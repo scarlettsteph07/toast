@@ -34,14 +34,16 @@ export class UserIngredients {
 
     return new Promise((resolve, reject) => {
       resolve(
-        dynamoResponse["Items"].map((item: any) => {
-          return {
-            name: item.name,
-            style: item.style,
-            type: item.type,
-            required: item.required
-          };
-        })
+        dynamoResponse["Items"].map(
+          (item: Ingredient): Ingredient => {
+            return {
+              name: item.name,
+              style: item.style,
+              type: item.type,
+              required: item.required
+            };
+          }
+        )
       );
       reject({ error: "no results returned" });
     });

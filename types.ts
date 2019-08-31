@@ -4,7 +4,7 @@ export type Response = {
   headers: Object;
 };
 
-export type Item = {
+type Item = {
   name: string;
   style: Array<string>;
   type: Array<string>;
@@ -37,7 +37,6 @@ export type DynamoQueryResponse = {
 export type DynamoResponse = {
   Item: Item;
 };
-
 
 export type IngredientNameParams = {
   TableName: string;

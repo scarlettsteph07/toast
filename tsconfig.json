@@ -9,7 +9,8 @@
     "strict": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "outDir": "lib"
+    "outDir": "lib",
+    "no-any": true
   },
   "exclude": ["node_modules"]
 }
