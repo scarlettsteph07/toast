@@ -9,12 +9,15 @@ import { EventSanitizer } from "./eventSanitizer";
 import { RequestValidator } from "./schema";
 import { eventWrapper } from "./utils";
 
-import { RecipeItem } from "./types";
+import {
+  RecipeItem,
+  UserIngredient
+} from "./types";
 
 const addIngredientEvent = async (
   event: APIGatewayProxyEvent,
   _context: Context
-): Promise<any> => {
+): Promise<UserIngredient> => {
   const { ingredient, userKey } = new EventSanitizer(
     event
   ).eventFilterAddIngredient();
@@ -28,23 +31,20 @@ export const addIngredient = eventWrapper(addIngredientEvent);
 const deleteIngredientStyleEvent = async (
   event: APIGatewayProxyEvent,
   _context: Context
-): Promise<any> => {
+): Promise<UserIngredient> => {
   const { name, style, userKey } = new EventSanitizer(
     event
   ).eventFilterDeleteIngredientStyle();
   new RequestValidator({ name, style }).validateDeleteIngredientStyle();
 
-  return await new UserIngredients(userKey).deleteUserIngredientStyle(
-    name,
-    style
-  );
+  return await new UserIngredients(userKey).deleteByStyle(name, style);
 };
 
 export const deleteIngredientStyle = eventWrapper(deleteIngredientStyleEvent);
 
 const getIngredientsByUserIdEvent = async (
   event: APIGatewayProxyEvent
-): Promise<any> => {
+): Promise<Array<UserIngredient>> => {
   const { userKey } = new EventSanitizer(event).listIngredientsParams();
   return await new UserIngredients(userKey).getAll();
 };
@@ -54,7 +54,7 @@ export const getIngredientsByUserId = eventWrapper(getIngredientsByUserIdEvent);
 export const getNewRecipeEvent = async (
   event: APIGatewayProxyEvent,
   _context: Context
-): Promise<any> => {
+): Promise<Array<UserIngredient>> => {
   const {
     userKey,
     numOfOptionalIngredients,
@@ -74,16 +74,17 @@ export const getNewRecipeEvent = async (
   const recipeItems =
     userIngredients.length === 0 ? defaultIngredients() : userIngredients;
 
-  const invalidStyles = [];
-  const invalidIngredients = [];
+  const invalidStyles: Array<RecipeItem> = [];
+  const invalidIngredients: Array<RecipeItem> = [];
 
-  ignoredIngredients.map((i: any) => {
-    const ingredient = recipeItems.find((r: any) => r.name === i.name);
+  ignoredIngredients.map((i: RecipeItem) => {
+    const ingredient = recipeItems.find(
+      (r: UserIngredient) => r.name === i.name
+    );
     if (!ingredient) {
       invalidIngredients.push(i);
     } else {
       if (!ingredient.style.includes(i.style)) {
-        console.log(i);
         invalidStyles.push({
           name: i.name,
           style: i.style

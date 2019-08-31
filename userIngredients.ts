@@ -2,10 +2,10 @@ const dynamodb = require("serverless-dynamodb-client");
 
 import {
   DynamoQueryResponse,
-  DynamoGetResponse,
   IngredientNameParams,
   Ingredient,
-  IngredientTemplate
+  IngredientTemplate,
+  UserIngredient
 } from "./types";
 
 export const TABLE_NAME = "UserIngredients";
@@ -33,18 +33,16 @@ export class UserIngredients {
 
     return new Promise((resolve, reject) => {
       resolve(
-        dynamoResponse["Items"].map(
-          (item: any) => {
-            return {
-              name: item.name,
-              style: item.style,
-              type: item.type,
-              required: item.required
-            };
-          }
-        )
+        dynamoResponse["Items"].map((item: any) => {
+          return {
+            name: item.name,
+            style: item.style,
+            type: item.type,
+            required: item.required
+          };
+        })
       );
-      reject({error: "no results returned"});
+      reject({ error: "no results returned" });
     });
   }
 
@@ -81,16 +79,14 @@ export class UserIngredients {
     return await dynamoDbClient.batchWrite(params).promise();
   }
 
-  async getItemByName(name: string): Promise<DynamoGetResponse> {
+  async getItemByName(name: string): Promise<UserIngredient> {
+    // TODO: fix this because its probably broken
     return await dynamoDbClient
       .get(this.getIngredientNameParams(name))
       .promise();
   }
 
-  async deleteUserIngredientStyle(
-    name: string,
-    style: string
-  ): Promise<DynamoQueryResponse> {
+  async deleteByStyle(name: string, style: string): Promise<UserIngredient> {
     const ingredient = await this.getItemByName(name);
     if (
       Object.keys(ingredient).length === 0 &&
@@ -98,7 +94,7 @@ export class UserIngredients {
     ) {
       return new Promise((resolve, reject) => {
         resolve(ingredient);
-        reject({error: "no results returned"});
+        reject({ error: "no results returned" });
       });
     }
     const styles = ingredient.Item.style;
@@ -128,11 +124,11 @@ export class UserIngredients {
 
     return new Promise((resolve, reject) => {
       resolve(res["Attributes"]);
-      reject({error: "error updating from dynamo"});
+      reject({ error: "error updating from dynamo" });
     });
   }
 
-  async createIngredient(ingredient: Ingredient): Promise<DynamoGetResponse> {
+  async createIngredient(ingredient: Ingredient): Promise<UserIngredient> {
     const params = {
       TableName: TABLE_NAME,
       Item: {
@@ -145,8 +141,7 @@ export class UserIngredients {
 
     return new Promise((resolve, reject) => {
       resolve(res["Attributes"]);
-      reject({error: "blah"});
+      reject({ error: "blah" });
     });
-
   }
 }

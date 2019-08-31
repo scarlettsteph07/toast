@@ -35,7 +35,7 @@ export class EventSanitizer {
   getUserKey(): string {
     const userKey = this.headers["X-User-Key"] || this.headers["x-user-key"];
     if (!userKey) {
-      throw new Error({ message: 'User Key is required'});
+      throw new Error('User Key is required');
     }
     return userKey;
   }

@@ -28,13 +28,6 @@ export type DynamoQueryResponse = {
   ScannedCount: number;
 };
 
-export type DynamoGetResponse = {
-  Items: Array<Item>;
-  Count: number;
-  ScannedCount: number;
-  Item: Item;
-};
-
 export type IngredientNameParams = {
   TableName: string;
   Key: {
@@ -73,7 +66,7 @@ export type IngredientTemplate = {
 export type RecipeItem = {
   name: string;
   style: string;
-  required: boolean;
+  required?: boolean;
 };
 
 export type DietPreference = "carnivore" | "vegan" | "vegetarian";
