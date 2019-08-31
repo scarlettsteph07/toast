@@ -6,7 +6,6 @@ export const validateSchema = (interpolate: TemplateStringsArray): Function => {
   const definition = interpolate[0];
   // load the yaml
   const schema = yml.safeLoad(definition);
-  console.log(JSON.stringify(schema));
   // return a validation function
   return (src: object) => {
     const { errors } = validate(src, schema);
