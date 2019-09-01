@@ -10,7 +10,6 @@ const isOffline = function() {
 };
 
 const dynamodb = () => {
-  console.log('initialized dynamo db');
   return isOffline()
       ? new AWS.DynamoDB.DocumentClient(options)
       : new AWS.DynamoDB.DocumentClient();

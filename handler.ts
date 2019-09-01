@@ -58,7 +58,6 @@ export const getNewRecipeEvent = async (
     ignoredIngredients,
     dietPreference
   } = new EventSanitizer(event).eventFilterNewRecipe();
-
   new RequestValidator({
     numOfOptionalIngredients,
     requestedIngredients,
@@ -68,9 +67,8 @@ export const getNewRecipeEvent = async (
   const { UserIngredients } = require("./userIngredients");
   let userIngredients;
   try {
-    await new UserIngredients(userKey).getAll();
+    userIngredients = await new UserIngredients(userKey).getAll();
   } catch(error) {
-    console.error('e:', error)
     userIngredients = [];
   }
   const recipeItems =
@@ -80,7 +78,7 @@ export const getNewRecipeEvent = async (
   const invalidIngredients: Array<RecipeItem> = [];
 
   ignoredIngredients.map((i: RecipeItem) => {
-    const ingredient: Ingredient | undefined = recipeItems.find(
+    const ingredient: Ingredient = recipeItems.find(
       (r: Ingredient): boolean => {
         return r.name === i.name;
       }
