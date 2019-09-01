@@ -19,22 +19,18 @@ const body = {
   dietPreference: "vegan"
 };
 
-// it("should error when requested ingredients is not an array", async () => {});
-beforeEach(async done => {
-  //get requires env vars
-  done();
+beforeEach(() => {
+  AWSMock.setSDKInstance(AWS);
+  AWSMock.mock("DynamoDB.DocumentClient", "batchWrite", () => {
+    return Promise.resolve({});
+  });
+  AWSMock.mock("DynamoDB.DocumentClient", "query", () => {
+    return Promise.resolve({});
+  });
 });
 
 describe("invalid new recipe events", () => {
   it("should error when numOptionalIngredients is not a number", async () => {
-    AWSMock.setSDKInstance(AWS);
-    AWSMock.mock("DynamoDB.DocumentClient", "batchWrite", () => {
-      return Promise.resolve({ foo: "expectedError" });
-    });
-    AWSMock.mock("DynamoDB.DocumentClient", "query", () => {
-      return Promise.resolve({});
-    });
-
     const handler = require("./handler");
     const payload = {
       body: Object.assign({}, body, {
@@ -54,58 +50,39 @@ describe("invalid new recipe events", () => {
   });
 
   it("should error when user key header is missing", async () => {
-    AWSMock.setSDKInstance(AWS);
-    AWSMock.mock(
-      "DynamoDB.DocumentClient",
-      "batchWrite",
-      (params: BatchWriteItemInput) => {
-        return Promise.resolve(params);
-      }
-    );
-    AWSMock.mock(
-      "DynamoDB.DocumentClient",
-      "query",
-      (params: any, callback: Function) => {
-        return Promise.resolve({});
-      }
-    );
     const handler = require("./handler");
     try {
-      await handler.getNewRecipeEvent({ body }, {})
-    } catch(e) {
+      await handler.getNewRecipeEvent({ body }, {});
+    } catch (e) {
       expect(e).to.have.property("message", "User Key is required");
     }
-  });
-
-  afterEach(function() {
-    //sinon.restore();
-    //AWSMock.restore();
   });
 });
 
 describe("valid new recipe events", () => {
-  it("should return two required items numIngredients is 0", async () => {
-    // Overwriting DynamoDB.DocumentClient.get()
+  beforeEach(() => {
     sinon.stub(Math, "random").returns(0);
-    AWSMock.setSDKInstance(AWS);
-    AWSMock.mock(
+    //AWSMock.setSDKInstance(AWS);
+    AWSMock.remock(
       "DynamoDB.DocumentClient",
       "batchWrite",
       (params: BatchWriteItemInput, callback: Function) => {
         return Promise.resolve({ foo: "expectedError" });
       }
     );
-    AWSMock.mock(
+    AWSMock.remock(
       "DynamoDB.DocumentClient",
       "query",
       (params: any, callback: Function) => {
         return Promise.resolve({});
       }
     );
+  });
+
+  it("should return two required items numIngredients is 0", async () => {
+    // Overwriting DynamoDB.DocumentClient.get()
     const handler = require("./handler");
-
     const res = await handler.getNewRecipe({ body, headers }, {});
-
     let responseBody = JSON.parse(res.body);
 
     expect(responseBody[0]).to.eql({
@@ -120,8 +97,43 @@ describe("valid new recipe events", () => {
     });
   });
 
+  it("should return 5 item", async () => {
+    // Overwriting DynamoDB.DocumentClient.get()
+    const handler = require("./handler");
+    const payload = Object.assign({}, body, { numOfOptionalIngredients: 5 });
+    const res = await handler.getNewRecipe({ body: payload, headers }, {});
+    let responseBody = JSON.parse(res.body);
+
+    expect(responseBody[0]).to.eql({
+      style: "avocado",
+      name: "avocado",
+      required: true
+    });
+    expect(responseBody[1]).to.eql({
+      style: "bagel",
+      name: "bread",
+      required: true
+    });
+    expect(responseBody[2]).to.eql({
+      style: "fresh tomato",
+      name: "tomato",
+      required: false
+    });
+    expect(responseBody[3]).to.eql({
+      style: "cilantro",
+      name: "herbs",
+      required: false
+    });
+    expect(responseBody[4]).to.eql({
+      style: "sea salt",
+      name: "salt",
+      required: false
+    });
+    expect(responseBody).to.have.lengthOf(5);
+  });
+
   afterEach(function() {
-    //sinon.restore();
+    sinon.restore();
     //AWSMock.restore();
   });
 });
