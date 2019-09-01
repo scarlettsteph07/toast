@@ -11,18 +11,26 @@ import * as AWSMock from "aws-sdk-mock";
 import * as AWS from "aws-sdk";
 import { BatchWriteItemInput } from "aws-sdk/clients/dynamodb";
 
+AWS.config.update({ region: "us-east-1" });
 let handler: any;
 
 describe("handler", () => {
   it("should mock reading from DocumentClient", async () => {
     // Overwriting DynamoDB.DocumentClient.get()
-    sinon.stub(Math, 'random').returns(0);
+    sinon.stub(Math, "random").returns(0);
     AWSMock.setSDKInstance(AWS);
     AWSMock.mock(
       "DynamoDB.DocumentClient",
       "batchWrite",
       (params: BatchWriteItemInput, callback: Function) => {
         return Promise.resolve({ foo: "expectedError" });
+      }
+    );
+    AWSMock.mock(
+      "DynamoDB.DocumentClient",
+      "query",
+      (params: any, callback: Function) => {
+        return Promise.resolve({});
       }
     );
     handler = require("./handler");
