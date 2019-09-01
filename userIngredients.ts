@@ -1,5 +1,21 @@
-const dynamodb = require("serverless-dynamodb-client");
+const AWS = require("aws-sdk"),
+  options = {
+    region: "localhost",
+    endpoint: "http://localhost:8000"
+  };
 
+const isOffline = function() {
+  // Depends on serverless-offline plugion which adds IS_OFFLINE to process.env when running offline
+  return process.env.IS_OFFLINE;
+};
+
+const dynamodb = () => {
+  return isOffline()
+      ? new AWS.DynamoDB.DocumentClient(options)
+      : new AWS.DynamoDB.DocumentClient();
+};
+
+// console.log(dynamodb);
 import {
   DynamoQueryResponse,
   IngredientNameParams,
@@ -10,7 +26,7 @@ import {
 } from "./types";
 
 export const TABLE_NAME = "UserIngredients";
-const dynamoDbClient = dynamodb.doc;
+const dynamoDbClient = dynamodb();
 
 export class UserIngredients {
   userKey: string;

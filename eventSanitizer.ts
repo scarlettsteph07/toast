@@ -34,8 +34,9 @@ export class EventSanitizer {
 
   getUserKey(): string {
     const userKey = this.headers["X-User-Key"] || this.headers["x-user-key"];
+    console.log("headrs: ", this.headers);
     if (!userKey) {
-      throw new Error('User Key is required');
+      throw new Error("User Key is required");
     }
     return userKey;
   }
@@ -66,10 +67,15 @@ export class EventSanitizer {
   }
 
   eventFilterNewRecipe(): NewRecipeEvent {
+    console.log("body", this.body);
     return {
       userKey: this.getUserKey(),
-      ignoredIngredients: this.body.ignoredIngredients,
-      requestedIngredients: this.body.requestedIngredients,
+      ignoredIngredients: this.body.hasOwnProperty("ignoredIngredients")
+        ? this.body.ignoredIngredients
+        : [],
+      requestedIngredients: this.body.hasOwnProperty("requestedIngredients")
+        ? this.body.requestedIngredients
+        : [],
       numOfOptionalIngredients: this.body.numOfOptionalIngredients,
       dietPreference: this.body.dietPreference
     };
