@@ -2,7 +2,6 @@
 import { APIGatewayProxyEvent, Context } from "aws-lambda";
 
 import { Recipe } from "./recipe";
-// import { UserIngredients } from "./userIngredients";
 import { defaultIngredients } from "./config";
 
 import { EventSanitizer } from "./eventSanitizer";
@@ -19,10 +18,9 @@ const addIngredientEvent = async (
     event
   ).eventFilterAddIngredient();
   new RequestValidator(ingredient).validateAddIngredient();
-  const { UserIngredients } = require("./userIngredients");
   return await new UserIngredients(userKey).createIngredient(ingredient);
 };
-
+const { UserIngredients } = require("./userIngredients");
 export const addIngredient = eventWrapper(addIngredientEvent);
 
 const deleteIngredientStyleEvent = async (
@@ -68,9 +66,13 @@ export const getNewRecipeEvent = async (
   }).validateGetNewRecipeParams();
 
   const { UserIngredients } = require("./userIngredients");
-
-  const userIngredients = await new UserIngredients(userKey).getAll();
-
+  let userIngredients;
+  try {
+    await new UserIngredients(userKey).getAll();
+  } catch(error) {
+    console.error('e:', error)
+    userIngredients = [];
+  }
   const recipeItems =
     userIngredients.length === 0 ? defaultIngredients() : userIngredients;
 
@@ -110,7 +112,6 @@ export const getNewRecipeEvent = async (
       defaultIngredients()
     );
   }
-  console.log("numOfOptionalIngredients:", numOfOptionalIngredients);
   const recipe = new Recipe(recipeItems, numOfOptionalIngredients);
   recipe.setDietPreference(dietPreference);
   ignoredIngredients.map((i: RecipeItem) => recipe.ignoreIngredient(i));

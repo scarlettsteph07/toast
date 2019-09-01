@@ -10,12 +10,12 @@ const isOffline = function() {
 };
 
 const dynamodb = () => {
+  console.log('initialized dynamo db');
   return isOffline()
       ? new AWS.DynamoDB.DocumentClient(options)
       : new AWS.DynamoDB.DocumentClient();
 };
 
-// console.log(dynamodb);
 import {
   DynamoQueryResponse,
   IngredientNameParams,
@@ -49,6 +49,9 @@ export class UserIngredients {
     const dynamoResponse = await dynamoDbClient.query(params).promise();
 
     return new Promise((resolve, reject) => {
+      if (!dynamoResponse.hasOwnProperty("Items")) {
+        reject({ error: "no results returned" });
+      }
       resolve(
         dynamoResponse["Items"].map(
           (item: Ingredient): Ingredient => {
@@ -61,7 +64,6 @@ export class UserIngredients {
           }
         )
       );
-      reject({ error: "no results returned" });
     });
   }
 

@@ -34,7 +34,6 @@ export class EventSanitizer {
 
   getUserKey(): string {
     const userKey = this.headers["X-User-Key"] || this.headers["x-user-key"];
-    console.log("headrs: ", this.headers);
     if (!userKey) {
       throw new Error("User Key is required");
     }
@@ -67,7 +66,6 @@ export class EventSanitizer {
   }
 
   eventFilterNewRecipe(): NewRecipeEvent {
-    console.log("body", this.body);
     return {
       userKey: this.getUserKey(),
       ignoredIngredients: this.body.hasOwnProperty("ignoredIngredients")
