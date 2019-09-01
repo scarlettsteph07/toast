@@ -2,7 +2,7 @@
 import { APIGatewayProxyEvent, Context } from "aws-lambda";
 
 import { Recipe } from "./recipe";
-import { UserIngredients } from "./userIngredients";
+// import { UserIngredients } from "./userIngredients";
 import { defaultIngredients } from "./config";
 
 import { EventSanitizer } from "./eventSanitizer";
@@ -19,7 +19,7 @@ const addIngredientEvent = async (
     event
   ).eventFilterAddIngredient();
   new RequestValidator(ingredient).validateAddIngredient();
-
+  const { UserIngredients } = require("./userIngredients");
   return await new UserIngredients(userKey).createIngredient(ingredient);
 };
 
@@ -33,7 +33,7 @@ const deleteIngredientStyleEvent = async (
     event
   ).eventFilterDeleteIngredientStyle();
   new RequestValidator({ name, style }).validateDeleteIngredientStyle();
-
+  const { UserIngredients } = require("./userIngredients");
   return await new UserIngredients(userKey).deleteByStyle(name, style);
 };
 
@@ -43,6 +43,7 @@ const getIngredientsByUserIdEvent = async (
   event: APIGatewayProxyEvent
 ): Promise<Array<Ingredient>> => {
   const { userKey } = new EventSanitizer(event).listIngredientsParams();
+  const { UserIngredients } = require("./userIngredients");
   return await new UserIngredients(userKey).getAll();
 };
 
@@ -66,6 +67,8 @@ export const getNewRecipeEvent = async (
     ignoredIngredients
   }).validateGetNewRecipeParams();
 
+  const { UserIngredients } = require("./userIngredients");
+
   const userIngredients = await new UserIngredients(userKey).getAll();
 
   const recipeItems =
@@ -75,7 +78,7 @@ export const getNewRecipeEvent = async (
   const invalidIngredients: Array<RecipeItem> = [];
 
   ignoredIngredients.map((i: RecipeItem) => {
-    const ingredient: Ingredient | undefined  = recipeItems.find(
+    const ingredient: Ingredient | undefined = recipeItems.find(
       (r: Ingredient): boolean => {
         return r.name === i.name;
       }
@@ -107,7 +110,7 @@ export const getNewRecipeEvent = async (
       defaultIngredients()
     );
   }
-
+  console.log("numOfOptionalIngredients:", numOfOptionalIngredients);
   const recipe = new Recipe(recipeItems, numOfOptionalIngredients);
   recipe.setDietPreference(dietPreference);
   ignoredIngredients.map((i: RecipeItem) => recipe.ignoreIngredient(i));
