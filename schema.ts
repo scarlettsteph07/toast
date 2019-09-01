@@ -91,18 +91,20 @@ export class RequestValidator {
   }
 
   validateAddIngredient() {
-    return validate(this.payload, validateSchema(addIngredientsSchema));
+    return validateSchema(addIngredientsSchema)(this.payload);
   }
 
   validateDeleteIngredientStyle() {
-    return validate(this.payload, validateSchema(deleteIngredientsSchema));
+    return validateSchema(deleteIngredientsSchema)(this.payload);
   }
 
   validateGetIngredientsByUserId() {
-    return validate(this.payload, validateSchema(addIngredientsSchema));
+    const validator = validateSchema(addIngredientsSchema);
+    return validator(this.payload);
   }
 
   validateGetNewRecipeParams() {
-    return validate(this.payload, validateSchema(getNewRecipeSchema));
+    const validator = validateSchema(getNewRecipeSchema);
+    return validator(this.payload);
   }
 }
