@@ -7,7 +7,7 @@ process.on("unhandledRejection", e => {
 
 import * as AWSMock from "aws-sdk-mock";
 import * as AWS from "aws-sdk";
-import { BatchWriteItemInput } from "aws-sdk/clients/dynamodb";
+import { BatchWriteItemInput, QueryInput } from "aws-sdk/clients/dynamodb";
 
 AWS.config.update({ region: "us-east-1" });
 
@@ -62,21 +62,12 @@ describe("invalid new recipe events", () => {
 describe("valid new recipe events", () => {
   beforeEach(() => {
     sinon.stub(Math, "random").returns(0);
-    //AWSMock.setSDKInstance(AWS);
-    AWSMock.remock(
-      "DynamoDB.DocumentClient",
-      "batchWrite",
-      (params: BatchWriteItemInput, callback: Function) => {
-        return Promise.resolve({ foo: "expectedError" });
-      }
-    );
-    AWSMock.remock(
-      "DynamoDB.DocumentClient",
-      "query",
-      (params: any, callback: Function) => {
-        return Promise.resolve({});
-      }
-    );
+    AWSMock.remock("DynamoDB.DocumentClient", "batchWrite", () => {
+      return Promise.resolve({ foo: "expectedError" });
+    });
+    AWSMock.remock("DynamoDB.DocumentClient", "query", () => {
+      return Promise.resolve({});
+    });
   });
 
   it("should return two required items numIngredients is 0", async () => {
@@ -130,6 +121,55 @@ describe("valid new recipe events", () => {
       required: false
     });
     expect(responseBody).to.have.lengthOf(5);
+  });
+
+  it("should return items from dynamo db if they exist", async () => {
+    const returnData = (params: QueryInput): any => {
+      expect(params["TableName"]).to.eql("UserIngredients");
+      expect(params["KeyConditionExpression"]).to.eql("#userId = :userId");
+      expect(params["ExpressionAttributeNames"]).to.eql({
+        "#userId": "userId"
+      });
+      return Promise.resolve({
+        Items: [
+          {
+            name: "weed",
+            style: ["smoke", "eat", "vape"],
+            required: true,
+            type: ["indica", "cbd", "sativa"]
+          },
+          {
+            name: "weed",
+            style: ["smoke", "eat", "vape"],
+            required: true,
+            type: ["indica", "cbd", "sativa"]
+          }
+        ]
+      });
+    };
+    AWSMock.remock("DynamoDB.DocumentClient", "query", returnData);
+
+    const payload = Object.assign({}, body, {
+      dietPreference: "indica",
+      numOfOptionalIngredients: 2
+    });
+
+    const handler = require("./handler");
+    const res = await handler.getNewRecipe({ body: payload, headers }, {});
+    const responseBody = JSON.parse(res.body);
+    expect(responseBody).to.eql([
+      {
+        name: "weed",
+        style: "smoke",
+        required: true
+      },
+      {
+        name: "weed",
+        style: "smoke",
+        required: true
+      }
+    ]);
+    expect(responseBody).to.have.lengthOf(2);
   });
 
   afterEach(function() {
