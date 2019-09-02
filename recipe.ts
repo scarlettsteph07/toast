@@ -1,22 +1,21 @@
-import { RecipeItem, IngredientTemplate, DietPreference } from "./types";
+import { RecipeItem, IngredientTemplate, DietPreference } from './types';
 
-const getRandomArrayIndex = (array: Array<string | Object>): number => {
-  return Math.floor(Math.random() * array.length);
-};
+const getRandomArrayIndex = (array: Array<string | object>): number =>
+  Math.floor(Math.random() * array.length);
 
 export class Recipe {
-  ingredients: Array<IngredientTemplate>;
-  numOfItems: number;
-  ignoreRequiredItems: Array<RecipeItem>;
-  ignoreOptionalItems: Array<RecipeItem>;
-  requestRequiredItems: Array<RecipeItem>;
-  requestOptionalItems: Array<RecipeItem>;
-  chosenIngredients: Array<RecipeItem>;
-  requiredIngredients: Array<IngredientTemplate>;
-  optionalIngredients: Array<IngredientTemplate>;
-  dietPreference: DietPreference;
+  private readonly ingredients: IngredientTemplate[];
+  private readonly numOfItems: number;
+  private readonly ignoreRequiredItems: RecipeItem[];
+  private readonly ignoreOptionalItems: RecipeItem[];
+  private readonly requestRequiredItems: RecipeItem[];
+  private readonly requestOptionalItems: RecipeItem[];
+  private chosenIngredients: RecipeItem[];
+  private requiredIngredients: IngredientTemplate[];
+  private optionalIngredients: IngredientTemplate[];
+  private dietPreference: DietPreference;
 
-  constructor(ingredients: Array<IngredientTemplate>, numOfItems: number) {
+  constructor(ingredients: IngredientTemplate[], numOfItems: number) {
     this.ingredients = [...ingredients];
     this.numOfItems = numOfItems;
     this.ignoreRequiredItems = new Array();
@@ -26,37 +25,62 @@ export class Recipe {
     this.chosenIngredients = new Array();
     this.requiredIngredients = [...this.filterRequiredIngredients()];
     this.optionalIngredients = [...this.filterOptionalIngredients()];
-    this.dietPreference = "carnivore";
+    this.dietPreference = 'carnivore';
   }
 
-  setDietPreference(dietPreference: DietPreference): void {
+  public setDietPreference(dietPreference: DietPreference): void {
     this.dietPreference = dietPreference;
     this.requiredIngredients = this.filterRequiredIngredients(
-      this.dietPreference
+      this.dietPreference,
     );
     this.optionalIngredients = this.filterOptionalIngredients(
-      this.dietPreference
+      this.dietPreference,
     );
   }
 
-  calculateOptionalIngredients(): void {
+  public ignoreIngredient(ingredient: RecipeItem) {
+    if (ingredient.required) {
+      this.ignoreRequiredItems.push({ ...ingredient });
+    } else {
+      this.ignoreOptionalItems.push({ ...ingredient });
+    }
+  }
+
+  public recipe(): RecipeItem[] {
+    this.calculateRequiredIngredients();
+    this.calculateOptionalIngredients();
+
+    return this.chosenIngredients;
+  }
+
+  public requestIngredient(itemToRequest: RecipeItem) {
+    if (itemToRequest.required) {
+      this.requestRequiredItems.push({ ...itemToRequest });
+    } else {
+      this.requestOptionalItems.push({ ...itemToRequest });
+    }
+  }
+
+  private calculateOptionalIngredients(): void {
     this.chosenIngredients = this.chosenIngredients.concat(
-      this.requestOptionalItems
+      this.requestOptionalItems,
     );
 
     if (this.numOfItems <= this.chosenIngredients.length) {
       return;
     }
 
-    for (let i: number = 0; i < this.ignoreOptionalItems.length; i++) {
+    for (let i = 0; i < this.ignoreOptionalItems.length; i += 1) {
       this.optionalIngredients.map((x: IngredientTemplate, index: number) => {
         if (
           x.name === this.ignoreOptionalItems[i].name &&
           x.style.includes(this.ignoreOptionalItems[i].style)
         ) {
-          x.style = x.style.filter(y => y != this.ignoreOptionalItems[i].style);
+          x.style = x.style.filter(
+            (y) => y !== this.ignoreOptionalItems[i].style,
+          );
 
-          if (x.style.length == 0) {
+          if (x.style.length === 0) {
             this.optionalIngredients.splice(index, 1);
           }
         }
@@ -66,43 +90,46 @@ export class Recipe {
     const numRequiredMissing: number =
       this.numOfItems - this.chosenIngredients.length;
 
-    this.optionalIngredients = this.optionalIngredients.filter(i => {
-      if (this.requestOptionalItems.map(x => x.name).includes(i.name)) {
-        return;
-      } else {
-        return i;
+    this.optionalIngredients = this.optionalIngredients.filter((i) => {
+      if (
+        this.requestOptionalItems
+          .map((optionalItem) => optionalItem.name)
+          .includes(i.name)
+      ) {
+        return undefined;
       }
+      return i;
     });
 
-    for (let i: number = 0; i < numRequiredMissing; i++) {
+    for (let i = 0; i < numRequiredMissing; i += 1) {
       const randomArrayIndex = getRandomArrayIndex(this.optionalIngredients);
       const ingredientItem: IngredientTemplate = this.optionalIngredients[
         randomArrayIndex
       ];
       const randomStyleIndex: number = getRandomArrayIndex(
-        ingredientItem.style
+        ingredientItem.style,
       );
       const ingredientStyle: string = ingredientItem.style[randomStyleIndex];
 
       this.chosenIngredients.push({
-        style: ingredientStyle,
         name: ingredientItem.name,
-        required: false
+        required: false,
+        style: ingredientStyle,
       });
 
       this.optionalIngredients.splice(randomArrayIndex, 1);
     }
   }
 
-  calculateRequiredIngredients(): void {
+  private calculateRequiredIngredients(): void {
     this.chosenIngredients = this.chosenIngredients.concat(
-      this.requestRequiredItems
+      this.requestRequiredItems,
     );
-    if (this.requiredIngredients.length == this.requestRequiredItems.length) {
+    if (this.requiredIngredients.length === this.requestRequiredItems.length) {
       return;
     }
 
-    for (let i: number = 0; i < this.ignoreRequiredItems.length; i++) {
+    for (let i = 0; i < this.ignoreRequiredItems.length; i += 1) {
       this.requiredIngredients.map((x: IngredientTemplate) => {
         if (
           x.name === this.ignoreRequiredItems[i].name &&
@@ -110,7 +137,7 @@ export class Recipe {
         ) {
           if (x.style.length > 1) {
             x.style = x.style.filter(
-              y => y != this.ignoreRequiredItems[i].style
+              (y) => y !== this.ignoreRequiredItems[i].style,
             );
           }
         }
@@ -120,72 +147,50 @@ export class Recipe {
     const numRequiredMissing: number =
       this.requiredIngredients.length - this.requestRequiredItems.length;
 
-    this.requiredIngredients = this.requiredIngredients.filter(i => {
-      if (this.requestRequiredItems.map(x => x.name).includes(i.name)) {
-        return;
-      } else {
-        return i;
+    this.requiredIngredients = this.requiredIngredients.filter((i) => {
+      if (this.requestRequiredItems.map((x) => x.name).includes(i.name)) {
+        return undefined;
       }
+      return i;
     });
 
-    for (let i: number = 0; i < numRequiredMissing; i++) {
+    for (let i = 0; i < numRequiredMissing; i += 1) {
       const randomArrayIndex = getRandomArrayIndex(this.requiredIngredients);
       const ingredientItem: IngredientTemplate = this.requiredIngredients[
         randomArrayIndex
       ];
       const randomStyleIndex: number = getRandomArrayIndex(
-        ingredientItem.style
+        ingredientItem.style,
       );
       const ingredientStyle: string = ingredientItem.style[randomStyleIndex];
 
       this.chosenIngredients.push({
-        style: ingredientStyle,
         name: ingredientItem.name,
-        required: true
+        required: true,
+        style: ingredientStyle,
       });
 
       this.requiredIngredients.splice(randomArrayIndex, 1);
     }
   }
 
-  ignoreIngredient(ingredient: RecipeItem) {
-    if (ingredient.required) {
-      this.ignoreRequiredItems.push(Object.assign({}, ingredient));
-    } else {
-      this.ignoreOptionalItems.push(Object.assign({}, ingredient));
-    }
+  private filterOptionalIngredients(dietPreference?: DietPreference) {
+    const isDietPreferenceEmpty =
+      typeof dietPreference !== 'undefined' || dietPreference === '';
+    return this.ingredients.filter(
+      (i) =>
+        !i.required &&
+        (isDietPreferenceEmpty || i.type.includes(dietPreference)),
+    );
   }
 
-  recipe(): Array<RecipeItem> {
-    this.calculateRequiredIngredients();
-    this.calculateOptionalIngredients();
-
-    return this.chosenIngredients;
-  }
-
-  requestIngredient(itemToRequest: RecipeItem) {
-    if (itemToRequest.required) {
-      this.requestRequiredItems.push(Object.assign({}, itemToRequest));
-    } else {
-      this.requestOptionalItems.push(Object.assign({}, itemToRequest));
-    }
-  }
-
-  filterOptionalIngredients(dietPreference?: DietPreference) {
-    return this.ingredients.filter(i => {
-      return (
-        i.required === false &&
-        (!dietPreference || i.type.includes(dietPreference))
-      );
-    });
-  }
-
-  filterRequiredIngredients(dietPreference?: DietPreference) {
-    return this.ingredients.filter(i => {
-      return (
-        i.required === true &&
-        (!dietPreference || i.type.includes(dietPreference))
-      );
-    });
+  private filterRequiredIngredients(dietPreference?: DietPreference) {
+    const isDietPreferenceEmpty =
+      typeof dietPreference !== 'undefined' || dietPreference === '';
+    return this.ingredients.filter(
+      (i) =>
+        i.required &&
+        (isDietPreferenceEmpty || i.type.includes(dietPreference)),
+    );
   }
 }
