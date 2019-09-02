@@ -79,7 +79,7 @@ export const getNewRecipeEvent = async (
 
   ignoredIngredients.map((i: RecipeItem) => {
     const ingredient: Ingredient = recipeItems.find(
-      (r: Ingredient): boolean =>  r.name === i.name,
+      (r: Ingredient): boolean => r.name === i.name,
     );
     if (!ingredient) {
       invalidIngredients.push(i);

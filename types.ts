@@ -1,4 +1,4 @@
-export interface Response {
+export type Response = {
   statusCode: number;
   body: string;
   headers: object;
@@ -25,11 +25,10 @@ export type RecipeItem = {
   required?: boolean;
 };
 
-export type UserIngredient = 
-  BaseIngredientEvent & Ingredient;
+export type UserIngredient = BaseIngredientEvent & Ingredient;
 
 export type DynamoQueryResponse = {
-  Items: Array<Item>;
+  Items: Item[];
   Count: number;
   ScannedCount: number;
 };
@@ -61,8 +60,8 @@ export type DeleteIngredientStyleEvent = BaseIngredientEvent & {
 
 export type NewRecipeEvent = BaseIngredientEvent & {
   numOfOptionalIngredients: number;
-  ignoredIngredients: Array<RecipeItem>;
-  requestedIngredients: Array<RecipeItem>;
+  ignoredIngredients: RecipeItem[];
+  requestedIngredients: RecipeItem[];
   dietPreference: DietPreference;
 };
 
@@ -73,4 +72,4 @@ export type IngredientTemplate = {
   required: boolean;
 };
 
-export type DietPreference = "carnivore" | "vegan" | "vegetarian";
+export type DietPreference = 'carnivore' | 'vegan' | 'vegetarian';

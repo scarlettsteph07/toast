@@ -1,0 +1,3328 @@
+{
+    "Count": 104,
+    "Items": [
+        {
+            "userId": {
+                "S": "690811A8-47C0-4F41-8583-3724404792E9"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "avocado"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": true
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "avocado"
+            }
+        },
+        {
+            "userId": {
+                "S": "690811A8-47C0-4F41-8583-3724404792E9"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "fried beans"
+                    },
+                    {
+                        "S": "whole beans"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "beans"
+            }
+        },
+        {
+            "userId": {
+                "S": "690811A8-47C0-4F41-8583-3724404792E9"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "black pepper"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "black pepper"
+            }
+        },
+        {
+            "userId": {
+                "S": "690811A8-47C0-4F41-8583-3724404792E9"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "bagel"
+                    },
+                    {
+                        "S": "como bread"
+                    },
+                    {
+                        "S": "honey wheat bread"
+                    },
+                    {
+                        "S": "baguette"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": true
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "bread"
+            }
+        },
+        {
+            "userId": {
+                "S": "690811A8-47C0-4F41-8583-3724404792E9"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "cheddar cheese"
+                    },
+                    {
+                        "S": "monterrey jack cheese"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    }
+                ]
+            },
+            "name": {
+                "S": "cheese"
+            }
+        },
+        {
+            "userId": {
+                "S": "690811A8-47C0-4F41-8583-3724404792E9"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "poached egg"
+                    },
+                    {
+                        "S": "fried egg"
+                    },
+                    {
+                        "S": "scrambled egg"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    }
+                ]
+            },
+            "name": {
+                "S": "egg"
+            }
+        },
+        {
+            "userId": {
+                "S": "690811A8-47C0-4F41-8583-3724404792E9"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "roasted garlic"
+                    },
+                    {
+                        "S": "minced garlic"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "garlic"
+            }
+        },
+        {
+            "userId": {
+                "S": "690811A8-47C0-4F41-8583-3724404792E9"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "cilantro"
+                    },
+                    {
+                        "S": "basil"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "herbs"
+            }
+        },
+        {
+            "userId": {
+                "S": "690811A8-47C0-4F41-8583-3724404792E9"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "pickled jalapeños"
+                    },
+                    {
+                        "S": "minced jalapeños"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "jalapeños"
+            }
+        },
+        {
+            "userId": {
+                "S": "690811A8-47C0-4F41-8583-3724404792E9"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "lemon juice"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "lemon juice"
+            }
+        },
+        {
+            "userId": {
+                "S": "690811A8-47C0-4F41-8583-3724404792E9"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "bacon"
+                    },
+                    {
+                        "S": "ham"
+                    },
+                    {
+                        "S": "sausage"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    }
+                ]
+            },
+            "name": {
+                "S": "meat"
+            }
+        },
+        {
+            "userId": {
+                "S": "690811A8-47C0-4F41-8583-3724404792E9"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "red pepper flakes"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "red pepper flakes"
+            }
+        },
+        {
+            "userId": {
+                "S": "690811A8-47C0-4F41-8583-3724404792E9"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "sea salt"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "salt"
+            }
+        },
+        {
+            "userId": {
+                "S": "690811A8-47C0-4F41-8583-3724404792E9"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "toasted sunflower seeds"
+                    },
+                    {
+                        "S": "sesame seeds"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "seeds"
+            }
+        },
+        {
+            "userId": {
+                "S": "690811A8-47C0-4F41-8583-3724404792E9"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "olive oil"
+                    },
+                    {
+                        "S": "butter"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    }
+                ]
+            },
+            "name": {
+                "S": "spread"
+            }
+        },
+        {
+            "userId": {
+                "S": "690811A8-47C0-4F41-8583-3724404792E9"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "fresh tomato"
+                    },
+                    {
+                        "S": "roasted tomato"
+                    },
+                    {
+                        "S": "sauté tomato"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "tomato"
+            }
+        },
+        {
+            "userId": {
+                "S": "34444"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "Tecate"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": true
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "Beer"
+            }
+        },
+        {
+            "userId": {
+                "S": "34444"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "avocado"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": true
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "avocado"
+            }
+        },
+        {
+            "userId": {
+                "S": "34444"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "fried beans"
+                    },
+                    {
+                        "S": "whole beans"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "beans"
+            }
+        },
+        {
+            "userId": {
+                "S": "34444"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "black pepper"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "black pepper"
+            }
+        },
+        {
+            "userId": {
+                "S": "34444"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "bagel"
+                    },
+                    {
+                        "S": "como bread"
+                    },
+                    {
+                        "S": "honey wheat bread"
+                    },
+                    {
+                        "S": "baguette"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": true
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "bread"
+            }
+        },
+        {
+            "userId": {
+                "S": "34444"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "cheddar cheese"
+                    },
+                    {
+                        "S": "monterrey jack cheese"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    }
+                ]
+            },
+            "name": {
+                "S": "cheese"
+            }
+        },
+        {
+            "userId": {
+                "S": "34444"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "poached egg"
+                    },
+                    {
+                        "S": "fried egg"
+                    },
+                    {
+                        "S": "scrambled egg"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    }
+                ]
+            },
+            "name": {
+                "S": "egg"
+            }
+        },
+        {
+            "userId": {
+                "S": "34444"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "roasted garlic"
+                    },
+                    {
+                        "S": "minced garlic"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "garlic"
+            }
+        },
+        {
+            "userId": {
+                "S": "34444"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "cilantro"
+                    },
+                    {
+                        "S": "basil"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "herbs"
+            }
+        },
+        {
+            "userId": {
+                "S": "34444"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "pickled jalapeños"
+                    },
+                    {
+                        "S": "minced jalapeños"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "jalapeños"
+            }
+        },
+        {
+            "userId": {
+                "S": "34444"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "lemon juice"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "lemon juice"
+            }
+        },
+        {
+            "userId": {
+                "S": "34444"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "mezcal"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": true
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "liquorr"
+            }
+        },
+        {
+            "userId": {
+                "S": "34444"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "bacon"
+                    },
+                    {
+                        "S": "ham"
+                    },
+                    {
+                        "S": "sausage"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    }
+                ]
+            },
+            "name": {
+                "S": "meat"
+            }
+        },
+        {
+            "userId": {
+                "S": "34444"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "red pepper flakes"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "red pepper flakes"
+            }
+        },
+        {
+            "userId": {
+                "S": "34444"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "sea salt"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "salt"
+            }
+        },
+        {
+            "userId": {
+                "S": "34444"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "toasted sunflower seeds"
+                    },
+                    {
+                        "S": "sesame seeds"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "seeds"
+            }
+        },
+        {
+            "userId": {
+                "S": "34444"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "olive oil"
+                    },
+                    {
+                        "S": "butter"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    }
+                ]
+            },
+            "name": {
+                "S": "spread"
+            }
+        },
+        {
+            "userId": {
+                "S": "34444"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "fresh tomato"
+                    },
+                    {
+                        "S": "roasted tomato"
+                    },
+                    {
+                        "S": "sauté tomato"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "tomato"
+            }
+        },
+        {
+            "userId": {
+                "S": "demo"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "avocado"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": true
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "avocado"
+            }
+        },
+        {
+            "userId": {
+                "S": "demo"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "fried beans"
+                    },
+                    {
+                        "S": "whole beans"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "beans"
+            }
+        },
+        {
+            "userId": {
+                "S": "demo"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "black pepper"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "black pepper"
+            }
+        },
+        {
+            "userId": {
+                "S": "demo"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "bagel"
+                    },
+                    {
+                        "S": "como bread"
+                    },
+                    {
+                        "S": "honey wheat bread"
+                    },
+                    {
+                        "S": "baguette"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": true
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "bread"
+            }
+        },
+        {
+            "userId": {
+                "S": "demo"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "cheddar cheese"
+                    },
+                    {
+                        "S": "monterrey jack cheese"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    }
+                ]
+            },
+            "name": {
+                "S": "cheese"
+            }
+        },
+        {
+            "userId": {
+                "S": "demo"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "poached egg"
+                    },
+                    {
+                        "S": "fried egg"
+                    },
+                    {
+                        "S": "scrambled egg"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    }
+                ]
+            },
+            "name": {
+                "S": "egg"
+            }
+        },
+        {
+            "userId": {
+                "S": "demo"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "roasted garlic"
+                    },
+                    {
+                        "S": "minced garlic"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "garlic"
+            }
+        },
+        {
+            "userId": {
+                "S": "demo"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "cilantro"
+                    },
+                    {
+                        "S": "basil"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "herbs"
+            }
+        },
+        {
+            "userId": {
+                "S": "demo"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "pickled jalapeños"
+                    },
+                    {
+                        "S": "minced jalapeños"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "jalapeños"
+            }
+        },
+        {
+            "userId": {
+                "S": "demo"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "lemon juice"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "lemon juice"
+            }
+        },
+        {
+            "userId": {
+                "S": "demo"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "bacon"
+                    },
+                    {
+                        "S": "ham"
+                    },
+                    {
+                        "S": "sausage"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    }
+                ]
+            },
+            "name": {
+                "S": "meat"
+            }
+        },
+        {
+            "userId": {
+                "S": "demo"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "red pepper flakes"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "red pepper flakes"
+            }
+        },
+        {
+            "userId": {
+                "S": "demo"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "sea salt"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "salt"
+            }
+        },
+        {
+            "userId": {
+                "S": "demo"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "toasted sunflower seeds"
+                    },
+                    {
+                        "S": "sesame seeds"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "seeds"
+            }
+        },
+        {
+            "userId": {
+                "S": "demo"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "olive oil"
+                    },
+                    {
+                        "S": "butter"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    }
+                ]
+            },
+            "name": {
+                "S": "spread"
+            }
+        },
+        {
+            "userId": {
+                "S": "demo"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "fresh tomato"
+                    },
+                    {
+                        "S": "roasted tomato"
+                    },
+                    {
+                        "S": "sauté tomato"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "tomato"
+            }
+        },
+        {
+            "userId": {
+                "S": "8C3B6E09-3ECA-420B-A33C-092BEE7F7D0F"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "Tecate"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": true
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "Beer"
+            }
+        },
+        {
+            "userId": {
+                "S": "8C3B6E09-3ECA-420B-A33C-092BEE7F7D0F"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "Mezcal"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": true
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "Liquor"
+            }
+        },
+        {
+            "userId": {
+                "S": "8C3B6E09-3ECA-420B-A33C-092BEE7F7D0F"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "avocado"
+                    },
+                    {
+                        "S": "rotten avocado"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": true
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "avocado"
+            }
+        },
+        {
+            "userId": {
+                "S": "8C3B6E09-3ECA-420B-A33C-092BEE7F7D0F"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "fried beans"
+                    },
+                    {
+                        "S": "whole beans"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "beans"
+            }
+        },
+        {
+            "userId": {
+                "S": "8C3B6E09-3ECA-420B-A33C-092BEE7F7D0F"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "black pepper"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "black pepper"
+            }
+        },
+        {
+            "userId": {
+                "S": "8C3B6E09-3ECA-420B-A33C-092BEE7F7D0F"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "bagel"
+                    },
+                    {
+                        "S": "como bread"
+                    },
+                    {
+                        "S": "honey wheat bread"
+                    },
+                    {
+                        "S": "baguette"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": true
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "bread"
+            }
+        },
+        {
+            "userId": {
+                "S": "8C3B6E09-3ECA-420B-A33C-092BEE7F7D0F"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "cheddar cheese"
+                    },
+                    {
+                        "S": "monterrey jack cheese"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    }
+                ]
+            },
+            "name": {
+                "S": "cheese"
+            }
+        },
+        {
+            "userId": {
+                "S": "8C3B6E09-3ECA-420B-A33C-092BEE7F7D0F"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "poached egg"
+                    },
+                    {
+                        "S": "fried egg"
+                    },
+                    {
+                        "S": "scrambled egg"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    }
+                ]
+            },
+            "name": {
+                "S": "egg"
+            }
+        },
+        {
+            "userId": {
+                "S": "8C3B6E09-3ECA-420B-A33C-092BEE7F7D0F"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "roasted garlic"
+                    },
+                    {
+                        "S": "minced garlic"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "garlic"
+            }
+        },
+        {
+            "userId": {
+                "S": "8C3B6E09-3ECA-420B-A33C-092BEE7F7D0F"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "cilantro"
+                    },
+                    {
+                        "S": "basil"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "herbs"
+            }
+        },
+        {
+            "userId": {
+                "S": "8C3B6E09-3ECA-420B-A33C-092BEE7F7D0F"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "pickled jalapeños"
+                    },
+                    {
+                        "S": "minced jalapeños"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "jalapeños"
+            }
+        },
+        {
+            "userId": {
+                "S": "8C3B6E09-3ECA-420B-A33C-092BEE7F7D0F"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "lemon juice"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "lemon juice"
+            }
+        },
+        {
+            "userId": {
+                "S": "8C3B6E09-3ECA-420B-A33C-092BEE7F7D0F"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "bacon"
+                    },
+                    {
+                        "S": "ham"
+                    },
+                    {
+                        "S": "sausage"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    }
+                ]
+            },
+            "name": {
+                "S": "meat"
+            }
+        },
+        {
+            "userId": {
+                "S": "8C3B6E09-3ECA-420B-A33C-092BEE7F7D0F"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "red pepper flakes"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "red pepper flakes"
+            }
+        },
+        {
+            "userId": {
+                "S": "8C3B6E09-3ECA-420B-A33C-092BEE7F7D0F"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "sea salt"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "salt"
+            }
+        },
+        {
+            "userId": {
+                "S": "8C3B6E09-3ECA-420B-A33C-092BEE7F7D0F"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "toasted sunflower seeds"
+                    },
+                    {
+                        "S": "sesame seeds"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "seeds"
+            }
+        },
+        {
+            "userId": {
+                "S": "8C3B6E09-3ECA-420B-A33C-092BEE7F7D0F"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "olive oil"
+                    },
+                    {
+                        "S": "butter"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    }
+                ]
+            },
+            "name": {
+                "S": "spread"
+            }
+        },
+        {
+            "userId": {
+                "S": "8C3B6E09-3ECA-420B-A33C-092BEE7F7D0F"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "fresh tomato"
+                    },
+                    {
+                        "S": "roasted tomato"
+                    },
+                    {
+                        "S": "sauté tomato"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "tomato"
+            }
+        },
+        {
+            "userId": {
+                "S": "07"
+            },
+            "name": {
+                "S": "avocado"
+            }
+        },
+        {
+            "userId": {
+                "S": "07"
+            },
+            "name": {
+                "S": "beer"
+            }
+        },
+        {
+            "userId": {
+                "S": "07"
+            },
+            "name": {
+                "S": "toast"
+            }
+        },
+        {
+            "userId": {
+                "S": "07"
+            },
+            "name": {
+                "S": "water"
+            }
+        },
+        {
+            "userId": {
+                "S": "123"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "avocado"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": true
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "avocado"
+            }
+        },
+        {
+            "userId": {
+                "S": "123"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "fried beans"
+                    },
+                    {
+                        "S": "whole beans"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "beans"
+            }
+        },
+        {
+            "userId": {
+                "S": "123"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "black pepper"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "black pepper"
+            }
+        },
+        {
+            "userId": {
+                "S": "123"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "bagel"
+                    },
+                    {
+                        "S": "como bread"
+                    },
+                    {
+                        "S": "honey wheat bread"
+                    },
+                    {
+                        "S": "baguette"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": true
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "bread"
+            }
+        },
+        {
+            "userId": {
+                "S": "123"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "cheddar cheese"
+                    },
+                    {
+                        "S": "monterrey jack cheese"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    }
+                ]
+            },
+            "name": {
+                "S": "cheese"
+            }
+        },
+        {
+            "userId": {
+                "S": "123"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "poached egg"
+                    },
+                    {
+                        "S": "fried egg"
+                    },
+                    {
+                        "S": "scrambled egg"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    }
+                ]
+            },
+            "name": {
+                "S": "egg"
+            }
+        },
+        {
+            "userId": {
+                "S": "123"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "roasted garlic"
+                    },
+                    {
+                        "S": "minced garlic"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "garlic"
+            }
+        },
+        {
+            "userId": {
+                "S": "123"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "cilantro"
+                    },
+                    {
+                        "S": "basil"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "herbs"
+            }
+        },
+        {
+            "userId": {
+                "S": "123"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "pickled jalapeños"
+                    },
+                    {
+                        "S": "minced jalapeños"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "jalapeños"
+            }
+        },
+        {
+            "userId": {
+                "S": "123"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "lemon juice"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "lemon juice"
+            }
+        },
+        {
+            "userId": {
+                "S": "123"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "bacon"
+                    },
+                    {
+                        "S": "ham"
+                    },
+                    {
+                        "S": "sausage"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    }
+                ]
+            },
+            "name": {
+                "S": "meat"
+            }
+        },
+        {
+            "userId": {
+                "S": "123"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "red pepper flakes"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "red pepper flakes"
+            }
+        },
+        {
+            "userId": {
+                "S": "123"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "sea salt"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "salt"
+            }
+        },
+        {
+            "userId": {
+                "S": "123"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "toasted sunflower seeds"
+                    },
+                    {
+                        "S": "sesame seeds"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "seeds"
+            }
+        },
+        {
+            "userId": {
+                "S": "123"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "olive oil"
+                    },
+                    {
+                        "S": "butter"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    }
+                ]
+            },
+            "name": {
+                "S": "spread"
+            }
+        },
+        {
+            "userId": {
+                "S": "123"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "fresh tomato"
+                    },
+                    {
+                        "S": "roasted tomato"
+                    },
+                    {
+                        "S": "sauté tomato"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "tomato"
+            }
+        },
+        {
+            "userId": {
+                "S": "200158DB-B803-4497-8170-5AC2DD9B42DB"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "avocado"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": true
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "avocado"
+            }
+        },
+        {
+            "userId": {
+                "S": "200158DB-B803-4497-8170-5AC2DD9B42DB"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "fried beans"
+                    },
+                    {
+                        "S": "whole beans"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "beans"
+            }
+        },
+        {
+            "userId": {
+                "S": "200158DB-B803-4497-8170-5AC2DD9B42DB"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "black pepper"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "black pepper"
+            }
+        },
+        {
+            "userId": {
+                "S": "200158DB-B803-4497-8170-5AC2DD9B42DB"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "bagel"
+                    },
+                    {
+                        "S": "como bread"
+                    },
+                    {
+                        "S": "honey wheat bread"
+                    },
+                    {
+                        "S": "baguette"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": true
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "bread"
+            }
+        },
+        {
+            "userId": {
+                "S": "200158DB-B803-4497-8170-5AC2DD9B42DB"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "cheddar cheese"
+                    },
+                    {
+                        "S": "monterrey jack cheese"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    }
+                ]
+            },
+            "name": {
+                "S": "cheese"
+            }
+        },
+        {
+            "userId": {
+                "S": "200158DB-B803-4497-8170-5AC2DD9B42DB"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "poached egg"
+                    },
+                    {
+                        "S": "fried egg"
+                    },
+                    {
+                        "S": "scrambled egg"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    }
+                ]
+            },
+            "name": {
+                "S": "egg"
+            }
+        },
+        {
+            "userId": {
+                "S": "200158DB-B803-4497-8170-5AC2DD9B42DB"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "roasted garlic"
+                    },
+                    {
+                        "S": "minced garlic"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "garlic"
+            }
+        },
+        {
+            "userId": {
+                "S": "200158DB-B803-4497-8170-5AC2DD9B42DB"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "cilantro"
+                    },
+                    {
+                        "S": "basil"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "herbs"
+            }
+        },
+        {
+            "userId": {
+                "S": "200158DB-B803-4497-8170-5AC2DD9B42DB"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "pickled jalapeños"
+                    },
+                    {
+                        "S": "minced jalapeños"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "jalapeños"
+            }
+        },
+        {
+            "userId": {
+                "S": "200158DB-B803-4497-8170-5AC2DD9B42DB"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "lemon juice"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "lemon juice"
+            }
+        },
+        {
+            "userId": {
+                "S": "200158DB-B803-4497-8170-5AC2DD9B42DB"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "bacon"
+                    },
+                    {
+                        "S": "ham"
+                    },
+                    {
+                        "S": "sausage"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    }
+                ]
+            },
+            "name": {
+                "S": "meat"
+            }
+        },
+        {
+            "userId": {
+                "S": "200158DB-B803-4497-8170-5AC2DD9B42DB"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "red pepper flakes"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "red pepper flakes"
+            }
+        },
+        {
+            "userId": {
+                "S": "200158DB-B803-4497-8170-5AC2DD9B42DB"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "sea salt"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "salt"
+            }
+        },
+        {
+            "userId": {
+                "S": "200158DB-B803-4497-8170-5AC2DD9B42DB"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "toasted sunflower seeds"
+                    },
+                    {
+                        "S": "sesame seeds"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "seeds"
+            }
+        },
+        {
+            "userId": {
+                "S": "200158DB-B803-4497-8170-5AC2DD9B42DB"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "olive oil"
+                    },
+                    {
+                        "S": "butter"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    }
+                ]
+            },
+            "name": {
+                "S": "spread"
+            }
+        },
+        {
+            "userId": {
+                "S": "200158DB-B803-4497-8170-5AC2DD9B42DB"
+            },
+            "style": {
+                "L": [
+                    {
+                        "S": "fresh tomato"
+                    },
+                    {
+                        "S": "roasted tomato"
+                    },
+                    {
+                        "S": "sauté tomato"
+                    }
+                ]
+            },
+            "required": {
+                "BOOL": false
+            },
+            "type": {
+                "L": [
+                    {
+                        "S": "carnivore"
+                    },
+                    {
+                        "S": "vegetarian"
+                    },
+                    {
+                        "S": "vegan"
+                    }
+                ]
+            },
+            "name": {
+                "S": "tomato"
+            }
+        }
+    ],
+    "ScannedCount": 104,
+    "ConsumedCapacity": null
+}
