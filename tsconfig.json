@@ -4,6 +4,7 @@
     "moduleResolution": "node",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "noImplicitAny": true,
     "sourceMap": true,
     "target": "es2017",
     "strict": true,
@@ -11,6 +12,9 @@
     "allowSyntheticDefaultImports": true,
     "outDir": "lib",
   },
-  "exclude": ["node_modules"],
-  "no-any": true
+  "exclude": [
+    "coverage",
+    "node_modules",
+    "!node_modules/@types"
+  ]
 }

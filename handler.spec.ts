@@ -1,173 +1,169 @@
-const expect = require("chai").expect;
-const sinon = require("sinon");
+import { expect } from 'chai';
+import * as sinon from 'sinon';
 
-process.on("unhandledRejection", e => {
-  console.log("you forgot to return a Promise! Check your tests!" + e.message);
+process.on('unhandledRejection', (e) => {
+  console.log(`you forgot to return a Promise! Check your tests! ${e.message}`);
 });
 
-import * as AWSMock from "aws-sdk-mock";
-import * as AWS from "aws-sdk";
-import { BatchWriteItemInput, QueryInput } from "aws-sdk/clients/dynamodb";
+import * as AWSMock from 'aws-sdk-mock';
+import * as AWS from 'aws-sdk';
 
-AWS.config.update({ region: "us-east-1" });
+AWS.config.update({ region: 'us-east-1' });
 
-const headers = { "X-User-Key": "1234" };
+const headers = { 'X-User-Key': '1234' };
 const body = {
+  dietPreference: 'vegan',
+  ignoredIngredients: [],
   numOfOptionalIngredients: 0,
   requestedIngredients: [],
-  ignoredIngredients: [],
-  dietPreference: "vegan"
 };
 
 beforeEach(() => {
   AWSMock.setSDKInstance(AWS);
-  AWSMock.mock("DynamoDB.DocumentClient", "batchWrite", () => {
-    return Promise.resolve({});
-  });
-  AWSMock.mock("DynamoDB.DocumentClient", "query", () => {
-    return Promise.resolve({});
-  });
+  AWSMock.mock('DynamoDB.DocumentClient', 'batchWrite', Promise.resolve({}));
+  AWSMock.mock('DynamoDB.DocumentClient', 'query', Promise.resolve({}));
 });
 
-describe("invalid new recipe events", () => {
-  it("should error when numOptionalIngredients is not a number", async () => {
-    const handler = require("./handler");
+describe('invalid new recipe events', () => {
+  it('should error when numOptionalIngredients is not a number', async () => {
+    const handler = require('./handler');
     const payload = {
-      body: Object.assign({}, body, {
-        numOfOptionalIngredients: "not a number"
-      }),
-      headers
+      body: {
+        numOfOptionalIngredients: 'not a number',
+        ...body,
+      },
+      headers,
     };
     try {
       await handler.getNewRecipeEvent(payload, {});
     } catch (e) {
       expect(e).to.have.property(
-        "property",
-        "instance.numOfOptionalIngredients"
+        'property',
+        'instance.numOfOptionalIngredients',
       );
-      expect(e).to.have.property("message", "is not of a type(s) integer");
+      expect(e).to.have.property('message', 'is not of a type(s) integer');
     }
   });
 
-  it("should error when user key header is missing", async () => {
-    const handler = require("./handler");
+  it('should error when user key header is missing', async () => {
+    const handler = require('./handler');
     try {
       await handler.getNewRecipeEvent({ body }, {});
     } catch (e) {
-      expect(e).to.have.property("message", "User Key is required");
+      expect(e).to.have.property('message', 'User Key is required');
     }
   });
 });
 
-describe("valid new recipe events", () => {
+describe('valid new recipe events', () => {
   beforeEach(() => {
-    sinon.stub(Math, "random").returns(0);
-    AWSMock.remock("DynamoDB.DocumentClient", "batchWrite", () => {
-      return Promise.resolve({ foo: "expectedError" });
+    sinon.stub(Math, 'random').returns(0);
+    AWSMock.remock('DynamoDB.DocumentClient', 'batchWrite', () => {
+      return Promise.resolve({ foo: 'expectedError' });
     });
-    AWSMock.remock("DynamoDB.DocumentClient", "query", () => {
+    AWSMock.remock('DynamoDB.DocumentClient', 'query', () => {
       return Promise.resolve({});
     });
   });
 
-  it("should return two required items numIngredients is 0", async () => {
+  it('should return two required items numIngredients is 0', async () => {
     // Overwriting DynamoDB.DocumentClient.get()
-    const handler = require("./handler");
+    const handler = require('./handler');
     const res = await handler.getNewRecipe({ body, headers }, {});
     let responseBody = JSON.parse(res.body);
 
     expect(responseBody[0]).to.eql({
-      style: "avocado",
-      name: "avocado",
-      required: true
+      style: 'avocado',
+      name: 'avocado',
+      required: true,
     });
     expect(responseBody[1]).to.eql({
-      style: "bagel",
-      name: "bread",
-      required: true
+      style: 'bagel',
+      name: 'bread',
+      required: true,
     });
   });
 
-  it("should return 5 item", async () => {
+  it('should return 5 item', async () => {
     // Overwriting DynamoDB.DocumentClient.get()
-    const handler = require("./handler");
+    const handler = require('./handler');
     const payload = Object.assign({}, body, { numOfOptionalIngredients: 5 });
     const res = await handler.getNewRecipe({ body: payload, headers }, {});
     let responseBody = JSON.parse(res.body);
 
     expect(responseBody[0]).to.eql({
-      style: "avocado",
-      name: "avocado",
-      required: true
+      style: 'avocado',
+      name: 'avocado',
+      required: true,
     });
     expect(responseBody[1]).to.eql({
-      style: "bagel",
-      name: "bread",
-      required: true
+      style: 'bagel',
+      name: 'bread',
+      required: true,
     });
     expect(responseBody[2]).to.eql({
-      style: "fresh tomato",
-      name: "tomato",
-      required: false
+      style: 'fresh tomato',
+      name: 'tomato',
+      required: false,
     });
     expect(responseBody[3]).to.eql({
-      style: "cilantro",
-      name: "herbs",
-      required: false
+      style: 'cilantro',
+      name: 'herbs',
+      required: false,
     });
     expect(responseBody[4]).to.eql({
-      style: "sea salt",
-      name: "salt",
-      required: false
+      style: 'sea salt',
+      name: 'salt',
+      required: false,
     });
     expect(responseBody).to.have.lengthOf(5);
   });
 
-  it("should return items from dynamo db if they exist", async () => {
-    const returnData = (params: QueryInput): any => {
-      expect(params["TableName"]).to.eql("UserIngredients");
-      expect(params["KeyConditionExpression"]).to.eql("#userId = :userId");
-      expect(params["ExpressionAttributeNames"]).to.eql({
-        "#userId": "userId"
+  it('should return items from dynamo db if they exist', async () => {
+    const returnData = (params: AWS.DynamoDB.QueryInput): any => {
+      expect(params['TableName']).to.eql('UserIngredients');
+      expect(params['KeyConditionExpression']).to.eql('#userId = :userId');
+      expect(params['ExpressionAttributeNames']).to.eql({
+        '#userId': 'userId',
       });
       return Promise.resolve({
         Items: [
           {
-            name: "weed",
-            style: ["smoke", "eat", "vape"],
+            name: 'flower',
+            style: ['smoke', 'eat', 'vape'],
             required: true,
-            type: ["indica", "cbd", "sativa"]
+            type: ['indica', 'cbd', 'sativa'],
           },
           {
-            name: "weed",
-            style: ["smoke", "eat", "vape"],
+            name: 'joint',
+            style: ['smoke', 'eat', 'vape'],
             required: true,
-            type: ["indica", "cbd", "sativa"]
-          }
-        ]
+            type: ['indica', 'cbd', 'sativa'],
+          },
+        ],
       });
     };
-    AWSMock.remock("DynamoDB.DocumentClient", "query", returnData);
+    AWSMock.remock('DynamoDB.DocumentClient', 'query', returnData);
 
     const payload = Object.assign({}, body, {
-      dietPreference: "indica",
-      numOfOptionalIngredients: 2
+      dietPreference: 'indica',
+      numOfOptionalIngredients: 2,
     });
 
-    const handler = require("./handler");
+    const handler = require('./handler');
     const res = await handler.getNewRecipe({ body: payload, headers }, {});
     const responseBody = JSON.parse(res.body);
     expect(responseBody).to.eql([
       {
-        name: "weed",
-        style: "smoke",
-        required: true
+        name: 'flower',
+        style: 'smoke',
+        required: true,
       },
       {
-        name: "weed",
-        style: "smoke",
-        required: true
-      }
+        name: 'joint',
+        style: 'smoke',
+        required: true,
+      },
     ]);
     expect(responseBody).to.have.lengthOf(2);
   });
