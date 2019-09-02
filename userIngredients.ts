@@ -1,19 +1,4 @@
-const AWS = require('aws-sdk'),
-  options = {
-    region: 'localhost',
-    endpoint: 'http://localhost:8000',
-  };
-
-const isOffline = function() {
-  // Depends on serverless-offline plugion which adds IS_OFFLINE to process.env when running offline
-  return process.env.IS_OFFLINE;
-};
-
-const dynamodb = () => {
-  return isOffline()
-    ? new AWS.DynamoDB.DocumentClient(options)
-    : new AWS.DynamoDB.DocumentClient();
-};
+import * as AWS from 'aws-sdk';
 
 import {
   DynamoQueryResponse,
@@ -24,26 +9,44 @@ import {
   DynamoResponse,
 } from './types';
 
+const options = {
+  endpoint: 'http://localhost:8000',
+  region: 'localhost',
+};
+
+const isOffline = function() {
+  if (process.env.hasOwnProperty('IS_OFFLINE')) {
+    return process.env.IS_OFFLINE;
+  }
+  // Depends on serverless-offline plugion which adds IS_OFFLINE to process.env when running offline
+  return false;
+};
+
+const dynamodb = () =>
+  isOffline()
+    ? new AWS.DynamoDB.DocumentClient(options)
+    : new AWS.DynamoDB.DocumentClient();
+
 export const TABLE_NAME = 'UserIngredients';
 const dynamoDbClient = dynamodb();
 
 export class UserIngredients {
-  userKey: string;
+  private readonly userKey: string;
 
   constructor(userKey: string) {
     this.userKey = userKey;
   }
 
-  async getAll(): Promise<Array<Ingredient>> {
+  public async getAll(): Promise<Ingredient[]> {
     const params = {
-      TableName: TABLE_NAME,
-      KeyConditionExpression: '#userId = :userId',
       ExpressionAttributeNames: {
         '#userId': 'userId',
       },
       ExpressionAttributeValues: {
         ':userId': this.userKey,
       },
+      KeyConditionExpression: '#userId = :userId',
+      TableName: TABLE_NAME,
     };
     const dynamoResponse = await dynamoDbClient.query(params).promise();
 
@@ -99,14 +102,14 @@ export class UserIngredients {
     return await dynamoDbClient.batchWrite(params).promise();
   }
 
-  async getItemByName(name: string): Promise<DynamoResponse> {
+  public async getItemByName(name: string): Promise<DynamoResponse> {
     // TODO: fix this because its probably broken
     return await dynamoDbClient
       .get(this.getIngredientNameParams(name))
       .promise();
   }
 
-  async deleteByStyle(name: string, style: string): Promise<UserIngredient> {
+  public async deleteByStyle(name: string, style: string): Promise<UserIngredient> {
     const ingredient = await this.getItemByName(name);
     if (
       Object.keys(ingredient).length === 0 &&
@@ -148,7 +151,9 @@ export class UserIngredients {
     });
   }
 
-  public async createIngredient(ingredient: Ingredient): Promise<UserIngredient> {
+  public async createIngredient(
+    ingredient: Ingredient,
+  ): Promise<UserIngredient> {
     const params = {
       Item: {
         ...ingredient,

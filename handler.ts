@@ -94,13 +94,15 @@ export const getNewRecipeEvent = async (
   });
 
   if (invalidIngredients.length > 0) {
-    throw new Error(
-      `Invalid name for [${invalidIngredients.map(i => i.name)}]`,
+    const invalidateIngredientString: string[] = invalidIngredients.map(
+      (i: RecipeItem) => i.style,
     );
+    throw new Error(`Invalid name for [${invalidateIngredientString.toString()}]`);
   }
 
   if (invalidStyles.length > 0) {
-    throw new Error(`Invalid style for [${invalidStyles.map(i => i.style)}]`);
+    const invalidStylesString: string[] = invalidStyles.map((i: RecipeItem)  => i.style);
+    throw new Error(`Invalid style for [${invalidStylesString.toString()}]`);
   }
 
   if (userIngredients.length === 0) {
