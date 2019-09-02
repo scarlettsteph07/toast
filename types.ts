@@ -1,22 +1,22 @@
-export type Response = {
-  statusCode: Number;
-  body: String;
-  headers: Object;
+export interface Response {
+  statusCode: number;
+  body: string;
+  headers: object;
 };
 
 type Item = {
   name: string;
-  style: Array<string>;
-  type: Array<string>;
+  style: string[];
+  type: string[];
   userId: string;
-  required: Boolean;
+  required: boolean;
 };
 
 export type Ingredient = {
   name: string;
-  style: Array<string>;
-  type: Array<string>;
-  required: Boolean;
+  style: string[];
+  type: string[];
+  required: boolean;
 };
 
 export type RecipeItem = {
@@ -68,9 +68,9 @@ export type NewRecipeEvent = BaseIngredientEvent & {
 
 export type IngredientTemplate = {
   name: string;
-  style: Array<string>;
-  type: Array<string>;
-  required: Boolean;
+  style: string[];
+  type: string[];
+  required: boolean;
 };
 
 export type DietPreference = "carnivore" | "vegan" | "vegetarian";

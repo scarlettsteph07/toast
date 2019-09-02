@@ -4,10 +4,12 @@
   "description": "A project template to get started with Serverless Enterprise",
   "main": "handler.js",
   "scripts": {
+    "lint": "tslint --project tsconfig.json --format stylish",
     "build": "tsc",
     "deploy": "npm run build && sls deploy",
     "debug": "export SLS_DEBUG=* && node --debug ./node_modules/.bin/serverless offline -s dev",
-    "test": "ts-mocha **/*.spec.ts"
+    "test": "ts-mocha **/*.spec.ts",
+    "coverage": "tsc && nyc mocha"
   },
   "repository": {
     "type": "git",
@@ -17,6 +19,14 @@
     "serverless",
     "enterprise"
   ],
+  "nyc": {
+    "extends": "@istanbuljs/nyc-config-typescript",
+    "all": true,
+    "reporter": [
+      "text",
+      "lcov"
+    ]
+  },
   "author": "Serverless, Inc <service@serverless.com>",
   "license": "Apache-2.0",
   "bugs": {
@@ -24,30 +34,34 @@
   },
   "homepage": "https://github.com/serverless/enterprise-template#readme",
   "dependencies": {
+    "@types/chai": "^4.2.0",
     "@types/js-yaml": "^3.12.1",
     "@types/sinon": "^7.0.13",
     "@types/supertest": "^2.0.8",
     "aws-sdk": "^2.517.0",
-    "jsonschema": "^1.2.4",
-    "source-map-support": "^0.5.10"
+    "jsonschema": "^1.2.4"
   },
   "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^0.1.3",
     "@types/aws-lambda": "^8.10.17",
     "@types/mocha": "^5.2.7",
     "@types/node": "^10.12.18",
     "aws-sdk-mock": "^4.5.0",
     "chai": "^4.2.0",
     "mocha": "^6.2.0",
+    "nyc": "^14.1.1",
     "proxyquire": "^2.1.3",
     "serverless": "^1.51.0",
     "serverless-dynamodb-local": "^0.2.38",
     "serverless-offline": "^5.10.1",
     "serverless-webpack": "^5.2.0",
     "sinon": "^7.4.1",
+    "source-map-support": "^0.5.13",
     "supertest": "^4.0.2",
     "ts-loader": "^5.3.3",
     "ts-mocha": "^6.0.0",
     "ts-node": "^8.3.0",
+    "tslint": "^5.19.0",
     "typescript": "^3.2.4",
     "webpack": "^4.29.0"
   }
