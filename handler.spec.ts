@@ -1,12 +1,16 @@
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 
-process.on('unhandledRejection', (e) => {
+process.on('unhandledRejection', e => {
   console.log(`you forgot to return a Promise! Check your tests! ${e.message}`);
 });
 
 import * as AWSMock from 'aws-sdk-mock';
 import * as AWS from 'aws-sdk';
+
+import { Response } from './types';
+
+import { getNewRecipe, getNewRecipeEvent } from './handler';
 
 AWS.config.update({ region: 'us-east-1' });
 
@@ -26,8 +30,7 @@ beforeEach(() => {
 
 describe('invalid new recipe events', () => {
   it('should error when numOptionalIngredients is not a number', async () => {
-    const handler = require('./handler');
-    const payload = {
+    const payload: { Body } = {
       body: {
         numOfOptionalIngredients: 'not a number',
         ...body,
@@ -35,7 +38,7 @@ describe('invalid new recipe events', () => {
       headers,
     };
     try {
-      await handler.getNewRecipeEvent(payload, {});
+      await getNewRecipeEvent(payload, {});
     } catch (e) {
       expect(e).to.have.property(
         'property',
@@ -58,19 +61,22 @@ describe('invalid new recipe events', () => {
 describe('valid new recipe events', () => {
   beforeEach(() => {
     sinon.stub(Math, 'random').returns(0);
-    AWSMock.remock('DynamoDB.DocumentClient', 'batchWrite', () => {
-      return Promise.resolve({ foo: 'expectedError' });
-    });
-    AWSMock.remock('DynamoDB.DocumentClient', 'query', () => {
-      return Promise.resolve({});
-    });
+    AWSMock.remock(
+      'DynamoDB.DocumentClient',
+      'batchWrite',
+      Promise.resolve({ foo: 'expectedError' }),
+    );
   });
+  AWSMock.mock('DynamoDB.DocumentClient', 'query', Promise.resolve({}));
 
   it('should return two required items numIngredients is 0', async () => {
     // Overwriting DynamoDB.DocumentClient.get()
-    const handler = require('./handler');
-    const res = await handler.getNewRecipe({ body, headers }, {});
-    let responseBody = JSON.parse(res.body);
+    const handler: Response = require('./handler');
+    const res: Promise<Response> = await handler.getNewRecipe(
+      { body, headers },
+      {},
+    );
+    const responseBody = JSON.parse(res.body);
 
     expect(responseBody[0]).to.eql({
       style: 'avocado',

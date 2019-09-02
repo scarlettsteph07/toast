@@ -1,5 +1,5 @@
-import { validate } from "jsonschema";
-const yml = require("js-yaml");
+import { validate } from 'jsonschema';
+import * as yml from 'js-yaml';
 
 const addIngredientsSchema = `
     type: object
@@ -75,7 +75,7 @@ export const validateSchema = (interpolate: string): Function => {
   // return a validation function
   return (src: object) => {
     const { errors } = validate(src, schema);
-    if (errors && errors.length > 0) {
+    if (errors.length > 0) {
       throw errors[0];
     }
     // valid return original request
@@ -84,26 +84,26 @@ export const validateSchema = (interpolate: string): Function => {
 };
 
 export class RequestValidator {
-  payload: any;
+  private readonly payload: any;
 
   constructor(payload: any) {
     this.payload = payload;
   }
 
-  validateAddIngredient() {
+  public validateAddIngredient() {
     return validateSchema(addIngredientsSchema)(this.payload);
   }
 
-  validateDeleteIngredientStyle() {
+  public validateDeleteIngredientStyle() {
     return validateSchema(deleteIngredientsSchema)(this.payload);
   }
 
-  validateGetIngredientsByUserId() {
+  public validateGetIngredientsByUserId() {
     const validator = validateSchema(addIngredientsSchema);
     return validator(this.payload);
   }
 
-  validateGetNewRecipeParams() {
+  public validateGetNewRecipeParams() {
     const validator = validateSchema(getNewRecipeSchema);
     return validator(this.payload);
   }
