@@ -11,7 +11,7 @@ export const eventWrapper = (originalFunction: Function) => async (
   _context: Context,
 ) => {
   try {
-    const data = await originalFunction(event, _context);
+    const data = await originalFunction(event);
     if (Object.keys(data).length === 0 && data.constructor === Object) {
       return {
         statusCode: 404,

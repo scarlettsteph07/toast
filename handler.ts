@@ -1,17 +1,21 @@
 'use strict';
-import { APIGatewayProxyEvent, Context } from 'aws-lambda';
 
 import { Recipe } from './recipe';
 import { defaultIngredients } from './config';
 import { EventSanitizer } from './eventSanitizer';
 import { RequestValidator } from './schema';
 import { eventWrapper } from './utils';
-import { RecipeItem, UserIngredient, Ingredient } from './types';
+import {
+  RecipeItem,
+  UserIngredient,
+  Ingredient,
+  FilteredEvent,
+  NewRecipeEvent,
+} from './types';
 import { UserIngredients } from './userIngredients';
 
 const addIngredientEvent = async (
-  event: APIGatewayProxyEvent,
-  _context: Context,
+  event: FilteredEvent,
 ): Promise<UserIngredient> => {
   const { ingredient, userKey } = new EventSanitizer(
     event,
@@ -23,8 +27,7 @@ const addIngredientEvent = async (
 export const addIngredient = eventWrapper(addIngredientEvent);
 
 const deleteIngredientStyleEvent = async (
-  event: APIGatewayProxyEvent,
-  _context: Context,
+  event: FilteredEvent,
 ): Promise<UserIngredient> => {
   const { name, style, userKey } = new EventSanitizer(
     event,
@@ -37,7 +40,7 @@ const deleteIngredientStyleEvent = async (
 export const deleteIngredientStyle = eventWrapper(deleteIngredientStyleEvent);
 
 const getIngredientsByUserIdEvent = async (
-  event: APIGatewayProxyEvent,
+  event: FilteredEvent,
 ): Promise<Ingredient[]> => {
   const { userKey } = new EventSanitizer(event).listIngredientsParams();
 
@@ -47,8 +50,7 @@ const getIngredientsByUserIdEvent = async (
 export const getIngredientsByUserId = eventWrapper(getIngredientsByUserIdEvent);
 
 export const getNewRecipeEvent = async (
-  event: APIGatewayProxyEvent,
-  _context: Context,
+  event: FilteredEvent,
 ): Promise<RecipeItem[]> => {
   const {
     userKey,
@@ -56,7 +58,7 @@ export const getNewRecipeEvent = async (
     requestedIngredients,
     ignoredIngredients,
     dietPreference,
-  } = new EventSanitizer(event).eventFilterNewRecipe();
+  }: NewRecipeEvent = new EventSanitizer(event).eventFilterNewRecipe();
 
   new RequestValidator({
     ignoredIngredients,
@@ -97,11 +99,15 @@ export const getNewRecipeEvent = async (
     const invalidateIngredientString: string[] = invalidIngredients.map(
       (i: RecipeItem) => i.style,
     );
-    throw new Error(`Invalid name for [${invalidateIngredientString.toString()}]`);
+    throw new Error(
+      `Invalid name for [${invalidateIngredientString.toString()}]`,
+    );
   }
 
   if (invalidStyles.length > 0) {
-    const invalidStylesString: string[] = invalidStyles.map((i: RecipeItem)  => i.style);
+    const invalidStylesString: string[] = invalidStyles.map(
+      (i: RecipeItem) => i.style,
+    );
     throw new Error(`Invalid style for [${invalidStylesString.toString()}]`);
   }
 
