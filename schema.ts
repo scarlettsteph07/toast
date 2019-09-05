@@ -31,7 +31,7 @@ const deleteIngredientsSchema = `
     required:
       - name
       - style
-  `;
+`;
 
 const getNewRecipeSchema = `
     type: object
@@ -65,7 +65,8 @@ const getNewRecipeSchema = `
       dietPreference:
         type: string
     required:
-      - numOfOptionalIngredients`;
+      - numOfOptionalIngredients
+`;
 
 export const validateSchema = (interpolate: string): Function => {
   // obtain schema definition
@@ -105,6 +106,7 @@ export class RequestValidator {
 
   public validateGetNewRecipeParams() {
     const validator = validateSchema(getNewRecipeSchema);
+    console.log('validator(this.payload): ', validator(this.payload));
     return validator(this.payload);
   }
 }

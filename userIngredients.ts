@@ -109,7 +109,10 @@ export class UserIngredients {
       .promise();
   }
 
-  publicasync deleteByStyle(name: string, style: string): Promise<UserIngredient> {
+  public async deleteByStyle(
+    name: string,
+    style: string,
+  ): Promise<UserIngredient> {
     const ingredient = await this.getItemByName(name);
     if (
       Object.keys(ingredient).length === 0 &&
