@@ -1,7 +1,24 @@
+import { APIGatewayProxyEvent, Context } from 'aws-lambda';
+
 export type Response = {
   statusCode: number;
   body: string;
   headers: object;
+};
+
+export type FilteredEvent = {
+  body: string;
+  headers: object;
+  httpMethod: string;
+  path: string;
+};
+
+export type GetNewRecipeFunc = (event: FilteredEvent) => Promise<RecipeItem[]>;
+export type GetNewRecipe = (event: APIGatewayProxyEvent) => Promise<Response>;
+
+export type IngredientHandler = {
+  getNewRecipeEvent: GetNewRecipeFunc;
+  getNewRecipe: GetNewRecipe;
 };
 
 type Item = {

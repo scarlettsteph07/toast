@@ -1,16 +1,14 @@
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 
-process.on('unhandledRejection', e => {
+process.on('unhandledRejection', (e) => {
   console.log(`you forgot to return a Promise! Check your tests! ${e.message}`);
 });
 
 import * as AWSMock from 'aws-sdk-mock';
 import * as AWS from 'aws-sdk';
 
-import { Response } from './types';
-
-import { getNewRecipe, getNewRecipeEvent } from './handler';
+import { Response, FilteredEvent, IngredientHandler } from './types';
 
 AWS.config.update({ region: 'us-east-1' });
 
@@ -30,28 +28,37 @@ beforeEach(() => {
 
 describe('invalid new recipe events', () => {
   it('should error when numOptionalIngredients is not a number', async () => {
-    const payload: { Body } = {
-      body: {
+    const payload: FilteredEvent = {
+      body: JSON.stringify({
         numOfOptionalIngredients: 'not a number',
         ...body,
-      },
+      }),
       headers,
+      httpMethod: 'POST',
+      path: '/test',
     };
     try {
-      await getNewRecipeEvent(payload, {});
+      const { getNewRecipeEvent } = require('./handler') as IngredientHandler;
+      await getNewRecipeEvent(payload);
     } catch (e) {
-      expect(e).to.have.property(
-        'property',
-        'instance.numOfOptionalIngredients',
-      );
+      expect(e).to.eq('instance.numOfOptionalIngredients');
       expect(e).to.have.property('message', 'is not of a type(s) integer');
     }
   });
 
   it('should error when user key header is missing', async () => {
-    const handler = require('./handler');
+    const payload: FilteredEvent = {
+      body: JSON.stringify({
+        numOfOptionalIngredients: 'not a number',
+        ...body,
+      }),
+      headers: {},
+      httpMethod: 'POST',
+      path: '/test',
+    };
     try {
-      await handler.getNewRecipeEvent({ body }, {});
+      const { getNewRecipeEvent } = require('./handler') as IngredientHandler;
+      await getNewRecipeEvent(payload);
     } catch (e) {
       expect(e).to.have.property('message', 'User Key is required');
     }
@@ -71,11 +78,14 @@ describe('valid new recipe events', () => {
 
   it('should return two required items numIngredients is 0', async () => {
     // Overwriting DynamoDB.DocumentClient.get()
-    const handler: Response = require('./handler');
-    const res: Promise<Response> = await handler.getNewRecipe(
-      { body, headers },
-      {},
-    );
+    const { getNewRecipe } = require('./handler') as IngredientHandler;
+    const payload: 12 = {
+      body,
+      headers,
+      httpMethod: 'POST',
+      path: '/test',
+    };
+    const res: Promise<Response> = getNewRecipe(payload);
     const responseBody = JSON.parse(res.body);
 
     expect(responseBody[0]).to.eql({
