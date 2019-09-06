@@ -1,21 +1,23 @@
-import { RecipeItem, IngredientTemplate, DietPreference } from './types';
+import { RecipeItem, Ingredient, DietPreference } from './types';
 
 const getRandomArrayIndex = (array: Array<string | object>): number =>
   Math.floor(Math.random() * array.length);
 
+const DEFAULT_DIET_PREFERENCE = 'carnivore';
+
 export class Recipe {
-  private readonly ingredients: IngredientTemplate[];
+  private readonly ingredients: Ingredient[];
   private readonly numOfItems: number;
   private readonly ignoreRequiredItems: RecipeItem[];
   private readonly ignoreOptionalItems: RecipeItem[];
   private readonly requestRequiredItems: RecipeItem[];
   private readonly requestOptionalItems: RecipeItem[];
   private chosenIngredients: RecipeItem[];
-  private requiredIngredients: IngredientTemplate[];
-  private optionalIngredients: IngredientTemplate[];
+  private requiredIngredients: Ingredient[];
+  private optionalIngredients: Ingredient[];
   private dietPreference: DietPreference;
 
-  constructor(ingredients: IngredientTemplate[], numOfItems: number) {
+  constructor(ingredients: Ingredient[], numOfItems: number) {
     this.ingredients = [...ingredients];
     this.numOfItems = numOfItems;
     this.ignoreRequiredItems = new Array();
@@ -23,9 +25,13 @@ export class Recipe {
     this.requestRequiredItems = new Array();
     this.requestOptionalItems = new Array();
     this.chosenIngredients = new Array();
-    this.requiredIngredients = [...this.filterRequiredIngredients()];
-    this.optionalIngredients = [...this.filterOptionalIngredients()];
-    this.dietPreference = 'carnivore';
+    this.dietPreference = DEFAULT_DIET_PREFERENCE;
+    this.requiredIngredients = [
+      ...this.filterRequiredIngredients(this.dietPreference),
+    ];
+    this.optionalIngredients = [
+      ...this.filterOptionalIngredients(this.dietPreference),
+    ];
   }
 
   public setDietPreference(dietPreference: DietPreference): void {
@@ -71,7 +77,7 @@ export class Recipe {
     }
 
     for (let i = 0; i < this.ignoreOptionalItems.length; i += 1) {
-      this.optionalIngredients.map((x: IngredientTemplate, index: number) => {
+      this.optionalIngredients.map((x: Ingredient, index: number) => {
         if (
           x.name === this.ignoreOptionalItems[i].name &&
           x.style.includes(this.ignoreOptionalItems[i].style)
@@ -103,7 +109,7 @@ export class Recipe {
 
     for (let i = 0; i < numRequiredMissing; i += 1) {
       const randomArrayIndex = getRandomArrayIndex(this.optionalIngredients);
-      const ingredientItem: IngredientTemplate = this.optionalIngredients[
+      const ingredientItem: Ingredient = this.optionalIngredients[
         randomArrayIndex
       ];
       const randomStyleIndex: number = getRandomArrayIndex(
@@ -130,7 +136,7 @@ export class Recipe {
     }
 
     for (let i = 0; i < this.ignoreRequiredItems.length; i += 1) {
-      this.requiredIngredients.map((x: IngredientTemplate) => {
+      this.requiredIngredients.map((x: Ingredient) => {
         if (
           x.name === this.ignoreRequiredItems[i].name &&
           x.style.includes(this.ignoreRequiredItems[i].style)
@@ -156,7 +162,7 @@ export class Recipe {
 
     for (let i = 0; i < numRequiredMissing; i += 1) {
       const randomArrayIndex = getRandomArrayIndex(this.requiredIngredients);
-      const ingredientItem: IngredientTemplate = this.requiredIngredients[
+      const ingredientItem: Ingredient = this.requiredIngredients[
         randomArrayIndex
       ];
       const randomStyleIndex: number = getRandomArrayIndex(

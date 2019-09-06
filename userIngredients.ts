@@ -1,10 +1,10 @@
 import * as AWS from 'aws-sdk';
+import * as _ from 'lodash';
 
 import {
   DynamoQueryResponse,
   Ingredient,
   IngredientNameParams,
-  IngredientTemplate,
   UserIngredient,
   DynamoResponse,
 } from './types';
@@ -69,34 +69,22 @@ export class UserIngredients {
     });
   }
 
-  getIngredientNameParams(name: string): IngredientNameParams {
-    return {
-      TableName: TABLE_NAME,
-      Key: {
-        userId: this.userKey,
-        name,
-      },
-    };
-  }
-
-  async bulkCreateIngredients(
-    recipeItems: Array<IngredientTemplate>,
+  public async bulkCreateIngredients(
+    recipeItems: Ingredient[],
   ): Promise<DynamoQueryResponse> {
     const params = {
       RequestItems: {
-        [TABLE_NAME]: recipeItems.map((i: IngredientTemplate) => {
-          return {
-            PutRequest: {
-              Item: {
-                name: i.name,
-                style: i.style,
-                type: i.type,
-                required: i.required,
-                userId: this.userKey,
-              },
+        [TABLE_NAME]: recipeItems.map((i: Ingredient) => ({
+          PutRequest: {
+            Item: {
+              name: i.name,
+              required: i.required,
+              style: i.style,
+              type: i.type,
+              userId: this.userKey,
             },
-          };
-        }),
+          },
+        })),
       },
     };
     return await dynamoDbClient.batchWrite(params).promise();
@@ -171,5 +159,15 @@ export class UserIngredients {
       resolve(res['Attributes']);
       reject({ error: 'blah' });
     });
+  }
+
+  private getIngredientNameParams(name: string): IngredientNameParams {
+    return {
+      Key: {
+        name,
+        userId: this.userKey,
+      },
+      TableName: TABLE_NAME,
+    };
   }
 }

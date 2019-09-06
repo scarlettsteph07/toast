@@ -5,7 +5,7 @@
   "main": "handler.js",
   "scripts": {
     "lint": "tslint --project tsconfig.json --format stylish",
-    "build": "tsc",
+    "build": "tsc --watch",
     "deploy": "npm run build && sls deploy",
     "debug": "export SLS_DEBUG=* && node --debug ./node_modules/.bin/serverless offline -s dev",
     "test": "ts-mocha **/*.spec.ts -watch-extensions ts --watch",
@@ -36,6 +36,7 @@
   "dependencies": {
     "@types/chai": "^4.2.0",
     "@types/js-yaml": "^3.12.1",
+    "@types/lodash": "^4.14.138",
     "@types/sinon": "^7.0.13",
     "@types/supertest": "^2.0.8",
     "aws-sdk": "^2.517.0",

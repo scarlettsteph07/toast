@@ -1,4 +1,4 @@
-import { APIGatewayProxyEvent } from 'aws-lambda';
+// import { APIGatewayProxyEvent } from 'aws-lambda';
 
 import {
   AddIngredientEvent,
@@ -17,16 +17,16 @@ export class EventSanitizer {
     this.event = event;
     const { headers, body } = this.parseEvent();
     this.headers = headers;
-    this.body = body;
+    this.body = typeof body === 'string' ? JSON.parse(body) : body;
   }
 
   public eventFilterAddIngredient(): AddIngredientEvent {
     return {
       ingredient: {
         name: this.body.name,
+        required: this.body.required,
         style: this.body.style,
         type: this.body.type,
-        required: this.body.required,
         userKey: this.getUserKey(),
       },
       userKey: this.getUserKey(),
@@ -43,15 +43,15 @@ export class EventSanitizer {
 
   public eventFilterNewRecipe(): NewRecipeEvent {
     return {
-      userKey: this.getUserKey(),
+      dietPreference: this.body.dietPreference,
       ignoredIngredients: this.body.hasOwnProperty('ignoredIngredients')
         ? this.body.ignoredIngredients
         : [],
+      numOfOptionalIngredients: this.body.numOfOptionalIngredients,
       requestedIngredients: this.body.hasOwnProperty('requestedIngredients')
         ? this.body.requestedIngredients
         : [],
-      numOfOptionalIngredients: this.body.numOfOptionalIngredients,
-      dietPreference: this.body.dietPreference,
+      userKey: this.getUserKey(),
     };
   }
 
