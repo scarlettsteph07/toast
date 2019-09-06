@@ -76,15 +76,13 @@ export class Recipe {
       return;
     }
 
-    for (let i = 0; i < this.ignoreOptionalItems.length; i += 1) {
+    for (const ignoreIngredient of this.ignoreOptionalItems) {
       this.optionalIngredients.map((x: Ingredient, index: number) => {
         if (
-          x.name === this.ignoreOptionalItems[i].name &&
-          x.style.includes(this.ignoreOptionalItems[i].style)
+          x.name === ignoreIngredient.name &&
+          x.style.includes(ignoreIngredient.style)
         ) {
-          x.style = x.style.filter(
-            (y) => y !== this.ignoreOptionalItems[i].style,
-          );
+          x.style = x.style.filter((y) => y !== ignoreIngredient.style);
 
           if (x.style.length === 0) {
             this.optionalIngredients.splice(index, 1);
@@ -135,15 +133,15 @@ export class Recipe {
       return;
     }
 
-    for (let i = 0; i < this.ignoreRequiredItems.length; i += 1) {
+    for (const ignoreRequiredItem of this.ignoreRequiredItems) {
       this.requiredIngredients.map((x: Ingredient) => {
         if (
-          x.name === this.ignoreRequiredItems[i].name &&
-          x.style.includes(this.ignoreRequiredItems[i].style)
+          x.name === ignoreRequiredItem.name &&
+          x.style.includes(ignoreRequiredItem.style)
         ) {
           if (x.style.length > 1) {
             x.style = x.style.filter(
-              (y) => y !== this.ignoreRequiredItems[i].style,
+              (y) => y !== ignoreRequiredItem.style,
             );
           }
         }
@@ -180,23 +178,19 @@ export class Recipe {
     }
   }
 
-  private filterOptionalIngredients(dietPreference?: DietPreference) {
-    const isDietPreferenceEmpty =
-      typeof dietPreference !== 'undefined' || dietPreference === '';
+  private filterOptionalIngredients(dietPreference: DietPreference) {
     return this.ingredients.filter(
       (i) =>
         !i.required &&
-        (isDietPreferenceEmpty || i.type.includes(dietPreference)),
+        i.type.includes(dietPreference),
     );
   }
 
-  private filterRequiredIngredients(dietPreference?: DietPreference) {
-    const isDietPreferenceEmpty =
-      typeof dietPreference !== 'undefined' || dietPreference === '';
+  private filterRequiredIngredients(dietPreference: DietPreference) {
     return this.ingredients.filter(
       (i) =>
         i.required &&
-        (isDietPreferenceEmpty || i.type.includes(dietPreference)),
+        i.type.includes(dietPreference),
     );
   }
 }

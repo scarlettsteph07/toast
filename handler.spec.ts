@@ -1,14 +1,9 @@
 import { expect } from 'chai';
 import * as sinon from 'sinon';
-
-process.on('unhandledRejection', (e) => {
-  console.log(`you forgot to return a Promise! Check your tests! ${e.message}`);
-});
-
 import * as AWSMock from 'aws-sdk-mock';
 import * as AWS from 'aws-sdk';
 
-import { Response, FilteredEvent, IngredientHandler } from './types';
+import { FilteredEvent, IngredientHandler } from './types';
 
 AWS.config.update({ region: 'us-east-1' });
 
@@ -78,22 +73,22 @@ describe('valid new recipe events', () => {
 
   it('should return two required items numIngredients is 0', async () => {
     // Overwriting DynamoDB.DocumentClient.get()
-    const { getNewRecipe } = require('./handler') as IngredientHandler;
-    const payload: 12 = {
+    const { getNewRecipeEvent } = require('./handler') as IngredientHandler;
+    const payload: FilteredEvent = {
       body,
       headers,
       httpMethod: 'POST',
       path: '/test',
     };
-    const res: Promise<Response> = await getNewRecipe(payload);
-    const responseBody = JSON.parse(res.body);
 
-    expect(responseBody[0]).to.eql({
+    const recipeItems = await getNewRecipeEvent(payload);
+
+    expect(recipeItems[0]).to.eql({
       name: 'avocado',
       required: true,
       style: 'avocado',
     });
-    expect(responseBody[1]).to.eql({
+    expect(recipeItems[1]).to.eql({
       name: 'bread',
       required: true,
       style: 'bagel',
@@ -101,48 +96,51 @@ describe('valid new recipe events', () => {
   });
 
   it('should return 5 ingredient items', async () => {
-    // Overwriting DynamoDB.DocumentClient.get()
-    const handler = require('./handler');
-    const payload = {
-      ...body,
-      numOfOptionalIngredients: 5,
+    const { getNewRecipeEvent } = require('./handler') as IngredientHandler;
+    const payload: FilteredEvent = {
+      body: {
+        ...body,
+        numOfOptionalIngredients: 5,
+      },
+      headers,
+      httpMethod: 'POST',
+      path: '/test',
     };
-    const res = await handler.getNewRecipe({ body: payload, headers }, {});
-    const responseBody = JSON.parse(res.body);
+    const recipeItems = await getNewRecipeEvent(payload);
 
-    //   expect(responseBody[0]).to.eql({
-    //     name: 'avocado',
-    //     required: true,
-    //     style: 'avocado',
-    //   });
-    //   expect(responseBody[1]).to.eql({
-    //     name: 'bread',
-    //     required: true,
-    //     style: 'bagel',
-    //   });
-    //   expect(responseBody[2]).to.eql({
-    //     name: 'tomato',
-    //     required: false,
-    //     style: 'fresh tomato',
-    //   });
-    //   expect(responseBody[3]).to.eql({
-    //     name: 'herbs',
-    //     required: false,
-    //     style: 'cilantro',
-    //   });
-    //   expect(responseBody[4]).to.eql({
-    //     name: 'salt',
-    //     required: false,
-    //     style: 'sea salt',
-    //   });
-    expect(responseBody).to.have.lengthOf(5);
+    expect(recipeItems[0]).to.eql({
+      name: 'avocado',
+      required: true,
+      style: 'avocado',
+    });
+    expect(recipeItems[1]).to.eql({
+      name: 'bread',
+      required: true,
+      style: 'bagel',
+    });
+    expect(recipeItems[2]).to.eql({
+      name: 'tomato',
+      required: false,
+      style: 'fresh tomato',
+    });
+    expect(recipeItems[3]).to.eql({
+      name: 'herbs',
+      required: false,
+      style: 'cilantro',
+    });
+    expect(recipeItems[4]).to.eql({
+      name: 'salt',
+      required: false,
+      style: 'sea salt',
+    });
+    expect(recipeItems).to.have.lengthOf(5);
   });
 
-  it.skip('should return items from dynamo db if they exist', async () => {
+  it('should return items from dynamo db if they exist', async () => {
     const returnData = (params: AWS.DynamoDB.QueryInput): any => {
-      expect(params['TableName']).to.eql('UserIngredients');
-      expect(params['KeyConditionExpression']).to.eql('#userId = :userId');
-      expect(params['ExpressionAttributeNames']).to.eql({
+      expect(params.TableName).to.eql('UserIngredients');
+      expect(params.KeyConditionExpression).to.eql('#userId = :userId');
+      expect(params.ExpressionAttributeNames).to.eql({
         '#userId': 'userId',
       });
       return Promise.resolve({
@@ -163,17 +161,20 @@ describe('valid new recipe events', () => {
       });
     };
     AWSMock.remock('DynamoDB.DocumentClient', 'query', returnData);
-
-    const payload = {
-      ...body,
-      dietPreference: 'indica',
-      numOfOptionalIngredients: 2,
+    const { getNewRecipeEvent } = require('./handler') as IngredientHandler;
+    const payload: FilteredEvent = {
+      body: {
+        ...body,
+        dietPreference: 'indica',
+        numOfOptionalIngredients: 2,
+      },
+      headers,
+      httpMethod: 'POST',
+      path: '/test',
     };
 
-    const handler = require('./handler');
-    const res = await handler.getNewRecipe({ body: payload, headers }, {});
-    const responseBody = JSON.parse(res.body);
-    expect(responseBody).to.eql([
+    const recipeItems = await getNewRecipeEvent(payload);
+    expect(recipeItems).to.eql([
       {
         name: 'flower',
         required: true,
@@ -185,7 +186,7 @@ describe('valid new recipe events', () => {
         style: 'smoke',
       },
     ]);
-    expect(responseBody).to.have.lengthOf(2);
+    expect(recipeItems).to.have.lengthOf(2);
   });
 
   afterEach(function() {

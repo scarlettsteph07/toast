@@ -106,7 +106,6 @@ export class RequestValidator {
 
   public validateGetNewRecipeParams() {
     const validator = validateSchema(getNewRecipeSchema);
-    console.log('validator(this.payload): ', validator(this.payload));
     return validator(this.payload);
   }
 }
