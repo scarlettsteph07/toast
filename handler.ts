@@ -1,10 +1,14 @@
 'use strict';
 
+import * as _ from 'lodash';
+
 import { Recipe } from './recipe';
 import { defaultIngredients } from './config';
 import { EventSanitizer } from './eventSanitizer';
 import { RequestValidator } from './schema';
 import { eventWrapper } from './utils';
+import { UserIngredients } from './userIngredients';
+
 import {
   RecipeItem,
   UserIngredient,
@@ -12,7 +16,6 @@ import {
   FilteredEvent,
   NewRecipeEvent,
 } from './types';
-import { UserIngredients } from './userIngredients';
 
 const addIngredientEvent = async (
   event: FilteredEvent,
@@ -80,10 +83,11 @@ export const getNewRecipeEvent = async (
   const invalidIngredients: RecipeItem[] = [];
 
   ignoredIngredients.map((i: RecipeItem) => {
-    const ingredient: Ingredient = recipeItems.find(
+    const ingredient: Ingredient | undefined = recipeItems.find(
       (r: Ingredient): boolean => r.name === i.name,
     );
-    if (!ingredient) {
+
+    if (_.isNil(ingredient) || _.isEmpty(ingredient)) {
       invalidIngredients.push(i);
     } else {
       if (!ingredient.style.includes(i.style)) {
@@ -95,7 +99,7 @@ export const getNewRecipeEvent = async (
     }
   });
 
-  if (invalidIngredients.length > 0) {
+  if (!_.isNil(invalidIngredients) && !_.isEmpty(invalidIngredients)) {
     const invalidateIngredientString: string[] = invalidIngredients.map(
       (i: RecipeItem) => i.style,
     );

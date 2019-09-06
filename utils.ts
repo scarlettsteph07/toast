@@ -14,28 +14,28 @@ export const eventWrapper = (originalFunction: Function) => async (
     const data = await originalFunction(event);
     if (Object.keys(data).length === 0 && data.constructor === Object) {
       return {
-        statusCode: 404,
         body: JSON.stringify({
           error: 'Item not found',
         }),
         headers: DEFAULT_HEADERS,
+        statusCode: 404,
       };
     }
     return {
-      statusCode: '200',
-      headers: DEFAULT_HEADERS,
       body: JSON.stringify(data),
+      headers: DEFAULT_HEADERS,
+      statusCode: '200',
     };
   } catch (e) {
     console.error('error: ', e);
     return {
-      statusCode: '400',
-      headers: DEFAULT_HEADERS,
       body: JSON.stringify({
         error: `${e.property ? e.property.split('.')[1] + ' ' : ''}${
           e.message
         }`,
       }),
+      headers: DEFAULT_HEADERS,
+      statusCode: '400',
     };
   }
 };

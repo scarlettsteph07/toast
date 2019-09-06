@@ -1,4 +1,4 @@
-import { APIGatewayProxyEvent, Context } from 'aws-lambda';
+import { APIGatewayProxyEvent } from 'aws-lambda';
 
 export type Response = {
   statusCode: number;
@@ -76,17 +76,10 @@ export type DeleteIngredientStyleEvent = BaseIngredientEvent & {
 };
 
 export type NewRecipeEvent = BaseIngredientEvent & {
-  numOfOptionalIngredients: number;
-  ignoredIngredients: RecipeItem[];
-  requestedIngredients: RecipeItem[];
   dietPreference: DietPreference;
-};
-
-export type IngredientTemplate = {
-  name: string;
-  style: string[];
-  type: string[];
-  required: boolean;
+  ignoredIngredients: RecipeItem[];
+  numOfOptionalIngredients: number;
+  requestedIngredients: RecipeItem[];
 };
 
 export type DietPreference = 'carnivore' | 'vegan' | 'vegetarian';

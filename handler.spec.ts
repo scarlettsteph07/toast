@@ -27,7 +27,7 @@ beforeEach(() => {
 });
 
 describe('invalid new recipe events', () => {
-  it.skip('should error when numOptionalIngredients is not a number', async () => {
+  it('should error when numOptionalIngredients is not a number', async () => {
     const payload: FilteredEvent = {
       body: JSON.stringify({
         numOfOptionalIngredients: 'not a number',
@@ -89,23 +89,26 @@ describe('valid new recipe events', () => {
     const responseBody = JSON.parse(res.body);
 
     expect(responseBody[0]).to.eql({
-      style: 'avocado',
       name: 'avocado',
       required: true,
+      style: 'avocado',
     });
     expect(responseBody[1]).to.eql({
-      style: 'bagel',
       name: 'bread',
       required: true,
+      style: 'bagel',
     });
   });
 
   it('should return 5 ingredient items', async () => {
     // Overwriting DynamoDB.DocumentClient.get()
     const handler = require('./handler');
-    const payload = Object.assign({}, body, { numOfOptionalIngredients: 5 });
+    const payload = {
+      ...body,
+      numOfOptionalIngredients: 5,
+    };
     const res = await handler.getNewRecipe({ body: payload, headers }, {});
-    let responseBody = JSON.parse(res.body);
+    const responseBody = JSON.parse(res.body);
 
     //   expect(responseBody[0]).to.eql({
     //     name: 'avocado',
@@ -146,14 +149,14 @@ describe('valid new recipe events', () => {
         Items: [
           {
             name: 'flower',
-            style: ['smoke', 'eat', 'vape'],
             required: true,
+            style: ['smoke', 'eat', 'vape'],
             type: ['indica', 'cbd', 'sativa'],
           },
           {
             name: 'joint',
-            style: ['smoke', 'eat', 'vape'],
             required: true,
+            style: ['smoke', 'eat', 'vape'],
             type: ['indica', 'cbd', 'sativa'],
           },
         ],
@@ -161,10 +164,11 @@ describe('valid new recipe events', () => {
     };
     AWSMock.remock('DynamoDB.DocumentClient', 'query', returnData);
 
-    const payload = Object.assign({}, body, {
+    const payload = {
+      ...body,
       dietPreference: 'indica',
       numOfOptionalIngredients: 2,
-    });
+    };
 
     const handler = require('./handler');
     const res = await handler.getNewRecipe({ body: payload, headers }, {});
@@ -186,6 +190,6 @@ describe('valid new recipe events', () => {
 
   afterEach(function() {
     sinon.restore();
-    //AWSMock.restore();
+    // AWSMock.restore();
   });
 });
