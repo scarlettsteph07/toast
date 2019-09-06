@@ -54,7 +54,7 @@ export const getIngredientsByUserId = eventWrapper(getIngredientsByUserIdEvent);
 
 export const getNewRecipeEvent = async (
   event: FilteredEvent,
-): Promise<RecipeItem[]> => {
+) => {
   const {
     userKey,
     numOfOptionalIngredients,

@@ -2,6 +2,11 @@
   "lintOptions": {
     "typeCheck": true
   },
+  "linterOptions": {
+    "exclude": [
+      "node_modules/**"
+    ]
+  },
   "extends": "tslint:all",
   "rules": {
     "quotemark": [
@@ -67,9 +72,13 @@
     ],
     "member-ordering": [
       true,
-      "public-before-private",
-      "static-before-instance",
-      "variables-before-functions"
+      {
+        "order": [
+            "public-before-private",
+            "static-before-instance",
+            "variables-before-functions"
+        ]
+    }
     ],
     "newline-per-chained-call": false,
     "no-switch-case-fall-through": true,
@@ -86,7 +95,8 @@
       "allow-pascal-case"
     ],
     "file-name-casing": [
-      false
+      true,
+      "camel-case"
     ]
   }
 }

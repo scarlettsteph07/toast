@@ -1,5 +1,4 @@
 import * as AWS from 'aws-sdk';
-import * as _ from 'lodash';
 
 import {
   DynamoQueryResponse,
@@ -51,27 +50,35 @@ export class UserIngredients {
     const dynamoResponse = await dynamoDbClient.query(params).promise();
 
     return new Promise((resolve, reject) => {
-      if (!dynamoResponse.hasOwnProperty('Items')) {
-        reject({ error: 'no results returned' });
+      if (dynamoResponse.Items !== undefined) {
+        resolve(
+          dynamoResponse.Items.map(
+            (item): Ingredient => {
+              if (item !== undefined) {
+                return {
+                  name: item.name as string,
+                  required: item.required as boolean,
+                  style: item.style as [],
+                  type: item.type as [],
+                };
+              }
+              return {
+                name: '',
+                required: false,
+                style: [],
+                type: [],
+              };
+            },
+          ).filter((i) => i.name !== ''),
+        );
       }
-      resolve(
-        dynamoResponse['Items'].map(
-          (item: Ingredient): Ingredient => {
-            return {
-              name: item.name,
-              style: item.style,
-              type: item.type,
-              required: item.required,
-            };
-          },
-        ),
-      );
+      reject({ error: 'no results returned' });
     });
   }
 
   public async bulkCreateIngredients(
     recipeItems: Ingredient[],
-  ): Promise<DynamoQueryResponse> {
+  ): Promise<boolean> {
     const params = {
       RequestItems: {
         [TABLE_NAME]: recipeItems.map((i: Ingredient) => ({
@@ -87,7 +94,13 @@ export class UserIngredients {
         })),
       },
     };
-    return await dynamoDbClient.batchWrite(params).promise();
+    try {
+      await dynamoDbClient.batchWrite(params).promise();
+      return true;
+    } catch(e) {
+      console.error(e);
+      return false;
+    }
   }
 
   public async getItemByName(name: string): Promise<DynamoResponse> {

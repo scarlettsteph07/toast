@@ -7,7 +7,7 @@ export type Response = {
 };
 
 export type FilteredEvent = {
-  body: string;
+  body: any;
   headers: object;
   httpMethod: string;
   path: string;
