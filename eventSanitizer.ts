@@ -4,8 +4,12 @@ import {
   AddIngredientEvent,
   DeleteIngredientStyleEvent,
   BaseIngredientEvent,
+  NewRecipe,
   FilteredEvent,
   NewRecipeEvent,
+  Ingredient,
+  DeleteIngredientStyle,
+  UserHeaders,
 } from './types';
 
 export class EventSanitizer {
@@ -21,12 +25,13 @@ export class EventSanitizer {
   }
 
   public eventFilterAddIngredient(): AddIngredientEvent {
+    const { name, required, style, type } = this.body as Ingredient;
     return {
       ingredient: {
-        name: this.body.name,
-        required: this.body.required,
-        style: this.body.style,
-        type: this.body.type,
+        name,
+        required,
+        style,
+        type,
         userKey: this.getUserKey(),
       },
       userKey: this.getUserKey(),
@@ -34,23 +39,29 @@ export class EventSanitizer {
   }
 
   public eventFilterDeleteIngredientStyle(): DeleteIngredientStyleEvent {
+    const { name, style } = this.body as DeleteIngredientStyle;
     return {
-      name: this.body.name,
-      style: this.body.style,
+      name,
+      style,
       userKey: this.getUserKey(),
     };
   }
 
   public eventFilterNewRecipe(): NewRecipeEvent {
+    const {
+      dietPreference,
+      ignoredIngredients,
+      numOfOptionalIngredients,
+      requestedIngredients,
+    } = this.body as NewRecipe;
+
     return {
-      dietPreference: this.body.dietPreference,
-      ignoredIngredients: this.body.hasOwnProperty('ignoredIngredients')
-        ? this.body.ignoredIngredients
-        : [],
-      numOfOptionalIngredients: this.body.numOfOptionalIngredients,
-      requestedIngredients: this.body.hasOwnProperty('requestedIngredients')
-        ? this.body.requestedIngredients
-        : [],
+      dietPreference,
+      ignoredIngredients:
+        ignoredIngredients !== undefined ? ignoredIngredients : [],
+      numOfOptionalIngredients,
+      requestedIngredients:
+        requestedIngredients !== undefined ? requestedIngredients : [],
       userKey: this.getUserKey(),
     };
   }
@@ -63,11 +74,11 @@ export class EventSanitizer {
     return {
       body:
         typeof this.event.body === 'string'
-          ? JSON.parse(this.event.body)
+          ? (JSON.parse(this.event.body) as object)
           : this.event.body,
       headers:
         typeof this.event.headers === 'string'
-          ? JSON.parse(this.event.headers)
+          ? (JSON.parse(this.event.headers) as object)
           : this.event.headers,
       ...this.event,
     };
@@ -77,9 +88,13 @@ export class EventSanitizer {
     if (!this.headers) {
       throw new Error('User Key is required');
     }
-    const userKey = this.headers['X-User-Key'] || this.headers['x-user-key'];
+    const { headers } = this.headers as UserHeaders;
+    const userKey =
+      headers['X-User-Key'] !== undefined
+        ? headers['X-User-Key']
+        : headers['x-user-key'];
 
-    if (!userKey) {
+    if (userKey === undefined) {
       throw new Error('User Key is required');
     }
     return userKey;
