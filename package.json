@@ -8,7 +8,8 @@
     "build": "tsc --watch",
     "deploy": "npm run build && sls deploy",
     "debug": "export SLS_DEBUG=* && node --debug ./node_modules/.bin/serverless offline -s dev",
-    "test": "ts-mocha **/*.spec.ts -watch-extensions ts --watch",
+    "test": "ts-mocha **/*.spec.ts",
+    "watch": "ts-mocha **/*.spec.ts -watch-extensions ts --watch",
     "coverage": "tsc && nyc mocha"
   },
   "repository": {
