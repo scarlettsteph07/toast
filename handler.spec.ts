@@ -69,7 +69,7 @@ describe('valid new recipe events', () => {
       Promise.resolve({ foo: 'expectedError' }),
     );
   });
-  AWSMock.mock('DynamoDB.DocumentClient', 'query', Promise.resolve({}));
+  AWSMock.mock('DynamoDB.DocumentClient', 'query', Promise.resolve({Items: []}));
 
   it('should return two required items numIngredients is 0', async () => {
     // Overwriting DynamoDB.DocumentClient.get()

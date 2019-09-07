@@ -71,11 +71,11 @@ export const getNewRecipeEvent = async (
 
   let userIngredients: Ingredient[];
 
-  // try {
-  //   userIngredients = await new UserIngredients(userKey).getAll();
-  // } catch (error) {
-  userIngredients = [];
-  // }
+  try {
+    userIngredients = await new UserIngredients(userKey).getAll();
+  } catch (error) {
+    userIngredients = [];
+  }
   const recipeItems =
     userIngredients.length === 0 ? defaultIngredients() : userIngredients;
 
