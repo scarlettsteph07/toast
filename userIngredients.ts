@@ -1,11 +1,10 @@
 import * as AWS from 'aws-sdk';
 
 import {
-  DynamoQueryResponse,
   Ingredient,
   IngredientNameParams,
   UserIngredient,
-  DynamoResponse,
+  Item,
 } from './types';
 
 const options = {
@@ -22,7 +21,7 @@ const isOffline = function() {
 };
 
 const dynamodb = () =>
-  isOffline()
+  (isOffline() as boolean)
     ? new AWS.DynamoDB.DocumentClient(options)
     : new AWS.DynamoDB.DocumentClient();
 
@@ -97,17 +96,23 @@ export class UserIngredients {
     try {
       await dynamoDbClient.batchWrite(params).promise();
       return true;
-    } catch(e) {
+    } catch (e) {
       console.error(e);
       return false;
     }
   }
 
-  public async getItemByName(name: string): Promise<DynamoResponse> {
-    // TODO: fix this because its probably broken
-    return await dynamoDbClient
+  public async getItemByName(name: string): Promise<Item> {
+    const ingredient = await dynamoDbClient
       .get(this.getIngredientNameParams(name))
       .promise();
+
+    return new Promise((resolve, reject) => {
+      if (ingredient !== undefined) {
+        resolve(ingredient.Item as Item);
+      }
+      reject('no items found');
+    });
   }
 
   public async deleteByStyle(
@@ -115,20 +120,26 @@ export class UserIngredients {
     style: string,
   ): Promise<UserIngredient> {
     const ingredient = await this.getItemByName(name);
+
     if (
-      Object.keys(ingredient).length === 0 &&
-      ingredient.constructor === Object
+      Object.keys(ingredient).length === 0
     ) {
       return new Promise((resolve, reject) => {
-        resolve(Object.assign({ userKey: this.userKey }, ingredient['Item']));
+        resolve({ userKey: this.userKey, ...ingredient});
         reject({ error: 'no results returned' });
       });
     }
-    const styles = ingredient.Item.style;
+
+    const styles = ingredient.style;
     if (styles.length === 0) {
-      return dynamoDbClient
+      const deleteResult = await dynamoDbClient
         .delete(this.getIngredientNameParams(name))
         .promise();
+
+      return new Promise((resolve, reject) => {
+        resolve(deleteResult.Attributes as UserIngredient);
+        reject("error deleting item");
+      });
     }
 
     const updateParams = {
@@ -147,10 +158,10 @@ export class UserIngredients {
       name,
     };
 
-    const res = await dynamoDbClient.update(updateParams).promise();
+    const updateResult = await dynamoDbClient.update(updateParams).promise();
 
     return new Promise((resolve, reject) => {
-      resolve(res['Attributes']);
+      resolve(updateResult.Attributes as UserIngredient);
       reject({ error: 'error updating from dynamo' });
     });
   }
@@ -169,7 +180,7 @@ export class UserIngredients {
     const res = await dynamoDbClient.put(params).promise();
 
     return new Promise((resolve, reject) => {
-      resolve(res['Attributes']);
+      resolve(res.Attributes as UserIngredient);
       reject({ error: 'blah' });
     });
   }
