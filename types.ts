@@ -7,7 +7,7 @@ export type Response = {
 };
 
 export type FilteredEvent = {
-  body: any;
+  body: object | string;
   headers: object;
   httpMethod: string;
   path: string;
@@ -66,7 +66,8 @@ export type BaseIngredientEvent = {
   userKey: string;
 };
 
-export type AddIngredientEvent = BaseIngredientEvent & {
+export type AddIngredientEvent = {
+  userKey: string;
   ingredient: UserIngredient;
 };
 
@@ -75,11 +76,30 @@ export type DeleteIngredientStyleEvent = BaseIngredientEvent & {
   style: string;
 };
 
+export type DeleteIngredientStyle = {
+  name: string;
+  style: string;
+};
+
+export type NewRecipe = {
+  dietPreference: DietPreference;
+  ignoredIngredients: RecipeItem[];
+  numOfOptionalIngredients: number;
+  requestedIngredients: RecipeItem[];
+};
+
 export type NewRecipeEvent = BaseIngredientEvent & {
   dietPreference: DietPreference;
   ignoredIngredients: RecipeItem[];
   numOfOptionalIngredients: number;
   requestedIngredients: RecipeItem[];
+};
+
+export type UserHeaders = {
+  headers: {
+    'X-User-Key'?: string;
+    'x-user-key'?: string;
+  };
 };
 
 export type DietPreference = 'carnivore' | 'vegan' | 'vegetarian';
