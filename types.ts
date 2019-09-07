@@ -12,9 +12,21 @@ export type FilteredEvent = {
   httpMethod: string;
   path: string;
 };
+export type ErrorMessage = {
+  property: string;
+  message: string;
+};
 
 export type GetNewRecipeFunc = (event: FilteredEvent) => Promise<RecipeItem[]>;
 export type GetNewRecipe = (event: APIGatewayProxyEvent) => Promise<Response>;
+
+export type IngredientStyleFunc = (
+  event: FilteredEvent,
+) => Promise<UserIngredient>;
+
+export type GetIngredientsByUserIdFunc = (
+  event: FilteredEvent,
+) => Promise<Ingredient[]>;
 
 export type IngredientHandler = {
   getNewRecipeEvent: GetNewRecipeFunc;
