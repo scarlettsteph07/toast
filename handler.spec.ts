@@ -95,7 +95,7 @@ describe('valid new recipe events', () => {
     });
   });
 
-  it.skip('should return 5 ingredient items', async () => {
+  it('should return 5 ingredient items', async () => {
     const { getNewRecipeEvent } = require('./handler') as IngredientHandler;
     const payload: FilteredEvent = {
       body: {
