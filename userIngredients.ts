@@ -1,150 +1,195 @@
-const dynamodb = require("serverless-dynamodb-client");
+import * as AWS from 'aws-sdk';
 
 import {
-  DynamoQueryResponse,
-  IngredientNameParams,
   Ingredient,
-  IngredientTemplate,
+  IngredientNameParams,
   UserIngredient,
-  DynamoResponse
-} from "./types";
+  Item,
+} from './types';
 
-export const TABLE_NAME = "UserIngredients";
-const dynamoDbClient = dynamodb.doc;
+const options = {
+  endpoint: 'http://localhost:8000',
+  region: 'localhost',
+};
+
+const isOffline = function() {
+  if (process.env.hasOwnProperty('IS_OFFLINE')) {
+    return process.env.IS_OFFLINE;
+  }
+  // Depends on serverless-offline plugion which adds IS_OFFLINE to process.env when running offline
+  return false;
+};
+
+const dynamodb = () =>
+  (isOffline() as boolean)
+    ? new AWS.DynamoDB.DocumentClient(options)
+    : new AWS.DynamoDB.DocumentClient();
+
+export const TABLE_NAME = 'UserIngredients';
+const dynamoDbClient = dynamodb();
 
 export class UserIngredients {
-  userKey: string;
+  private readonly userKey: string;
 
   constructor(userKey: string) {
     this.userKey = userKey;
   }
 
-  async getAll(): Promise<Array<Ingredient>> {
+  public async getAll(): Promise<Ingredient[]> {
     const params = {
-      TableName: TABLE_NAME,
-      KeyConditionExpression: "#userId = :userId",
       ExpressionAttributeNames: {
-        "#userId": "userId"
+        '#userId': 'userId',
       },
       ExpressionAttributeValues: {
-        ":userId": this.userKey
-      }
+        ':userId': this.userKey,
+      },
+      KeyConditionExpression: '#userId = :userId',
+      TableName: TABLE_NAME,
     };
     const dynamoResponse = await dynamoDbClient.query(params).promise();
 
     return new Promise((resolve, reject) => {
-      resolve(
-        dynamoResponse["Items"].map(
-          (item: Ingredient): Ingredient => {
-            return {
-              name: item.name,
-              style: item.style,
-              type: item.type,
-              required: item.required
-            };
-          }
-        )
-      );
-      reject({ error: "no results returned" });
+      if (dynamoResponse.Items !== undefined) {
+        resolve(
+          dynamoResponse.Items.map(
+            (item): Ingredient => {
+              if (item !== undefined) {
+                return {
+                  name: item.name as string,
+                  required: item.required as boolean,
+                  style: item.style as [],
+                  type: item.type as [],
+                };
+              }
+              return {
+                name: '',
+                required: false,
+                style: [],
+                type: [],
+              };
+            },
+          ).filter((i) => i.name !== ''),
+        );
+      }
+      reject({ error: 'no results returned' });
     });
   }
 
-  getIngredientNameParams(name: string): IngredientNameParams {
-    return {
-      TableName: TABLE_NAME,
-      Key: {
-        userId: this.userKey,
-        name
-      }
-    };
-  }
-
-  async bulkCreateIngredients(
-    recipeItems: Array<IngredientTemplate>
-  ): Promise<DynamoQueryResponse> {
+  public async bulkCreateIngredients(
+    recipeItems: Ingredient[],
+  ): Promise<boolean> {
     const params = {
       RequestItems: {
-        [TABLE_NAME]: recipeItems.map((i: IngredientTemplate) => {
-          return {
-            PutRequest: {
-              Item: {
-                name: i.name,
-                style: i.style,
-                type: i.type,
-                required: i.required,
-                userId: this.userKey
-              }
-            }
-          };
-        })
-      }
+        [TABLE_NAME]: recipeItems.map((i: Ingredient) => ({
+          PutRequest: {
+            Item: {
+              name: i.name,
+              required: i.required,
+              style: i.style,
+              type: i.type,
+              userId: this.userKey,
+            },
+          },
+        })),
+      },
     };
-    return await dynamoDbClient.batchWrite(params).promise();
+    const result = await dynamoDbClient.batchWrite(params).promise();
+    return new Promise((resolve, reject) => {
+      if (result !== undefined) {
+        resolve(true);
+      }
+      reject('no items found');
+    });
   }
 
-  async getItemByName(name: string): Promise<DynamoResponse> {
-    // TODO: fix this because its probably broken
-    return await dynamoDbClient
+  public async getItemByName(name: string): Promise<Item> {
+    const ingredient = await dynamoDbClient
       .get(this.getIngredientNameParams(name))
       .promise();
+
+    return new Promise((resolve, reject) => {
+      if (ingredient !== undefined) {
+        resolve(ingredient.Item as Item);
+      }
+      reject('no items found');
+    });
   }
 
-  async deleteByStyle(name: string, style: string): Promise<UserIngredient> {
+  public async deleteByStyle(
+    name: string,
+    style: string,
+  ): Promise<UserIngredient> {
     const ingredient = await this.getItemByName(name);
-    if (
-      Object.keys(ingredient).length === 0 &&
-      ingredient.constructor === Object
-    ) {
+
+    if (Object.keys(ingredient).length === 0) {
       return new Promise((resolve, reject) => {
-        resolve(Object.assign({ userKey: this.userKey }, ingredient["Item"]));
-        reject({ error: "no results returned" });
+        resolve({ userKey: this.userKey, ...ingredient });
+        reject({ error: 'no results returned' });
       });
     }
-    const styles = ingredient.Item.style;
+
+    const styles = ingredient.style;
     if (styles.length === 0) {
-      return dynamoDbClient
+      const deleteResult = await dynamoDbClient
         .delete(this.getIngredientNameParams(name))
         .promise();
+
+      return new Promise((resolve, reject) => {
+        resolve(deleteResult.Attributes as UserIngredient);
+        reject('error deleting item');
+      });
     }
 
     const updateParams = {
-      UpdateExpression: "set #style = :styles",
       ExpressionAttributeNames: {
-        "#style": "style"
+        '#style': 'style',
       },
       ExpressionAttributeValues: {
-        ":styles": styles.filter((s: String) => s !== style)
+        ':styles': styles.filter((s: string) => s !== style),
       },
-      ReturnValues: "ALL_NEW",
-      TableName: TABLE_NAME,
       Key: {
         userId: this.userKey,
-        name
-      }
+      },
+      ReturnValues: 'ALL_NEW',
+      TableName: TABLE_NAME,
+      UpdateExpression: 'set #style = :styles',
+      name,
     };
 
-    const res = await dynamoDbClient.update(updateParams).promise();
+    const updateResult = await dynamoDbClient.update(updateParams).promise();
 
     return new Promise((resolve, reject) => {
-      resolve(res["Attributes"]);
-      reject({ error: "error updating from dynamo" });
+      resolve(updateResult.Attributes as UserIngredient);
+      reject({ error: 'error updating from dynamo' });
     });
   }
 
-  async createIngredient(ingredient: Ingredient): Promise<UserIngredient> {
+  public async createIngredient(
+    ingredient: Ingredient,
+  ): Promise<UserIngredient> {
     const params = {
-      TableName: TABLE_NAME,
       Item: {
+        ...ingredient,
         userId: this.userKey,
-        ...ingredient
       },
-      ReturnValues: "ALL_OLD"
+      ReturnValues: 'ALL_OLD',
+      TableName: TABLE_NAME,
     };
     const res = await dynamoDbClient.put(params).promise();
 
     return new Promise((resolve, reject) => {
-      resolve(res["Attributes"]);
-      reject({ error: "blah" });
+      resolve(res.Attributes as UserIngredient);
+      reject({ error: 'blah' });
     });
+  }
+
+  private getIngredientNameParams(name: string): IngredientNameParams {
+    return {
+      Key: {
+        name,
+        userId: this.userKey,
+      },
+      TableName: TABLE_NAME,
+    };
   }
 }

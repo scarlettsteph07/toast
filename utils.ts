@@ -1,37 +1,50 @@
-import { APIGatewayProxyEvent, Context } from "aws-lambda";
+import { APIGatewayProxyEvent, Context } from 'aws-lambda';
 
-const DEFAULT_HEADERS =  {
-  'Content-Type': 'application/json',
+import {
+  GetNewRecipeFunc,
+  FilteredEvent,
+  IngredientStyleFunc,
+  GetIngredientsByUserIdFunc,
+  ErrorMessage,
+} from './types';
+
+const DEFAULT_HEADERS = {
+  'Access-Control-Allow-Credentials': true,
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Credentials': true
+  'Content-Type': 'application/json',
 };
 
-export const eventWrapper = (originalFunction: Function) =>
-async (event: APIGatewayProxyEvent, _context: Context) => {
+export const eventWrapper = (
+  originalFunction:
+    | GetNewRecipeFunc
+    | IngredientStyleFunc
+    | GetIngredientsByUserIdFunc,
+) => async (event: APIGatewayProxyEvent, _context: Context) => {
   try {
-    const data = await originalFunction(event, _context);
-    if (Object.keys(data).length === 0 && data.constructor === Object) {
+    const filteredEvent = event as FilteredEvent;
+    const data = await originalFunction(filteredEvent);
+    if (Object.keys(data).length === 0) {
       return {
-        statusCode: 404,
         body: JSON.stringify({
-          error: "Item not found"
+          error: 'Item not found',
         }),
-        headers: DEFAULT_HEADERS
+        headers: DEFAULT_HEADERS,
+        statusCode: 404,
       };
     }
     return {
-      statusCode: '200',
-      headers: DEFAULT_HEADERS,
       body: JSON.stringify(data),
-    }
-  } catch (e) {
-    console.error('error: ', e);
-    return {
-      statusCode: '400',
       headers: DEFAULT_HEADERS,
+      statusCode: '200',
+    };
+  } catch (e) {
+    const error = e as ErrorMessage;
+    return {
       body: JSON.stringify({
-        error: `${e.property ? e.property.split(".")[1] + ' ' : ''}${e.message}`,
+        error: `${error.property.split('.')[1]}}${error.message}`,
       }),
-    }
+      headers: DEFAULT_HEADERS,
+      statusCode: '400',
+    };
   }
-}
+};

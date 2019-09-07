@@ -1,22 +1,51 @@
+import { APIGatewayProxyEvent } from 'aws-lambda';
+
 export type Response = {
-  statusCode: Number;
-  body: String;
-  headers: Object;
+  statusCode: number;
+  body: string;
+  headers: object;
 };
 
-type Item = {
+export type FilteredEvent = {
+  body: object | string;
+  headers: object;
+  httpMethod: string;
+  path: string;
+};
+export type ErrorMessage = {
+  property: string;
+  message: string;
+};
+
+export type GetNewRecipeFunc = (event: FilteredEvent) => Promise<RecipeItem[]>;
+export type GetNewRecipe = (event: APIGatewayProxyEvent) => Promise<Response>;
+
+export type IngredientStyleFunc = (
+  event: FilteredEvent,
+) => Promise<UserIngredient>;
+
+export type GetIngredientsByUserIdFunc = (
+  event: FilteredEvent,
+) => Promise<Ingredient[]>;
+
+export type IngredientHandler = {
+  getNewRecipeEvent: GetNewRecipeFunc;
+  getNewRecipe: GetNewRecipe;
+};
+
+export type Item = {
   name: string;
-  style: Array<string>;
-  type: Array<string>;
+  style: string[];
+  type: string[];
   userId: string;
-  required: Boolean;
+  required: boolean;
 };
 
 export type Ingredient = {
   name: string;
-  style: Array<string>;
-  type: Array<string>;
-  required: Boolean;
+  style: string[];
+  type: string[];
+  required: boolean;
 };
 
 export type RecipeItem = {
@@ -25,11 +54,10 @@ export type RecipeItem = {
   required?: boolean;
 };
 
-export type UserIngredient = 
-  BaseIngredientEvent & Ingredient;
+export type UserIngredient = BaseIngredientEvent & Ingredient;
 
 export type DynamoQueryResponse = {
-  Items: Array<Item>;
+  Items: Item[];
   Count: number;
   ScannedCount: number;
 };
@@ -50,7 +78,8 @@ export type BaseIngredientEvent = {
   userKey: string;
 };
 
-export type AddIngredientEvent = BaseIngredientEvent & {
+export type AddIngredientEvent = {
+  userKey: string;
   ingredient: UserIngredient;
 };
 
@@ -59,18 +88,28 @@ export type DeleteIngredientStyleEvent = BaseIngredientEvent & {
   style: string;
 };
 
-export type NewRecipeEvent = BaseIngredientEvent & {
-  numOfOptionalIngredients: number;
-  ignoredIngredients: Array<RecipeItem>;
-  requestedIngredients: Array<RecipeItem>;
-  dietPreference: DietPreference;
-};
-
-export type IngredientTemplate = {
+export type DeleteIngredientStyle = {
   name: string;
-  style: Array<string>;
-  type: Array<string>;
-  required: Boolean;
+  style: string;
 };
 
-export type DietPreference = "carnivore" | "vegan" | "vegetarian";
+export type NewRecipe = {
+  dietPreference: DietPreference;
+  ignoredIngredients: RecipeItem[];
+  numOfOptionalIngredients: number;
+  requestedIngredients: RecipeItem[];
+};
+
+export type NewRecipeEvent = BaseIngredientEvent & {
+  dietPreference: DietPreference;
+  ignoredIngredients: RecipeItem[];
+  numOfOptionalIngredients: number;
+  requestedIngredients: RecipeItem[];
+};
+
+export type UserHeaders = {
+  'X-User-Key'?: string;
+  'x-user-key'?: string;
+};
+
+export type DietPreference = 'carnivore' | 'vegan' | 'vegetarian';

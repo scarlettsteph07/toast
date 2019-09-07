@@ -1,77 +1,102 @@
-import { APIGatewayProxyEvent } from "aws-lambda";
+// import { APIGatewayProxyEvent } from 'aws-lambda';
 
 import {
   AddIngredientEvent,
   DeleteIngredientStyleEvent,
   BaseIngredientEvent,
-  NewRecipeEvent
-} from "./types";
+  NewRecipe,
+  FilteredEvent,
+  NewRecipeEvent,
+  Ingredient,
+  DeleteIngredientStyle,
+  UserHeaders,
+} from './types';
 
 export class EventSanitizer {
-  event: APIGatewayProxyEvent;
-  headers: any;
-  body: any;
+  private readonly event: FilteredEvent;
+  private readonly headers: any;
+  private readonly body: any;
 
-  constructor(event: APIGatewayProxyEvent) {
+  constructor(event: FilteredEvent) {
     this.event = event;
     const { headers, body } = this.parseEvent();
     this.headers = headers;
-    this.body = body;
+    this.body = typeof body === 'string' ? JSON.parse(body) : body;
   }
 
-  parseEvent(): any {
+  public eventFilterAddIngredient(): AddIngredientEvent {
+    const { name, required, style, type } = this.body as Ingredient;
     return {
-      headers:
-        typeof this.event.headers === "string"
-          ? JSON.parse(this.event.headers)
-          : this.event.headers,
-      body:
-        typeof this.event.body === "string"
-          ? JSON.parse(this.event.body)
-          : this.event.body
+      ingredient: {
+        name,
+        required,
+        style,
+        type,
+        userKey: this.getUserKey(),
+      },
+      userKey: this.getUserKey(),
     };
   }
 
-  getUserKey(): string {
-    const userKey = this.headers["X-User-Key"] || this.headers["x-user-key"];
-    if (!userKey) {
-      throw new Error('User Key is required');
-    }
-    return userKey;
+  public eventFilterDeleteIngredientStyle(): DeleteIngredientStyleEvent {
+    const { name, style } = this.body as DeleteIngredientStyle;
+    return {
+      name,
+      style,
+      userKey: this.getUserKey(),
+    };
   }
 
-  listIngredientsParams(): BaseIngredientEvent {
+  public eventFilterNewRecipe(): NewRecipeEvent {
+    const {
+      dietPreference,
+      ignoredIngredients,
+      numOfOptionalIngredients,
+      requestedIngredients,
+    } = this.body as NewRecipe;
+
+    return {
+      dietPreference,
+      ignoredIngredients:
+        ignoredIngredients !== undefined ? ignoredIngredients : [],
+      numOfOptionalIngredients,
+      requestedIngredients:
+        requestedIngredients !== undefined ? requestedIngredients : [],
+      userKey: this.getUserKey(),
+    };
+  }
+
+  public listIngredientsParams(): BaseIngredientEvent {
     return { userKey: this.getUserKey() };
   }
 
-  eventFilterAddIngredient(): AddIngredientEvent {
+  private parseEvent(): FilteredEvent {
     return {
-      ingredient: {
-        name: this.body.name,
-        style: this.body.style,
-        type: this.body.type,
-        required: this.body.required,
-        userKey: this.getUserKey()
-      },
-      userKey: this.getUserKey()
+      body:
+        typeof this.event.body === 'string'
+          ? (JSON.parse(this.event.body) as object)
+          : this.event.body,
+      headers:
+        typeof this.event.headers === 'string'
+          ? (JSON.parse(this.event.headers) as object)
+          : this.event.headers,
+      ...this.event,
     };
   }
 
-  eventFilterDeleteIngredientStyle(): DeleteIngredientStyleEvent {
-    return {
-      name: this.body.name,
-      style: this.body.style,
-      userKey: this.getUserKey()
-    };
-  }
+  private getUserKey(): string {
+    if (!this.headers) {
+      throw new Error('User Key is required');
+    }
+    const headers = this.headers as UserHeaders;
+    const userKey =
+      headers['X-User-Key'] !== undefined
+        ? headers['X-User-Key']
+        : headers['x-user-key'];
 
-  eventFilterNewRecipe(): NewRecipeEvent {
-    return {
-      userKey: this.getUserKey(),
-      ignoredIngredients: this.body.ignoredIngredients,
-      requestedIngredients: this.body.requestedIngredients,
-      numOfOptionalIngredients: this.body.numOfOptionalIngredients,
-      dietPreference: this.body.dietPreference
-    };
+    if (userKey === undefined) {
+      throw new Error('User Key is required');
+    }
+    return userKey;
   }
 }

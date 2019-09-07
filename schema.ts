@@ -1,46 +1,8 @@
-import { validate } from "jsonschema";
-import yml from "js-yaml";
+import { validate } from 'jsonschema';
+import * as yml from 'js-yaml';
+import { UserIngredient, DeleteIngredientStyle, NewRecipe } from './types';
 
-export const validateSchema = (interpolate: TemplateStringsArray): Function => {
-  // obtain schema definition
-  const definition = interpolate[0];
-  // load the yaml
-  const schema = yml.safeLoad(definition);
-  // return a validation function
-  return (src: object) => {
-    const { errors } = validate(src, schema);
-    if (errors && errors.length > 0) {
-      throw errors[0];
-    }
-    // valid return original request
-    return src;
-  };
-};
-
-export class RequestValidator {
-  payload: any;
-
-  constructor(payload: any) {
-    this.payload = payload;
-  }
-
-  validateAddIngredient() {
-    return this.validateAddIngredientsFunc(this.payload);
-  }
-
-  validateDeleteIngredientStyle() {
-    return this.validateDeleteIngredientStyleFunc(this.payload);
-  }
-
-  validateGetIngredientsByUserId() {
-    return this.validateGetIngredientsByUserIdFunc(this.payload);
-  }
-
-  validateGetNewRecipeParams() {
-    return this.validateGetNewRecipeParamsFunc(this.payload);
-  }
-
-  validateAddIngredientsFunc = validateSchema`
+const addIngredientsSchema = `
     type: object
     properties:
       name:
@@ -60,7 +22,7 @@ export class RequestValidator {
       - style
   `;
 
-  validateDeleteIngredientStyleFunc = validateSchema`
+const deleteIngredientsSchema = `
     type: object
     properties:
       name:
@@ -70,13 +32,9 @@ export class RequestValidator {
     required:
       - name
       - style
-  `;
+`;
 
-  validateGetIngredientsByUserIdFunc = validateSchema`
-
-  `;
-
-  validateGetNewRecipeParamsFunc = validateSchema`
+const getNewRecipeSchema = `
     type: object
     properties:
       numOfOptionalIngredients:
@@ -109,5 +67,45 @@ export class RequestValidator {
         type: string
     required:
       - numOfOptionalIngredients
-  `;
+`;
+
+export const validateSchema = (
+  interpolate: string,
+): ((src: object) => object) => {
+  // obtain schema definition
+  const definition = interpolate;
+  // load the yaml
+  const schema = yml.safeLoad(definition);
+  // return a validation function
+  return (src: object) => {
+    const { errors } = validate(src, schema);
+    if (errors.length > 0) {
+      throw errors[0];
+    }
+    // valid return original request
+    return src;
+  };
+};
+
+export class RequestValidator {
+  private readonly payload: any;
+
+  constructor(payload: any) {
+    this.payload = payload;
+  }
+
+  public validateAddIngredient() {
+    const userIngredient = this.payload as UserIngredient;
+    return validateSchema(addIngredientsSchema)(userIngredient);
+  }
+
+  public validateDeleteIngredientStyle() {
+    const deleteIngredientStyle = this.payload as DeleteIngredientStyle;
+    return validateSchema(deleteIngredientsSchema)(deleteIngredientStyle);
+  }
+
+  public validateGetNewRecipeParams() {
+    const getNewRecipeParams = this.payload as NewRecipe;
+    return validateSchema(getNewRecipeSchema)(getNewRecipeParams);
+  }
 }
