@@ -88,7 +88,7 @@ export class EventSanitizer {
     if (!this.headers) {
       throw new Error('User Key is required');
     }
-    const { headers } = this.headers as UserHeaders;
+    const headers = this.headers as UserHeaders;
     const userKey =
       headers['X-User-Key'] !== undefined
         ? headers['X-User-Key']

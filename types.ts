@@ -96,10 +96,8 @@ export type NewRecipeEvent = BaseIngredientEvent & {
 };
 
 export type UserHeaders = {
-  headers: {
-    'X-User-Key'?: string;
-    'x-user-key'?: string;
-  };
+  'X-User-Key'?: string;
+  'x-user-key'?: string;
 };
 
 export type DietPreference = 'carnivore' | 'vegan' | 'vegetarian';
