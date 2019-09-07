@@ -21,7 +21,7 @@ export type IngredientHandler = {
   getNewRecipe: GetNewRecipe;
 };
 
-type Item = {
+export type Item = {
   name: string;
   style: string[];
   type: string[];
