@@ -24,6 +24,7 @@ const addIngredientEvent = async (
     event,
   ).eventFilterAddIngredient();
   new RequestValidator(ingredient).validateAddIngredient();
+
   return new UserIngredients(userKey).createIngredient(ingredient);
 };
 
@@ -54,7 +55,7 @@ export const getIngredientsByUserId = eventWrapper(getIngredientsByUserIdEvent);
 
 export const getNewRecipeEvent = async (
   event: FilteredEvent,
-) => {
+): Promise<RecipeItem[]> => {
   const {
     userKey,
     numOfOptionalIngredients,
@@ -73,7 +74,6 @@ export const getNewRecipeEvent = async (
 
   try {
     userIngredients = await new UserIngredients(userKey).getAll();
-    console.log(JSON.stringify(userIngredients));
   } catch (error) {
     userIngredients = [];
   }

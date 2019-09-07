@@ -27,7 +27,11 @@ beforeEach(() => {
     'batchWrite',
     Promise.resolve({ foo: 'bar' }),
   );
-  AWSMock.mock('DynamoDB.DocumentClient', 'query', Promise.resolve({}));
+  AWSMock.mock(
+    'DynamoDB.DocumentClient',
+    'query',
+    Promise.resolve({ Items: [] }),
+  );
 });
 
 describe('invalid new recipe events', () => {
@@ -119,38 +123,34 @@ describe('valid new recipe events', () => {
       httpMethod: 'POST',
       path: '/test',
     };
-    try {
-      const recipeItems = await getNewRecipeEvent(payload);
-      console.log('recipeitems', recipeItems);
-      expect(recipeItems[0]).to.eql({
-        name: 'avocado',
-        required: true,
-        style: 'avocado',
-      });
-      expect(recipeItems[1]).to.eql({
-        name: 'bread',
-        required: true,
-        style: 'bagel',
-      });
-      expect(recipeItems[2]).to.eql({
-        name: 'tomato',
-        required: false,
-        style: 'fresh tomato',
-      });
-      expect(recipeItems[3]).to.eql({
-        name: 'herbs',
-        required: false,
-        style: 'cilantro',
-      });
-      expect(recipeItems[4]).to.eql({
-        name: 'salt',
-        required: false,
-        style: 'sea salt',
-      });
-      expect(recipeItems).to.have.lengthOf(5);
-    } catch (e) {
-      console.error('error: ', e);
-    }
+    const recipeItems = await getNewRecipeEvent(payload);
+
+    expect(recipeItems[0]).to.eql({
+      name: 'avocado',
+      required: true,
+      style: 'avocado',
+    });
+    expect(recipeItems[1]).to.eql({
+      name: 'bread',
+      required: true,
+      style: 'bagel',
+    });
+    expect(recipeItems[2]).to.eql({
+      name: 'tomato',
+      required: false,
+      style: 'fresh tomato',
+    });
+    expect(recipeItems[3]).to.eql({
+      name: 'herbs',
+      required: false,
+      style: 'cilantro',
+    });
+    expect(recipeItems[4]).to.eql({
+      name: 'salt',
+      required: false,
+      style: 'sea salt',
+    });
+    expect(recipeItems).to.have.lengthOf(5);
   });
 
   it('should return items from dynamo db if they exist', async () => {
