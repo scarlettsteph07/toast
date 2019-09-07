@@ -22,7 +22,11 @@ const body = {
 
 beforeEach(() => {
   AWSMock.setSDKInstance(AWS);
-  AWSMock.mock('DynamoDB.DocumentClient', 'batchWrite', Promise.resolve({ foo: "bar"}));
+  AWSMock.mock(
+    'DynamoDB.DocumentClient',
+    'batchWrite',
+    Promise.resolve({ foo: 'bar' }),
+  );
   AWSMock.mock('DynamoDB.DocumentClient', 'query', Promise.resolve({}));
 });
 
@@ -74,7 +78,11 @@ describe('valid new recipe events', () => {
       Promise.resolve({ foo: 'expectedError' }),
     );
   });
-  AWSMock.mock('DynamoDB.DocumentClient', 'query', Promise.resolve({Items: []}));
+  AWSMock.mock(
+    'DynamoDB.DocumentClient',
+    'query',
+    Promise.resolve({ Items: [] }),
+  );
 
   it('should return two required items numIngredients is 0', async () => {
     // Overwriting DynamoDB.DocumentClient.get()
@@ -111,35 +119,38 @@ describe('valid new recipe events', () => {
       httpMethod: 'POST',
       path: '/test',
     };
-    const recipeItems = await getNewRecipeEvent(payload);
-    console.log('recipeitems', recipeItems);
-
-    expect(recipeItems[0]).to.eql({
-      name: 'avocado',
-      required: true,
-      style: 'avocado',
-    });
-    expect(recipeItems[1]).to.eql({
-      name: 'bread',
-      required: true,
-      style: 'bagel',
-    });
-    expect(recipeItems[2]).to.eql({
-      name: 'tomato',
-      required: false,
-      style: 'fresh tomato',
-    });
-    expect(recipeItems[3]).to.eql({
-      name: 'herbs',
-      required: false,
-      style: 'cilantro',
-    });
-    expect(recipeItems[4]).to.eql({
-      name: 'salt',
-      required: false,
-      style: 'sea salt',
-    });
-    expect(recipeItems).to.have.lengthOf(5);
+    try {
+      const recipeItems = await getNewRecipeEvent(payload);
+      console.log('recipeitems', recipeItems);
+      expect(recipeItems[0]).to.eql({
+        name: 'avocado',
+        required: true,
+        style: 'avocado',
+      });
+      expect(recipeItems[1]).to.eql({
+        name: 'bread',
+        required: true,
+        style: 'bagel',
+      });
+      expect(recipeItems[2]).to.eql({
+        name: 'tomato',
+        required: false,
+        style: 'fresh tomato',
+      });
+      expect(recipeItems[3]).to.eql({
+        name: 'herbs',
+        required: false,
+        style: 'cilantro',
+      });
+      expect(recipeItems[4]).to.eql({
+        name: 'salt',
+        required: false,
+        style: 'sea salt',
+      });
+      expect(recipeItems).to.have.lengthOf(5);
+    } catch (e) {
+      console.error('error: ', e);
+    }
   });
 
   it('should return items from dynamo db if they exist', async () => {
