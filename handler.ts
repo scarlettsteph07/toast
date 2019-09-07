@@ -74,7 +74,7 @@ export const getNewRecipeEvent = async (
   // try {
   //   userIngredients = await new UserIngredients(userKey).getAll();
   // } catch (error) {
-  //   userIngredients = [];
+  userIngredients = [];
   // }
   const recipeItems =
     userIngredients.length === 0 ? defaultIngredients() : userIngredients;
