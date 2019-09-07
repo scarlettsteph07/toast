@@ -7,6 +7,11 @@ import { FilteredEvent, IngredientHandler } from './types';
 
 AWS.config.update({ region: 'us-east-1' });
 
+process.on('unhandledRejection', (e) => {
+  // tslint:disable-next-line: no-unsafe-any
+  console.log(`you forgot to return a Promise! Check your tests! ${e.message}`);
+});
+
 const headers = { 'X-User-Key': '1234' };
 const body = {
   dietPreference: 'vegan',
