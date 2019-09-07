@@ -107,6 +107,7 @@ describe('valid new recipe events', () => {
       path: '/test',
     };
     const recipeItems = await getNewRecipeEvent(payload);
+    console.log('recipeitems', recipeItems);
 
     expect(recipeItems[0]).to.eql({
       name: 'avocado',
