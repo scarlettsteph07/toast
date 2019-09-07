@@ -73,6 +73,7 @@ export const getNewRecipeEvent = async (
 
   try {
     userIngredients = await new UserIngredients(userKey).getAll();
+    console.log(JSON.stringify(userIngredients));
   } catch (error) {
     userIngredients = [];
   }
