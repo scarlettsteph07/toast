@@ -95,6 +95,7 @@ export class UserIngredients {
     };
     const result = await dynamoDbClient.batchWrite(params).promise();
     return new Promise((resolve, reject) => {
+      console.log('result', result);
       if (result !== undefined) {
         resolve(true);
       }

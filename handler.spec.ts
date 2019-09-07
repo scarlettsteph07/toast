@@ -17,7 +17,7 @@ const body = {
 
 beforeEach(() => {
   AWSMock.setSDKInstance(AWS);
-  AWSMock.mock('DynamoDB.DocumentClient', 'batchWrite', Promise.resolve({}));
+  AWSMock.mock('DynamoDB.DocumentClient', 'batchWrite', Promise.resolve({ foo: "bar"}));
   AWSMock.mock('DynamoDB.DocumentClient', 'query', Promise.resolve({}));
 });
 
