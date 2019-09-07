@@ -93,13 +93,13 @@ export class UserIngredients {
         })),
       },
     };
-    try {
-      await dynamoDbClient.batchWrite(params).promise();
-      return true;
-    } catch (e) {
-      console.error(e);
-      return false;
-    }
+    const result = await dynamoDbClient.batchWrite(params).promise();
+    return new Promise((resolve, reject) => {
+      if (result !== undefined) {
+        resolve(true);
+      }
+      reject('no items found');
+    });
   }
 
   public async getItemByName(name: string): Promise<Item> {
@@ -121,11 +121,9 @@ export class UserIngredients {
   ): Promise<UserIngredient> {
     const ingredient = await this.getItemByName(name);
 
-    if (
-      Object.keys(ingredient).length === 0
-    ) {
+    if (Object.keys(ingredient).length === 0) {
       return new Promise((resolve, reject) => {
-        resolve({ userKey: this.userKey, ...ingredient});
+        resolve({ userKey: this.userKey, ...ingredient });
         reject({ error: 'no results returned' });
       });
     }
@@ -138,7 +136,7 @@ export class UserIngredients {
 
       return new Promise((resolve, reject) => {
         resolve(deleteResult.Attributes as UserIngredient);
-        reject("error deleting item");
+        reject('error deleting item');
       });
     }
 
