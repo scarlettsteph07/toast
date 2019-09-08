@@ -1,4 +1,5 @@
 import { APIGatewayProxyEvent, Context } from 'aws-lambda';
+import * as AWS from 'aws-sdk';
 
 import {
   GetNewRecipeFunc,
@@ -14,6 +15,26 @@ const DEFAULT_HEADERS = {
   'Content-Type': 'application/json',
 };
 
+const options = {
+  endpoint: 'http://localhost:8000',
+  region: 'localhost',
+};
+
+const isOffline = function() {
+  if (process.env.hasOwnProperty('IS_OFFLINE')) {
+    return process.env.IS_OFFLINE;
+  }
+  // Depends on serverless-offline plugion which adds IS_OFFLINE to process.env when running offline
+  return false;
+};
+
+const dynamodb = () =>
+  (isOffline() as boolean)
+    ? new AWS.DynamoDB.DocumentClient(options)
+    : new AWS.DynamoDB.DocumentClient();
+
+export const dynamoDbClient = dynamodb();
+
 export const eventWrapper = (
   originalFunction:
     | GetNewRecipeFunc
@@ -22,7 +43,8 @@ export const eventWrapper = (
 ) => async (event: APIGatewayProxyEvent, _context: Context) => {
   try {
     const filteredEvent = event as FilteredEvent;
-    const data = await originalFunction(filteredEvent);
+    const data = await originalFunction(filteredEvent, dynamoDbClient);
+
     if (Object.keys(data).length === 0) {
       return {
         body: JSON.stringify({

@@ -20,7 +20,7 @@ const body = {
   requestedIngredients: [],
 };
 
-beforeEach(() => {
+beforeEach((done) => {
   AWSMock.setSDKInstance(AWS);
   AWSMock.mock(
     'DynamoDB.DocumentClient',
@@ -30,8 +30,18 @@ beforeEach(() => {
   AWSMock.mock(
     'DynamoDB.DocumentClient',
     'query',
-    Promise.resolve({ Items: [] }),
+    (
+      params: AWS.DynamoDB.QueryInput,
+      callback: (something: any, otherthing: any) => any,
+    ) => {
+      callback(null, {
+        Items: [],
+        params,
+      });
+    },
   );
+
+  done();
 });
 
 describe('invalid new recipe events', () => {
@@ -47,7 +57,7 @@ describe('invalid new recipe events', () => {
     };
     try {
       const { getNewRecipeEvent } = require('./handler') as IngredientHandler;
-      await getNewRecipeEvent(payload);
+      await getNewRecipeEvent(payload, new AWS.DynamoDB.DocumentClient());
     } catch (e) {
       expect(e).to.eq('instance.numOfOptionalIngredients');
       expect(e).to.have.property('message', 'is not of a type(s) integer');
@@ -66,7 +76,7 @@ describe('invalid new recipe events', () => {
     };
     try {
       const { getNewRecipeEvent } = require('./handler') as IngredientHandler;
-      await getNewRecipeEvent(payload);
+      await getNewRecipeEvent(payload, new AWS.DynamoDB.DocumentClient());
     } catch (e) {
       expect(e).to.have.property('message', 'User Key is required');
     }
@@ -98,7 +108,10 @@ describe('valid new recipe events', () => {
       path: '/test',
     };
 
-    const recipeItems = await getNewRecipeEvent(payload);
+    const recipeItems = await getNewRecipeEvent(
+      payload,
+      new AWS.DynamoDB.DocumentClient(),
+    );
 
     expect(recipeItems[0]).to.eql({
       name: 'avocado',
@@ -112,7 +125,7 @@ describe('valid new recipe events', () => {
     });
   });
 
-  it.skip('should return 5 ingredient items', async () => {
+  it('should return 5 ingredient items', async () => {
     const { getNewRecipeEvent } = require('./handler') as IngredientHandler;
     const payload: FilteredEvent = {
       body: {
@@ -123,7 +136,10 @@ describe('valid new recipe events', () => {
       httpMethod: 'POST',
       path: '/test',
     };
-    const recipeItems = await getNewRecipeEvent(payload);
+    const recipeItems = await getNewRecipeEvent(
+      payload,
+      new AWS.DynamoDB.DocumentClient(),
+    );
 
     expect(recipeItems[0]).to.eql({
       name: 'avocado',
@@ -190,7 +206,10 @@ describe('valid new recipe events', () => {
       path: '/test',
     };
 
-    const recipeItems = await getNewRecipeEvent(payload);
+    const recipeItems = await getNewRecipeEvent(
+      payload,
+      new AWS.DynamoDB.DocumentClient(),
+    );
     expect(recipeItems).to.eql([
       {
         name: 'flower',
@@ -208,6 +227,6 @@ describe('valid new recipe events', () => {
 
   afterEach(function() {
     sinon.restore();
-    // AWSMock.restore();
+    AWSMock.restore('DynamoDB.DocumentClient');
   });
 });
