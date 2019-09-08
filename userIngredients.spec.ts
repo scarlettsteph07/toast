@@ -3,7 +3,7 @@ import * as AWSMock from 'aws-sdk-mock';
 import * as AWS from 'aws-sdk';
 import * as sinon from 'sinon';
 
-import { UserIngredientFile } from './types';
+import { UserIngredientFile, Ingredient } from './types';
 
 AWS.config.update({ region: 'us-east-1' });
 const validUserKey = '1234';
@@ -39,14 +39,10 @@ describe('user ingredients class', () => {
       const {
         UserIngredients,
       } = require('./userIngredients') as UserIngredientFile;
-      const options = {
-        endpoint: 'http://localhost:8000',
-        region: 'localhost',
-      };
 
       const userIngredient = new UserIngredients(
         validUserKey,
-        new AWS.DynamoDB.DocumentClient(options),
+        new AWS.DynamoDB.DocumentClient(),
       );
 
       const results = await userIngredient.getAll();
@@ -58,6 +54,24 @@ describe('user ingredients class', () => {
           type: [],
         },
       ]);
+    });
+
+    it('should bulk create ingredients', async () => {
+      const {
+        UserIngredients,
+      } = require('./userIngredients') as UserIngredientFile;
+      const userIngredient = new UserIngredients(
+        validUserKey,
+        new AWS.DynamoDB.DocumentClient(),
+      );
+      const payload = [{
+          name: 'test',
+          required: true,
+          style: ['lame', 'cool'],
+          type: [],
+      }] as Ingredient[];
+      const results = await userIngredient.bulkCreateIngredients(payload);
+      expect(results).to.deep.equal(true);
     });
 
     afterEach(function() {
