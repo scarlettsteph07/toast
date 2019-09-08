@@ -19,42 +19,51 @@ import {
 
 const addIngredientEvent = async (
   event: FilteredEvent,
+  dynamoDbClient: AWS.DynamoDB.DocumentClient,
 ): Promise<UserIngredient> => {
   const { ingredient, userKey } = new EventSanitizer(
     event,
   ).eventFilterAddIngredient();
   new RequestValidator(ingredient).validateAddIngredient();
 
-  return new UserIngredients(userKey).createIngredient(ingredient);
+  return new UserIngredients(userKey, dynamoDbClient).createIngredient(
+    ingredient,
+  );
 };
 
 export const addIngredient = eventWrapper(addIngredientEvent);
 
 const deleteIngredientStyleEvent = async (
   event: FilteredEvent,
+  dynamoDbClient: AWS.DynamoDB.DocumentClient,
 ): Promise<UserIngredient> => {
   const { name, style, userKey } = new EventSanitizer(
     event,
   ).eventFilterDeleteIngredientStyle();
   new RequestValidator({ name, style }).validateDeleteIngredientStyle();
 
-  return new UserIngredients(userKey).deleteByStyle(name, style);
+  return new UserIngredients(userKey, dynamoDbClient).deleteByStyle(
+    name,
+    style,
+  );
 };
 
 export const deleteIngredientStyle = eventWrapper(deleteIngredientStyleEvent);
 
 const getIngredientsByUserIdEvent = async (
   event: FilteredEvent,
+  dynamoDbClient: AWS.DynamoDB.DocumentClient,
 ): Promise<Ingredient[]> => {
   const { userKey } = new EventSanitizer(event).listIngredientsParams();
 
-  return new UserIngredients(userKey).getAll();
+  return new UserIngredients(userKey, dynamoDbClient).getAll();
 };
 
 export const getIngredientsByUserId = eventWrapper(getIngredientsByUserIdEvent);
 
 export const getNewRecipeEvent = async (
   event: FilteredEvent,
+  dynamoDbClient: AWS.DynamoDB.DocumentClient,
 ): Promise<RecipeItem[]> => {
   const {
     userKey,
@@ -73,7 +82,10 @@ export const getNewRecipeEvent = async (
   let userIngredients: Ingredient[];
 
   try {
-    userIngredients = await new UserIngredients(userKey).getAll();
+    userIngredients = await new UserIngredients(
+      userKey,
+      dynamoDbClient,
+    ).getAll();
   } catch (error) {
     userIngredients = [];
   }
@@ -117,7 +129,7 @@ export const getNewRecipeEvent = async (
   }
 
   if (userIngredients.length === 0) {
-    await new UserIngredients(userKey).bulkCreateIngredients(
+    await new UserIngredients(userKey, dynamoDbClient).bulkCreateIngredients(
       defaultIngredients(),
     );
   }
