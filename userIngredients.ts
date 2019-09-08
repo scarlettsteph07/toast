@@ -1,5 +1,7 @@
 import * as AWS from 'aws-sdk';
 
+import { TABLES } from './dynamodb';
+
 import {
   Ingredient,
   IngredientNameParams,
@@ -7,32 +9,14 @@ import {
   Item,
 } from './types';
 
-const options = {
-  endpoint: 'http://localhost:8000',
-  region: 'localhost',
-};
-
-const isOffline = function() {
-  if (process.env.hasOwnProperty('IS_OFFLINE')) {
-    return process.env.IS_OFFLINE;
-  }
-  // Depends on serverless-offline plugion which adds IS_OFFLINE to process.env when running offline
-  return false;
-};
-
-const dynamodb = () =>
-  (isOffline() as boolean)
-    ? new AWS.DynamoDB.DocumentClient(options)
-    : new AWS.DynamoDB.DocumentClient();
-
-export const TABLE_NAME = 'UserIngredients';
-const dynamoDbClient = dynamodb();
-
 export class UserIngredients {
   private readonly userKey: string;
+  private readonly dynamoDbClient: AWS.DynamoDB.DocumentClient;
 
-  constructor(userKey: string) {
+  constructor(userKey: string, dynamoDbClient: AWS.DynamoDB.DocumentClient) {
     this.userKey = userKey;
+    this.dynamoDbClient = dynamoDbClient;
+    return this;
   }
 
   public async getAll(): Promise<Ingredient[]> {
@@ -44,10 +28,9 @@ export class UserIngredients {
         ':userId': this.userKey,
       },
       KeyConditionExpression: '#userId = :userId',
-      TableName: TABLE_NAME,
+      TableName: TABLES.USER_INGREDIENTS,
     };
-    const dynamoResponse = await dynamoDbClient.query(params).promise();
-
+    const dynamoResponse = await this.dynamoDbClient.query(params).promise();
     return new Promise((resolve, reject) => {
       if (dynamoResponse.Items !== undefined) {
         resolve(
@@ -80,7 +63,7 @@ export class UserIngredients {
   ): Promise<boolean> {
     const params = {
       RequestItems: {
-        [TABLE_NAME]: recipeItems.map((i: Ingredient) => ({
+        [TABLES.USER_INGREDIENTS]: recipeItems.map((i: Ingredient) => ({
           PutRequest: {
             Item: {
               name: i.name,
@@ -93,7 +76,7 @@ export class UserIngredients {
         })),
       },
     };
-    const result = await dynamoDbClient.batchWrite(params).promise();
+    const result = await this.dynamoDbClient.batchWrite(params).promise();
     return new Promise((resolve, reject) => {
       if (result !== undefined) {
         resolve(true);
@@ -103,7 +86,7 @@ export class UserIngredients {
   }
 
   public async getItemByName(name: string): Promise<Item> {
-    const ingredient = await dynamoDbClient
+    const ingredient = await this.dynamoDbClient
       .get(this.getIngredientNameParams(name))
       .promise();
 
@@ -130,7 +113,7 @@ export class UserIngredients {
 
     const styles = ingredient.style;
     if (styles.length === 0) {
-      const deleteResult = await dynamoDbClient
+      const deleteResult = await this.dynamoDbClient
         .delete(this.getIngredientNameParams(name))
         .promise();
 
@@ -151,12 +134,14 @@ export class UserIngredients {
         userId: this.userKey,
       },
       ReturnValues: 'ALL_NEW',
-      TableName: TABLE_NAME,
+      TableName: TABLES.USER_INGREDIENTS,
       UpdateExpression: 'set #style = :styles',
       name,
     };
 
-    const updateResult = await dynamoDbClient.update(updateParams).promise();
+    const updateResult = await this.dynamoDbClient
+      .update(updateParams)
+      .promise();
 
     return new Promise((resolve, reject) => {
       resolve(updateResult.Attributes as UserIngredient);
@@ -173,9 +158,9 @@ export class UserIngredients {
         userId: this.userKey,
       },
       ReturnValues: 'ALL_OLD',
-      TableName: TABLE_NAME,
+      TableName: TABLES.USER_INGREDIENTS,
     };
-    const res = await dynamoDbClient.put(params).promise();
+    const res = await this.dynamoDbClient.put(params).promise();
 
     return new Promise((resolve, reject) => {
       resolve(res.Attributes as UserIngredient);
@@ -189,7 +174,7 @@ export class UserIngredients {
         name,
         userId: this.userKey,
       },
-      TableName: TABLE_NAME,
+      TableName: TABLES.USER_INGREDIENTS,
     };
   }
 }

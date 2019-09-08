@@ -17,15 +17,35 @@ export type ErrorMessage = {
   message: string;
 };
 
-export type GetNewRecipeFunc = (event: FilteredEvent) => Promise<RecipeItem[]>;
+export type GetAll = () => Promise<Ingredient[]>;
+export type Constructor = (userKey: string) => void;
+
+export type UserIngredientClass = new (
+  userKey: string,
+  dynamoDbClient: AWS.DynamoDB.DocumentClient,
+) => {
+  userKey: string;
+  getAll(): Promise<Ingredient[]>;
+};
+
+export type UserIngredientFile = {
+  UserIngredients: UserIngredientClass;
+};
+
+export type GetNewRecipeFunc = (
+  event: FilteredEvent,
+  dynamoDbClient: AWS.DynamoDB.DocumentClient,
+) => Promise<RecipeItem[]>;
 export type GetNewRecipe = (event: APIGatewayProxyEvent) => Promise<Response>;
 
 export type IngredientStyleFunc = (
   event: FilteredEvent,
+  dynamoDbClient: AWS.DynamoDB.DocumentClient,
 ) => Promise<UserIngredient>;
 
 export type GetIngredientsByUserIdFunc = (
   event: FilteredEvent,
+  dynamoDbClient: AWS.DynamoDB.DocumentClient,
 ) => Promise<Ingredient[]>;
 
 export type IngredientHandler = {
