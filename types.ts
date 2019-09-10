@@ -26,6 +26,7 @@ export type UserIngredientClass = new (
 ) => {
   userKey: string;
   getAll(): Promise<Ingredient[]>;
+  bulkCreateIngredients(defaultIngredients: Ingredient[]): Promise<boolean>;
 };
 
 export type UserIngredientFile = {
