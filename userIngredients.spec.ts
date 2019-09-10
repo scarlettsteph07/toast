@@ -84,4 +84,54 @@ describe('user ingredients class', () => {
       expect(results).to.equal(true);
     });
   });
+
+  describe('#getItemByName', () => {
+    beforeEach((done) => {
+      AWSMock.setSDKInstance(AWS);
+      AWSMock.mock(
+        'DynamoDB.DocumentClient',
+        'get',
+        (
+          params: AWS.DynamoDB.QueryInput,
+          callback: (something: any, otherthing: any) => any,
+        ) => {
+          callback(null, {
+            Item: {
+              name: 'black pepper',
+              required: false,
+              style: ['black pepper'],
+              type: ['carnivore', 'vegetarian', 'vegan'],
+              userId: '1234',
+            },
+            params,
+          });
+        },
+      );
+      done();
+    });
+
+    it('should get item given the name as string', async () => {
+      const {
+        UserIngredients,
+      } = require('./userIngredients') as UserIngredientFile;
+
+      const userIngredient = new UserIngredients(
+        VALID_USER_KEY,
+        new AWS.DynamoDB.DocumentClient(OPTIONS),
+      );
+      const results = await userIngredient.getItemByName('black pepper');
+      expect(results).to.deep.equal({
+        name: 'black pepper',
+        required: false,
+        style: ['black pepper'],
+        type: ['carnivore', 'vegetarian', 'vegan'],
+        userId: '1234',
+      });
+    });
+
+    afterEach(function() {
+      sinon.restore();
+      AWSMock.restore('DynamoDB.DocumentClient');
+    });
+  });
 });

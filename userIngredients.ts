@@ -89,9 +89,12 @@ export class UserIngredients {
     const ingredient = await this.dynamoDbClient
       .get(this.getIngredientNameParams(name))
       .promise();
-
     return new Promise((resolve, reject) => {
-      if (ingredient !== undefined) {
+      if (
+        ingredient !== undefined &&
+        ingredient.Item !== undefined &&
+        ingredient.Item.name === name
+      ) {
         resolve(ingredient.Item as Item);
       }
       reject('no items found');
