@@ -40,7 +40,6 @@ beforeEach((done) => {
       });
     },
   );
-
   done();
 });
 

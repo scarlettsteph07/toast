@@ -3,13 +3,19 @@ import * as AWSMock from 'aws-sdk-mock';
 import * as AWS from 'aws-sdk';
 import * as sinon from 'sinon';
 
+import { defaultIngredients } from './config';
+
 import { UserIngredientFile } from './types';
 
 AWS.config.update({ region: 'us-east-1' });
-const validUserKey = '1234';
+const VALID_USER_KEY = '1234';
+const OPTIONS = {
+  endpoint: 'http://localhost:8000',
+  region: 'localhost',
+};
 
 describe('user ingredients class', () => {
-  describe('getAll', () => {
+  describe('#getAll', () => {
     beforeEach((done) => {
       AWSMock.setSDKInstance(AWS);
       AWSMock.remock(
@@ -39,14 +45,10 @@ describe('user ingredients class', () => {
       const {
         UserIngredients,
       } = require('./userIngredients') as UserIngredientFile;
-      const options = {
-        endpoint: 'http://localhost:8000',
-        region: 'localhost',
-      };
 
       const userIngredient = new UserIngredients(
-        validUserKey,
-        new AWS.DynamoDB.DocumentClient(options),
+        VALID_USER_KEY,
+        new AWS.DynamoDB.DocumentClient(OPTIONS),
       );
 
       const results = await userIngredient.getAll();
@@ -63,6 +65,23 @@ describe('user ingredients class', () => {
     afterEach(function() {
       sinon.restore();
       AWSMock.restore('DynamoDB.DocumentClient');
+    });
+  });
+
+  describe('#bulkCreateIngredients', () => {
+    it('should bulk create ingredients and return true', async () => {
+      const {
+        UserIngredients,
+      } = require('./userIngredients') as UserIngredientFile;
+
+      const userIngredient = new UserIngredients(
+        VALID_USER_KEY,
+        new AWS.DynamoDB.DocumentClient(OPTIONS),
+      );
+      const results = await userIngredient.bulkCreateIngredients(
+        defaultIngredients(),
+      );
+      expect(results).to.equal(true);
     });
   });
 });
