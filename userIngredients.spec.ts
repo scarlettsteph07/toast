@@ -4,6 +4,7 @@ import * as AWS from 'aws-sdk';
 import * as sinon from 'sinon';
 
 import { defaultIngredients } from './config';
+import { TABLES } from './dynamodb';
 
 import { UserIngredientFile } from './types';
 
@@ -287,6 +288,28 @@ describe('user ingredients class', () => {
 
       const result = await userIngredient.createIngredient(itemToCreate);
       expect(result).to.deep.equal(itemToCreate);
+    });
+  });
+
+  describe('#getIngredientNameParams', () => {
+    const params = {
+      Key: {
+        name: 'item name',
+        userId: '1234',
+      },
+      TableName: TABLES.USER_INGREDIENTS,
+    };
+
+    it('should return a params object', () => {
+      const {
+        UserIngredients,
+      } = require('./userIngredients') as UserIngredientFile;
+      const userIngredient = new UserIngredients(
+        VALID_USER_KEY,
+        new AWS.DynamoDB.DocumentClient(OPTIONS),
+      );
+      const result = userIngredient.getIngredientNameParams('item name');
+      expect(result).to.deep.equal(params);
     });
   });
 });
