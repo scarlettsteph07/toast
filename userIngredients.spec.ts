@@ -248,4 +248,45 @@ describe('user ingredients class', () => {
       expect(results).to.deep.equal(updatedItem);
     });
   });
+
+  describe('#createIngredient', () => {
+    const itemToCreate = {
+      name: 'beer',
+      required: false,
+      style: ['ipa'],
+      type: ['carnivore', 'vegetarian', 'vegan'],
+      userId: VALID_USER_KEY,
+    };
+
+    beforeEach((done) => {
+      AWSMock.setSDKInstance(AWS);
+      AWSMock.mock(
+        'DynamoDB.DocumentClient',
+        'put',
+        (
+          params: AWS.DynamoDB.QueryInput,
+          callback: (something: any, otherthing: object) => any,
+        ) => {
+          callback(null, {
+            Attributes: itemToCreate,
+            params,
+          });
+        },
+      );
+      done();
+    });
+
+    it('should add a new item given an Ingredient object', async () => {
+      const {
+        UserIngredients,
+      } = require('./userIngredients') as UserIngredientFile;
+      const userIngredient = new UserIngredients(
+        VALID_USER_KEY,
+        new AWS.DynamoDB.DocumentClient(OPTIONS),
+      );
+
+      const result = await userIngredient.createIngredient(itemToCreate);
+      expect(result).to.deep.equal(itemToCreate);
+    });
+  });
 });
