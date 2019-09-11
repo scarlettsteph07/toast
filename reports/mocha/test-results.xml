@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="0.10400000000000001" tests="8" failures="0">
+  <testsuite name="Root Suite" timestamp="2019-09-11T02:22:12" tests="0" failures="0" time="0">
+  </testsuite>
+  <testsuite name="invalid new recipe events" timestamp="2019-09-11T02:22:12" tests="2" file="/Users/saegey/Projects/toast/handler.spec.ts" failures="0" time="0.096">
+    <testcase name="invalid new recipe events should error when numOptionalIngredients is not a number" time="0.094" classname="should error when numOptionalIngredients is not a number">
+    </testcase>
+    <testcase name="invalid new recipe events should error when user key header is missing" time="0.002" classname="should error when user key header is missing">
+    </testcase>
+  </testsuite>
+  <testsuite name="valid new recipe events" timestamp="2019-09-11T02:22:12" tests="3" file="/Users/saegey/Projects/toast/handler.spec.ts" failures="0" time="0.005">
+    <testcase name="valid new recipe events should return two required items numIngredients is 0" time="0.002" classname="should return two required items numIngredients is 0">
+    </testcase>
+    <testcase name="valid new recipe events should return 5 ingredient items" time="0.002" classname="should return 5 ingredient items">
+    </testcase>
+    <testcase name="valid new recipe events should return items from dynamo db if they exist" time="0.001" classname="should return items from dynamo db if they exist">
+    </testcase>
+  </testsuite>
+  <testsuite name="user ingredients class" timestamp="2019-09-11T02:22:12" tests="0" file="/Users/saegey/Projects/toast/userIngredients.spec.ts" failures="0" time="0">
+  </testsuite>
+  <testsuite name="#getAll" timestamp="2019-09-11T02:22:12" tests="1" file="/Users/saegey/Projects/toast/userIngredients.spec.ts" failures="0" time="0.001">
+    <testcase name="user ingredients class #getAll should get all user ingredients" time="0.001" classname="should get all user ingredients">
+    </testcase>
+  </testsuite>
+  <testsuite name="#bulkCreateIngredients" timestamp="2019-09-11T02:22:12" tests="1" file="/Users/saegey/Projects/toast/userIngredients.spec.ts" failures="0" time="0.001">
+    <testcase name="user ingredients class #bulkCreateIngredients should bulk create ingredients and return true" time="0.001" classname="should bulk create ingredients and return true">
+    </testcase>
+  </testsuite>
+  <testsuite name="#getItemByName" timestamp="2019-09-11T02:22:12" tests="1" file="/Users/saegey/Projects/toast/userIngredients.spec.ts" failures="0" time="0.001">
+    <testcase name="user ingredients class #getItemByName should get item given the name as string" time="0.001" classname="should get item given the name as string">
+    </testcase>
+  </testsuite>
+</testsuites>
