@@ -28,6 +28,9 @@ export type UserIngredientClass = new (
   getAll(): Promise<Ingredient[]>;
   bulkCreateIngredients(defaultIngredients: Ingredient[]): Promise<boolean>;
   getItemByName(itemName: string): Promise<Item>;
+  deleteByStyle(itemName: string, itemStyle: string): Promise<UserIngredient>;
+  createIngredient(ingredient: Ingredient): Promise<UserIngredient>;
+  getIngredientNameParams(name: string): IngredientNameParams;
 };
 
 export type UserIngredientFile = {

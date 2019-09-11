@@ -115,7 +115,7 @@ export class UserIngredients {
     }
 
     const styles = ingredient.style;
-    if (styles.length === 0) {
+    if (styles.length === 1 && styles[0] === style) {
       const deleteResult = await this.dynamoDbClient
         .delete(this.getIngredientNameParams(name))
         .promise();
@@ -127,17 +127,14 @@ export class UserIngredients {
     }
 
     const updateParams = {
+      ...this.getIngredientNameParams(name),
       ExpressionAttributeNames: {
         '#style': 'style',
       },
       ExpressionAttributeValues: {
         ':styles': styles.filter((s: string) => s !== style),
       },
-      Key: {
-        userId: this.userKey,
-      },
       ReturnValues: 'ALL_NEW',
-      TableName: TABLES.USER_INGREDIENTS,
       UpdateExpression: 'set #style = :styles',
       name,
     };
