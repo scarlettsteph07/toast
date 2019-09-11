@@ -143,6 +143,20 @@ describe('user ingredients class', () => {
       type: ['carnivore'],
       userId: VALID_USER_KEY,
     };
+    const itemToUpdate = {
+      name: 'meat',
+      required: false,
+      style: ['bacon', 'ham', 'sausage'],
+      type: ['carnivore'],
+      userId: VALID_USER_KEY,
+    };
+    const updatedItem = {
+      name: 'meat',
+      required: false,
+      style: ['ham', 'sausage'],
+      type: ['carnivore'],
+      userId: VALID_USER_KEY,
+    };
 
     beforeEach((done) => {
       AWSMock.setSDKInstance(AWS);
@@ -172,6 +186,19 @@ describe('user ingredients class', () => {
           });
         },
       );
+      AWSMock.mock(
+        'DynamoDB.DocumentClient',
+        'update',
+        (
+          params: AWS.DynamoDB.QueryInput,
+          callback: (something: null, queryResult: object) => any,
+        ) => {
+          callback(null, {
+            Attributes: updatedItem,
+            params,
+          });
+        },
+      );
       done();
     });
 
@@ -189,6 +216,36 @@ describe('user ingredients class', () => {
         itemToDelete.style[0],
       );
       expect(results).to.deep.equal(itemToDelete);
+    });
+
+    it('should update existing item styles given a valid name and style', async () => {
+      AWSMock.remock(
+        'DynamoDB.DocumentClient',
+        'get',
+        (
+          params: AWS.DynamoDB.QueryInput,
+          callback: (something: any, otherthing: object) => any,
+        ) => {
+          callback(null, {
+            Item: itemToUpdate,
+            params,
+          });
+        },
+      );
+
+      const {
+        UserIngredients,
+      } = require('./userIngredients') as UserIngredientFile;
+      const userIngredient = new UserIngredients(
+        VALID_USER_KEY,
+        new AWS.DynamoDB.DocumentClient(OPTIONS),
+      );
+
+      const results = await userIngredient.deleteByStyle(
+        itemToDelete.name,
+        itemToDelete.style[0],
+      );
+      expect(results).to.deep.equal(updatedItem);
     });
   });
 });

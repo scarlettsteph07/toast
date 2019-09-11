@@ -127,17 +127,14 @@ export class UserIngredients {
     }
 
     const updateParams = {
+      ...this.getIngredientNameParams(name),
       ExpressionAttributeNames: {
         '#style': 'style',
       },
       ExpressionAttributeValues: {
         ':styles': styles.filter((s: string) => s !== style),
       },
-      Key: {
-        userId: this.userKey,
-      },
       ReturnValues: 'ALL_NEW',
-      TableName: TABLES.USER_INGREDIENTS,
       UpdateExpression: 'set #style = :styles',
       name,
     };
