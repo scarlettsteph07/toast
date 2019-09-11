@@ -101,7 +101,7 @@ describe('user ingredients class', () => {
               required: false,
               style: ['black pepper'],
               type: ['carnivore', 'vegetarian', 'vegan'],
-              userId: '1234',
+              userId: VALID_USER_KEY,
             },
             params,
           });
@@ -125,13 +125,70 @@ describe('user ingredients class', () => {
         required: false,
         style: ['black pepper'],
         type: ['carnivore', 'vegetarian', 'vegan'],
-        userId: '1234',
+        userId: VALID_USER_KEY,
       });
     });
 
     afterEach(function() {
       sinon.restore();
       AWSMock.restore('DynamoDB.DocumentClient');
+    });
+  });
+
+  describe('#deleteByStyle', () => {
+    const itemToDelete = {
+      name: 'meat',
+      required: false,
+      style: ['bacon'],
+      type: ['carnivore'],
+      userId: VALID_USER_KEY,
+    };
+
+    beforeEach((done) => {
+      AWSMock.setSDKInstance(AWS);
+      AWSMock.mock(
+        'DynamoDB.DocumentClient',
+        'get',
+        (
+          params: AWS.DynamoDB.QueryInput,
+          callback: (something: any, otherthing: object) => any,
+        ) => {
+          callback(null, {
+            Item: itemToDelete,
+            params,
+          });
+        },
+      );
+      AWSMock.mock(
+        'DynamoDB.DocumentClient',
+        'delete',
+        (
+          params: AWS.DynamoDB.QueryInput,
+          callback: (something: any, otherthing: object) => any,
+        ) => {
+          callback(null, {
+            Attributes: itemToDelete,
+            params,
+          });
+        },
+      );
+      done();
+    });
+
+    it('should delete last item that matches given name and style', async () => {
+      const {
+        UserIngredients,
+      } = require('./userIngredients') as UserIngredientFile;
+      const userIngredient = new UserIngredients(
+        VALID_USER_KEY,
+        new AWS.DynamoDB.DocumentClient(OPTIONS),
+      );
+
+      const results = await userIngredient.deleteByStyle(
+        itemToDelete.name,
+        itemToDelete.style[0],
+      );
+      expect(results).to.deep.equal(itemToDelete);
     });
   });
 });

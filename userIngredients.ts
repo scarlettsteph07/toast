@@ -115,7 +115,7 @@ export class UserIngredients {
     }
 
     const styles = ingredient.style;
-    if (styles.length === 0) {
+    if (styles.length === 1 && styles[0] === style) {
       const deleteResult = await this.dynamoDbClient
         .delete(this.getIngredientNameParams(name))
         .promise();
