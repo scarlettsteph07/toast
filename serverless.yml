@@ -127,7 +127,6 @@ resources:
       Type: 'AWS::DynamoDB::Table'
       DeletionPolicy: Retain
       Properties:
-        TableName: UserIngredients
         AttributeDefinitions:
           - AttributeName: userId
             AttributeType: S
