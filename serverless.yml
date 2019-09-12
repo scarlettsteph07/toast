@@ -24,7 +24,7 @@ plugins:
   - serverless-webpack
   - serverless-dynamodb-local
   - serverless-offline #serverless-offline needs to be last in the list
-${self:service}-${opt:stage, self:provider.stage}
+
 provider:
   name: aws
   runtime: nodejs8.10
