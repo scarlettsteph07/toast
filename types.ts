@@ -37,6 +37,22 @@ export type UserIngredientFile = {
   UserIngredients: UserIngredientClass;
 };
 
+export type EventSanitizerClass = new (event: FilteredEvent) => {
+  event: FilteredEvent;
+  headers: any;
+  body: any;
+  eventFilterAddIngredient(): AddIngredientEvent;
+  eventFilterDeleteIngredientStyle(): DeleteIngredientStyleEvent;
+  eventFilterNewRecipe(): NewRecipeEvent;
+  listIngredientsParams(): BaseIngredientEvent;
+  parseEvent(): FilteredEvent;
+  getUserKey(): string;
+};
+
+export type EventSanitizerFile = {
+  EventSanitizer: EventSanitizerClass;
+};
+
 export type GetNewRecipeFunc = (
   event: FilteredEvent,
   dynamoDbClient: AWS.DynamoDB.DocumentClient,
