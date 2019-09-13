@@ -6,11 +6,15 @@ frameworkVersion: ">=1.44.0"
 
 runtime: nodejs10.x
 
+environment:
+  INGREDIENTS_TABLE: ${self:service}-${self:provider.stage}-Ingredients
+
 # Add the serverless-webpack plugin
 plugins:
   - serverless-webpack
   - serverless-dynamodb-local
   - serverless-offline #serverless-offline needs to be last in the list
+  
 
 provider:
   name: aws
@@ -23,7 +27,7 @@ provider:
          - "dynamodb:PutItem"
          - "dynamodb:DeleteItem"
          - "dynamodb:GetItem"
-       Resource: "arn:aws:dynamodb:${self:provider.region}:373376418880:table/${self:service}-${self:provider.stage}-Ingredients"
+       Resource: "arn:aws:dynamodb:${self:provider.region}:373376418880:table/${env:INGREDIENT_TABLE}"
 custom:
   dynamodb:
     stages:
