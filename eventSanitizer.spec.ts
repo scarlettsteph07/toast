@@ -7,10 +7,12 @@ const headers = {
   'X-User-Key': VALID_USER_KEY,
 };
 const HTTP_METHODS = {
+  DELETE: 'DELETE',
   POST: 'POST',
 };
 const PATHS = {
-  NEW: '/ingredients/new',
+  INGREDIENTS: '/ingredients',
+  NEW_INGREDIENTS: '/ingredients/new',
 };
 
 describe('eventSanitizer', () => {
@@ -37,7 +39,7 @@ describe('eventSanitizer', () => {
           body: newIngredientObject,
           headers,
           httpMethod: HTTP_METHODS.POST,
-          path: PATHS.NEW,
+          path: PATHS.NEW_INGREDIENTS,
         };
         const eventSanitizer = new EventSanitizer(eventWithObject);
         expect(eventSanitizer.eventFilterAddIngredient()).to.deep.equal(
@@ -52,11 +54,53 @@ describe('eventSanitizer', () => {
           body: newIngredientString,
           headers,
           httpMethod: HTTP_METHODS.POST,
-          path: 'string',
+          path: PATHS.NEW_INGREDIENTS,
         };
         const eventSanitizer = new EventSanitizer(eventWithString);
         expect(eventSanitizer.eventFilterAddIngredient()).to.deep.equal(
           addIngredientEvent,
+        );
+      });
+    });
+  });
+
+  describe('#eventFilterDeleteIngredientStyle', () => {
+    const deleteIngredientObject = {
+      name: 'beer',
+      style: 'ipa',
+    };
+    const deleteIngredientString = '{"name": "beer", "style": "ipa"}';
+    const deleteIngredientStyleEvent = {
+      ...deleteIngredientObject,
+      userKey: VALID_USER_KEY,
+    };
+
+    describe('given an ingredient object', () => {
+      it('should return deleteIngredientStyleEvent', () => {
+        const eventWithObject = {
+          body: deleteIngredientObject,
+          headers,
+          httpMethod: HTTP_METHODS.DELETE,
+          path: PATHS.INGREDIENTS,
+        };
+        const eventSanitizer = new EventSanitizer(eventWithObject);
+        expect(eventSanitizer.eventFilterDeleteIngredientStyle()).to.deep.equal(
+          deleteIngredientStyleEvent,
+        );
+      });
+    });
+
+    describe('given an ingredient string', () => {
+      it('should return deleteIngredientStyleEvent', () => {
+        const eventWithString = {
+          body: deleteIngredientString,
+          headers,
+          httpMethod: HTTP_METHODS.DELETE,
+          path: PATHS.INGREDIENTS,
+        };
+        const eventSanitizer = new EventSanitizer(eventWithString);
+        expect(eventSanitizer.eventFilterDeleteIngredientStyle()).to.deep.equal(
+          deleteIngredientStyleEvent,
         );
       });
     });
