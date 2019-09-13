@@ -3,6 +3,7 @@ import * as sinon from 'sinon';
 import * as AWSMock from 'aws-sdk-mock';
 import * as AWS from 'aws-sdk';
 
+import { TABLES } from './dynamodb';
 import { FilteredEvent, IngredientHandler } from './types';
 
 AWS.config.update({ region: 'us-east-1' });
@@ -170,7 +171,7 @@ describe('valid new recipe events', () => {
 
   it('should return items from dynamo db if they exist', async () => {
     const returnData = (params: AWS.DynamoDB.QueryInput): any => {
-      expect(params.TableName).to.eql('UserIngredients');
+      expect(params.TableName).to.eql(TABLES.USER_INGREDIENTS);
       expect(params.KeyConditionExpression).to.eql('#userId = :userId');
       expect(params.ExpressionAttributeNames).to.eql({
         '#userId': 'userId',
