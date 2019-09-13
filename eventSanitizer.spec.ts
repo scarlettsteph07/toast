@@ -8,6 +8,7 @@ const headers = {
 };
 const HTTP_METHODS = {
   DELETE: 'DELETE',
+  GET: 'GET',
   POST: 'POST',
 };
 const PATHS = {
@@ -149,6 +150,24 @@ describe('eventSanitizer class', () => {
           newRecipeEvent,
         );
       });
+    });
+  });
+
+  describe('#listIngredientsParams', () => {
+    it('should return an object with the given user key', () => {
+      const requestEvent = {
+        body: {},
+        headers,
+        httpMethod: HTTP_METHODS.GET,
+        path: PATHS.INGREDIENTS,
+      };
+      const ingredientsParams = {
+        userKey: VALID_USER_KEY,
+      };
+      const eventSanitizer = new EventSanitizer(requestEvent);
+      expect(eventSanitizer.listIngredientsParams()).to.deep.equal(
+        ingredientsParams,
+      );
     });
   });
 });
