@@ -13,9 +13,10 @@ const HTTP_METHODS = {
 const PATHS = {
   INGREDIENTS: '/ingredients',
   NEW_INGREDIENTS: '/ingredients/new',
+  RECIPES: '/recipes',
 };
 
-describe('eventSanitizer', () => {
+describe('eventSanitizer class', () => {
   describe('#eventFilterAddIngredient', () => {
     const newIngredientObject = {
       name: 'meat',
@@ -101,6 +102,51 @@ describe('eventSanitizer', () => {
         const eventSanitizer = new EventSanitizer(eventWithString);
         expect(eventSanitizer.eventFilterDeleteIngredientStyle()).to.deep.equal(
           deleteIngredientStyleEvent,
+        );
+      });
+    });
+  });
+
+  describe('#eventFilterNewRecipe', () => {
+    const newRecipeObject = {
+      dietPreference: 'vegan',
+      ignoredIngredients: [],
+      numOfOptionalIngredients: 5,
+      requestedIngredients: [],
+    };
+    const newRecipeString =
+      '{"numOfOptionalIngredients": 5, "requestedIngredients": [], "ignoredIngredients": [], "dietPreference": "vegan"}';
+    const newRecipeEvent = {
+      ...newRecipeObject,
+      userKey: VALID_USER_KEY,
+    };
+
+    describe('given an new recipe object', () => {
+      it('should return newRecipeEvent', () => {
+        const eventWithObject = {
+          body: newRecipeObject,
+          headers,
+          httpMethod: HTTP_METHODS.POST,
+          path: PATHS.RECIPES,
+        };
+        const eventSanitizer = new EventSanitizer(eventWithObject);
+        expect(eventSanitizer.eventFilterNewRecipe()).to.deep.equal(
+          newRecipeEvent,
+        );
+      });
+    });
+
+    describe('given an new recipe string', () => {
+      it('should return newRecipeEvent', () => {
+        const eventWithObject = {
+          body: newRecipeString,
+          headers,
+          httpMethod: HTTP_METHODS.POST,
+          path: PATHS.RECIPES,
+        };
+        const eventSanitizer = new EventSanitizer(eventWithObject);
+        expect(eventSanitizer.eventFilterNewRecipe()).to.deep.equal(
+          newRecipeEvent,
         );
       });
     });
