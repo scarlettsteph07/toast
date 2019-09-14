@@ -4,8 +4,8 @@ service: ingredients
 # Check out our docs for more details
 frameworkVersion: ">=1.44.0"
 
-environment:
-  tableName: ${self:service}-${self:provider.stage}-Ingredients
+# environment:
+#   tableName: ${self:service}-${self:provider.stage}-Ingredients
 
 # Add the serverless-webpack plugin
 plugins:
@@ -77,6 +77,8 @@ custom:
 
 functions:
   removeIngredient:
+    environment:
+      tableName: ${self:service}-${self:provider.stage}-Ingredients
     handler: handler.deleteIngredientStyle
 
     events:
@@ -87,6 +89,8 @@ functions:
       # - cloudwatchLog: '/aws/lambda/removeIngredient'
 
   addIngredient:
+    environment:
+      tableName: ${self:service}-${self:provider.stage}-Ingredients
     handler: handler.addIngredient
 
     events:
@@ -97,6 +101,8 @@ functions:
       # - cloudwatchLog: '/aws/lambda/newIngredient'
 
   getIngredientsByUserId:
+    environment:
+      tableName: ${self:service}-${self:provider.stage}-Ingredients 
     handler: handler.getIngredientsByUserId
 
     events:
