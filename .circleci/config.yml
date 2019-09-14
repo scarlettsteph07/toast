@@ -87,7 +87,7 @@ jobs:
       
       - run:
           name: Deploy application
-          command: sls deploy --stage staging
+          command: sls deploy --stage staging --force
     
   deploy-production:
     docker:
@@ -120,7 +120,7 @@ jobs:
           
       - run:
           name: Deploy application
-          command: sls deploy --stage production
+          command: sls deploy --stage production --force
 
 workflows:
   version: 2

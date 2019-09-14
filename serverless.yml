@@ -7,12 +7,10 @@ frameworkVersion: ">=1.44.0"
 # environment:
 #   tableName: ${self:service}-${self:provider.stage}-Ingredients
 
-# Add the serverless-webpack plugin
 plugins:
   - serverless-webpack
   - serverless-dynamodb-local
   - serverless-offline #serverless-offline needs to be last in the list
-  
 
 provider:
   name: aws
@@ -25,12 +23,11 @@ provider:
          - "dynamodb:PutItem"
          - "dynamodb:DeleteItem"
          - "dynamodb:GetItem"
-       Resource: "arn:aws:dynamodb:${self:provider.region}:373376418880:table/${self:service}-${self:provider.stage}-Ingredients"
+       Resource: "arn:aws:dynamodb:${self:provider.region}:373376418880:table/${self:service}-${self:custom.myStage}-Ingredients"
+
 custom:
+  myStage: ${opt:stage, self:provider.stage}
   dynamodb:
-    stages:
-      - test
-      - dev
     start:
       port: 8000
       inMemory: true
@@ -78,7 +75,7 @@ custom:
 functions:
   removeIngredient:
     environment:
-      tableName: ${self:service}-${self:provider.stage}-Ingredients
+      tableName: ${self:service}-${self:custom.myStage}-Ingredients
     handler: handler.deleteIngredientStyle
 
     events:
@@ -86,11 +83,10 @@ functions:
           path: ingredients
           method: delete
           cors: true
-      # - cloudwatchLog: '/aws/lambda/removeIngredient'
 
   addIngredient:
     environment:
-      tableName: ${self:service}-${self:provider.stage}-Ingredients
+      tableName: ${self:service}-${self:custom.myStage}-Ingredients
     handler: handler.addIngredient
 
     events:
@@ -98,11 +94,10 @@ functions:
           path: ingredients/new
           method: post
           cors: true
-      # - cloudwatchLog: '/aws/lambda/newIngredient'
 
   getIngredientsByUserId:
     environment:
-      tableName: ${self:service}-${self:provider.stage}-Ingredients 
+      tableName: ${self:service}-${self:custom.myStage}-Ingredients 
     handler: handler.getIngredientsByUserId
 
     events:
@@ -113,7 +108,7 @@ functions:
 
   getNewRecipe:
     environment:
-      tableName: ${self:service}-${self:provider.stage}-Ingredients
+      tableName: ${self:service}-${self:custom.myStage}-Ingredients
     handler: handler.getNewRecipe
 
     events:
@@ -142,4 +137,4 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: ${self:service}-${self:provider.stage}-Ingredients
+        TableName: ${self:service}-${self:custom.myStage}-Ingredients
