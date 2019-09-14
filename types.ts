@@ -1,4 +1,5 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
+import { RequestValidator } from './lib/schema';
 
 export type Response = {
   statusCode: number;
@@ -19,6 +20,19 @@ export type ErrorMessage = {
 
 export type GetAll = () => Promise<Ingredient[]>;
 export type Constructor = (userKey: string) => void;
+
+export type RequestValidatorClass = (
+  payload: any,
+) => {
+  payload: any;
+  validateAddIngredient(): any;
+  validateDeleteIngredientStyle(): any;
+  validateGetNewRecipeParams(): any;
+};
+
+export type RequestValidatorFile = {
+  RequestValidator: RequestValidatorClass;
+};
 
 export type UserIngredientClass = new (
   userKey: string,
