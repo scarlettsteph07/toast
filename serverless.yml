@@ -4,10 +4,8 @@ service: ingredients
 # Check out our docs for more details
 frameworkVersion: ">=1.44.0"
 
-runtime: nodejs10.x
-
 environment:
-  INGREDIENTS_TABLE: ${self:service}-${self:provider.stage}-Ingredients
+  tableName: ${self:service}-${self:provider.stage}-Ingredients
 
 # Add the serverless-webpack plugin
 plugins:

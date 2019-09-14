@@ -22,7 +22,7 @@ export const dynamoDbClient = dynamodb();
 
 export const TABLES = {
   USER_INGREDIENTS:
-    process.env.INGREDIENTS_TABLE !== undefined
-      ? process.env.INGREDIENTS_TABLE
+    process.env.tableName !== undefined
+      ? process.env.tableName
       : 'UserIngredients',
 };
