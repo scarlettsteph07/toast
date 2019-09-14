@@ -63,7 +63,7 @@ export const eventWrapper = (
     const error = e as ErrorMessage;
     return {
       body: JSON.stringify({
-        error: `${error.property.split('.')[1]}}${error.message}`,
+        error,
       }),
       headers: DEFAULT_HEADERS,
       statusCode: '400',
