@@ -121,7 +121,7 @@ jobs:
           
       - run:
           name: Deploy application
-          command: sls deploy --stage production --force
+          command: sls deploy --stage production
 
 workflows:
   version: 2
