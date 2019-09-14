@@ -1,27 +1,18 @@
-# Welcome to Serverless!
-#
-# This file is the main config file for your service.
-# It's very minimal at this point and uses default values.
-# You can always add more config options for more control.
-# We've included some commented out config examples here.
-# Just uncomment any of them to get that config option.
-#
-# For full config options, check the docs:
-#    docs.serverless.com
-#
-# Happy Coding!
-
 service: ingredients
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
 frameworkVersion: ">=1.44.0"
 
+# environment:
+#   tableName: ${self:service}-${self:provider.stage}-Ingredients
+
 # Add the serverless-webpack plugin
 plugins:
   - serverless-webpack
   - serverless-dynamodb-local
   - serverless-offline #serverless-offline needs to be last in the list
+  
 
 provider:
   name: aws
@@ -30,19 +21,11 @@ provider:
     -  Effect: "Allow"
        Action:
          - "dynamodb:Query"
-       Resource: "arn:aws:dynamodb:us-east-1:373376418880:table/UserIngredients"
-    -  Effect: "Allow"
-       Action:
+         - "dynamodb:BatchWriteItem"
          - "dynamodb:PutItem"
-       Resource: "arn:aws:dynamodb:us-east-1:373376418880:table/UserIngredients"
-    -  Effect: "Allow"
-       Action:
          - "dynamodb:DeleteItem"
-       Resource: "arn:aws:dynamodb:us-east-1:373376418880:table/UserIngredients"
-    -  Effect: "Allow"
-       Action:
          - "dynamodb:GetItem"
-       Resource: "arn:aws:dynamodb:us-east-1:373376418880:table/UserIngredients"
+       Resource: "arn:aws:dynamodb:${self:provider.region}:373376418880:table/${self:service}-${self:provider.stage}-Ingredients"
 custom:
   dynamodb:
     stages:
@@ -94,6 +77,8 @@ custom:
 
 functions:
   removeIngredient:
+    environment:
+      tableName: ${self:service}-${self:provider.stage}-Ingredients
     handler: handler.deleteIngredientStyle
 
     events:
@@ -104,6 +89,8 @@ functions:
       # - cloudwatchLog: '/aws/lambda/removeIngredient'
 
   addIngredient:
+    environment:
+      tableName: ${self:service}-${self:provider.stage}-Ingredients
     handler: handler.addIngredient
 
     events:
@@ -114,6 +101,8 @@ functions:
       # - cloudwatchLog: '/aws/lambda/newIngredient'
 
   getIngredientsByUserId:
+    environment:
+      tableName: ${self:service}-${self:provider.stage}-Ingredients 
     handler: handler.getIngredientsByUserId
 
     events:
@@ -123,6 +112,8 @@ functions:
           cors: true
 
   getNewRecipe:
+    environment:
+      tableName: ${self:service}-${self:provider.stage}-Ingredients
     handler: handler.getNewRecipe
 
     events:
@@ -134,10 +125,10 @@ functions:
 
 resources:
   Resources:
-    usersTable:
-      Type: AWS::DynamoDB::Table
+    IngredientsDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      # DeletionPolicy: Retain
       Properties:
-        TableName: UserIngredients
         AttributeDefinitions:
           - AttributeName: userId
             AttributeType: S
@@ -151,3 +142,4 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
+        TableName: ${self:service}-${self:provider.stage}-Ingredients
