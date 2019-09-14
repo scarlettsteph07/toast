@@ -106,6 +106,8 @@ functions:
           cors: true
 
   getNewRecipe:
+    environment:
+      tableName: ${self:service}-${self:provider.stage}-Ingredients
     handler: handler.getNewRecipe
 
     events:
