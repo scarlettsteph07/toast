@@ -28,9 +28,6 @@ provider:
        Resource: "arn:aws:dynamodb:${self:provider.region}:373376418880:table/${self:service}-${self:provider.stage}-Ingredients"
 custom:
   dynamodb:
-    stages:
-      - test
-      - dev
     start:
       port: 8000
       inMemory: true
