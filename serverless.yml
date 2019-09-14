@@ -23,7 +23,7 @@ provider:
          - "dynamodb:PutItem"
          - "dynamodb:DeleteItem"
          - "dynamodb:GetItem"
-       Resource: "arn:aws:dynamodb:${self:provider.region}:373376418880:table/${self:service}-${self:provider.stage}-Ingredients"
+       Resource: "arn:aws:dynamodb:${self:provider.region}:373376418880:table/${self:service}-${opt:stage}-Ingredients"
 custom:
   dynamodb:
     start:
@@ -73,7 +73,7 @@ custom:
 functions:
   removeIngredient:
     environment:
-      tableName: ${self:service}-${self:provider.stage}-Ingredients
+      tableName: ${self:service}-${opt:stage}-Ingredients
     handler: handler.deleteIngredientStyle
 
     events:
@@ -84,7 +84,7 @@ functions:
 
   addIngredient:
     environment:
-      tableName: ${self:service}-${self:provider.stage}-Ingredients
+      tableName: ${self:service}-${opt:stage}-Ingredients
     handler: handler.addIngredient
 
     events:
@@ -95,7 +95,7 @@ functions:
 
   getIngredientsByUserId:
     environment:
-      tableName: ${self:service}-${self:provider.stage}-Ingredients 
+      tableName: ${self:service}-${opt:stage}-Ingredients 
     handler: handler.getIngredientsByUserId
 
     events:
@@ -106,7 +106,7 @@ functions:
 
   getNewRecipe:
     environment:
-      tableName: ${self:service}-${self:provider.stage}-Ingredients
+      tableName: ${self:service}-${opt:stage}-Ingredients
     handler: handler.getNewRecipe
 
     events:
@@ -135,4 +135,4 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: ${self:service}-${self:provider.stage}-Ingredients
+        TableName: ${self:service}-${opt:stage}-Ingredients
