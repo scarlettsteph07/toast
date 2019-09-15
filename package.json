@@ -42,6 +42,7 @@
   },
   "homepage": "https://github.com/serverless/enterprise-template#readme",
   "dependencies": {
+    "@types/aws-lambda-mock-context": "^1.0.3",
     "@types/chai": "^4.2.0",
     "@types/js-yaml": "^3.12.1",
     "@types/lodash": "^4.14.138",
@@ -57,6 +58,7 @@
     "@types/aws-sdk": "^2.7.0",
     "@types/mocha": "^5.2.7",
     "@types/node": "^10.12.18",
+    "aws-lambda-mock-context": "^3.2.1",
     "aws-sdk-mock": "^4.5.0",
     "chai": "^4.2.0",
     "mocha": "^6.2.0",

@@ -1,5 +1,4 @@
-import { APIGatewayProxyEvent } from 'aws-lambda';
-import { RequestValidator } from './lib/schema';
+import { APIGatewayProxyEvent } from "aws-lambda";
 
 export type Response = {
   statusCode: number;
@@ -71,6 +70,7 @@ export type GetNewRecipeFunc = (
   event: FilteredEvent,
   dynamoDbClient: AWS.DynamoDB.DocumentClient,
 ) => Promise<RecipeItem[]>;
+
 export type GetNewRecipe = (event: APIGatewayProxyEvent) => Promise<Response>;
 
 export type IngredientStyleFunc = (
@@ -163,8 +163,8 @@ export type NewRecipeEvent = BaseIngredientEvent & {
 };
 
 export type UserHeaders = {
-  'X-User-Key'?: string;
-  'x-user-key'?: string;
+  "X-User-Key"?: string;
+  "x-user-key"?: string;
 };
 
-export type DietPreference = 'carnivore' | 'vegan' | 'vegetarian';
+export type DietPreference = "carnivore" | "vegan" | "vegetarian";

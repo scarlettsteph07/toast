@@ -46,14 +46,17 @@ export const eventWrapper = (
     const data = await originalFunction(filteredEvent, dynamoDbClient);
 
     if (Object.keys(data).length === 0) {
+      _context.succeed(true);
       return {
         body: JSON.stringify({
           error: "Item not found",
         }),
         headers: DEFAULT_HEADERS,
-        statusCode: 404,
+        statusCode: "404",
       };
     }
+
+    _context.succeed(true);
     return {
       body: JSON.stringify(data),
       headers: DEFAULT_HEADERS,
