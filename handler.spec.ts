@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import sinon from "ts-sinon";
+import tsSinon from "ts-sinon";
 import * as AWSMock from "aws-sdk-mock";
 import * as AWS from "aws-sdk";
 
@@ -84,7 +84,7 @@ describe("invalid new recipe events", () => {
 
 describe("valid new recipe events", () => {
   beforeEach(() => {
-    sinon.stub(Math, "random").returns(0);
+    tsSinon.stub(Math, "random").returns(0);
     AWSMock.remock(
       "DynamoDB.DocumentClient",
       "batchWrite",
@@ -303,7 +303,7 @@ describe("valid new recipe events", () => {
   });
 
   afterEach(() => {
-    sinon.restore();
+    tsSinon.restore();
     AWSMock.restore("DynamoDB.DocumentClient");
   });
 });
