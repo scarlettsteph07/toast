@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { RequestValidator } from ".schema";
+import { RequestValidator } from "src/utils/schema";
 
 describe("RequestValidator class", () => {
   describe("#validateAddIngredient", () => {
