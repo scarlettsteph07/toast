@@ -10,7 +10,7 @@
     "strict": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "outDir": "lib",
+    "outDir": "lib"
   },
   "exclude": [
     "coverage",

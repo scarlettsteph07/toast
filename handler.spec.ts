@@ -125,6 +125,33 @@ describe('valid new recipe events', () => {
     });
   });
 
+  it('should ignore an invalid ingredients', async () => {
+    const { getNewRecipeEvent } = require('./handler') as IngredientHandler;
+    const payload: FilteredEvent = {
+      body: {
+        ...body,
+        ignoredIngredients: [
+          {
+            name: 'not a name',
+            style: 'not a style',
+          },
+        ],
+        numOfOptionalIngredients: 5,
+      },
+      headers,
+      httpMethod: 'POST',
+      path: '/test',
+    };
+
+    try {
+      await getNewRecipeEvent(payload, new AWS.DynamoDB.DocumentClient());
+    } catch (e) {
+      expect(e as Error).to.have.property('message');
+      const error = e as Error;
+      expect(error.message).to.eql('Invalid name for [not a style]');
+    }
+  });
+
   it('should return 5 ingredient items', async () => {
     const { getNewRecipeEvent } = require('./handler') as IngredientHandler;
     const payload: FilteredEvent = {
