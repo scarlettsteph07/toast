@@ -32,7 +32,7 @@ jobs:
       # Run mocha
       - run:
           name: npm test
-          command: ./node_modules/.bin/nyc ./node_modules/.bin/mocha -r ts-node/register -r tsconfig-paths/register --recursive --timeout=10000 --exit --reporter mocha-junit-reporter --reporter-options mochaFile=reports/mocha/test-results.xml *.spec.ts
+          command: ./node_modules/.bin/nyc ./node_modules/.bin/mocha -r ts-node/register -r tsconfig-paths/register --recursive --timeout=10000 --exit --reporter mocha-junit-reporter --reporter-options mochaFile=reports/mocha/test-results.xml **/*.spec.ts
           when: always
 
       # Run eslint
