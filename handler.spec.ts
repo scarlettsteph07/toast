@@ -125,7 +125,7 @@ describe('valid new recipe events', () => {
     });
   });
 
-  it('should ignore an invalid ingredients', async () => {
+  it('should throw an error for an invalid ingredient name', async () => {
     const { getNewRecipeEvent } = require('./handler') as IngredientHandler;
     const payload: FilteredEvent = {
       body: {
@@ -136,7 +136,7 @@ describe('valid new recipe events', () => {
             style: 'not a style',
           },
         ],
-        numOfOptionalIngredients: 5,
+        numOfOptionalIngredients: 2,
       },
       headers,
       httpMethod: 'POST',
@@ -148,7 +148,34 @@ describe('valid new recipe events', () => {
     } catch (e) {
       expect(e as Error).to.have.property('message');
       const error = e as Error;
-      expect(error.message).to.eql('Invalid name for [not a style]');
+      expect(error.message).to.eql('Invalid name for [not a name]');
+    }
+  });
+
+  it('should throw an error for an invalid ingredient style', async () => {
+    const { getNewRecipeEvent } = require('./handler') as IngredientHandler;
+    const payload: FilteredEvent = {
+      body: {
+        ...body,
+        ignoredIngredients: [
+          {
+            name: 'bread',
+            style: 'not a style',
+          },
+        ],
+        numOfOptionalIngredients: 2,
+      },
+      headers,
+      httpMethod: 'POST',
+      path: '/test',
+    };
+
+    try {
+      await getNewRecipeEvent(payload, new AWS.DynamoDB.DocumentClient());
+    } catch (e) {
+      expect(e as Error).to.have.property('message');
+      const error = e as Error;
+      expect(error.message).to.eql('Invalid style for [not a style]');
     }
   });
 
