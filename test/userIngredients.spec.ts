@@ -1,27 +1,27 @@
-import { expect } from 'chai';
-import * as AWSMock from 'aws-sdk-mock';
-import * as AWS from 'aws-sdk';
-import * as sinon from 'sinon';
+import { expect } from "chai";
+import * as AWSMock from "aws-sdk-mock";
+import * as AWS from "aws-sdk";
+import * as sinon from "sinon";
 
-import { defaultIngredients } from './config';
-import { TABLES } from './dynamodb';
+import { config } from "src/utils/config";
+import { TABLES } from "src/utils/dynamodb";
 
-import { UserIngredientFile } from './types';
+import { UserIngredientFile } from "src/types";
 
-AWS.config.update({ region: 'us-east-1' });
-const VALID_USER_KEY = '1234';
+AWS.config.update({ region: "us-east-1" });
+const VALID_USER_KEY = "1234";
 const OPTIONS = {
-  endpoint: 'http://localhost:8000',
-  region: 'localhost',
+  endpoint: "http://localhost:8000",
+  region: "localhost",
 };
 
-describe('user ingredients class', () => {
-  describe('#getAll', () => {
-    beforeEach((done) => {
+describe("user ingredients class", () => {
+  describe("#getAll", () => {
+    beforeEach(() => {
       AWSMock.setSDKInstance(AWS);
       AWSMock.remock(
-        'DynamoDB.DocumentClient',
-        'query',
+        "DynamoDB.DocumentClient",
+        "query",
         (
           params: AWS.DynamoDB.QueryInput,
           callback: (something: any, otherthing: any) => any,
@@ -29,7 +29,7 @@ describe('user ingredients class', () => {
           callback(null, {
             Items: [
               {
-                name: 'blah',
+                name: "blah",
                 required: true,
                 style: [],
                 type: [],
@@ -39,13 +39,12 @@ describe('user ingredients class', () => {
           });
         },
       );
-      done();
     });
 
-    it('should get all user ingredients', async () => {
-      const {
-        UserIngredients,
-      } = require('./userIngredients') as UserIngredientFile;
+    it("should get all user ingredients", async () => {
+      const { UserIngredients } = <UserIngredientFile>(
+        require("src/models/userIngredients")
+      );
 
       const userIngredient = new UserIngredients(
         VALID_USER_KEY,
@@ -53,117 +52,120 @@ describe('user ingredients class', () => {
       );
 
       const results = await userIngredient.getAll();
-      expect(results).to.deep.equal([
-        {
-          name: 'blah',
-          required: true,
-          style: [],
-          type: [],
-        },
-      ]);
+      expect(results).to.deep.equal(
+        [
+          {
+            name: "blah",
+            required: true,
+            style: [],
+            type: [],
+          },
+        ],
+        "returns ingredients",
+      );
     });
 
-    afterEach(function() {
+    afterEach(() => {
       sinon.restore();
-      AWSMock.restore('DynamoDB.DocumentClient');
+      AWSMock.restore("DynamoDB.DocumentClient");
     });
   });
 
-  describe('#bulkCreateIngredients', () => {
-    it('should bulk create ingredients and return true', async () => {
-      const {
-        UserIngredients,
-      } = require('./userIngredients') as UserIngredientFile;
+  describe("#bulkCreateIngredients", () => {
+    it("should bulk create ingredients and return true", async () => {
+      const { UserIngredients } = <UserIngredientFile>(
+        require("src/models/userIngredients")
+      );
 
       const userIngredient = new UserIngredients(
         VALID_USER_KEY,
         new AWS.DynamoDB.DocumentClient(OPTIONS),
       );
-      const results = await userIngredient.bulkCreateIngredients(
-        defaultIngredients(),
-      );
-      expect(results).to.equal(true);
+      const results = await userIngredient.bulkCreateIngredients(config());
+      expect(results).to.equal(true, "return the correct results");
     });
   });
 
-  describe('#getItemByName', () => {
-    beforeEach((done) => {
+  describe("#getItemByName", () => {
+    beforeEach(() => {
       AWSMock.setSDKInstance(AWS);
       AWSMock.mock(
-        'DynamoDB.DocumentClient',
-        'get',
+        "DynamoDB.DocumentClient",
+        "get",
         (
           params: AWS.DynamoDB.QueryInput,
           callback: (something: any, otherthing: any) => any,
         ) => {
           callback(null, {
             Item: {
-              name: 'black pepper',
+              name: "black pepper",
               required: false,
-              style: ['black pepper'],
-              type: ['carnivore', 'vegetarian', 'vegan'],
+              style: ["black pepper"],
+              type: ["carnivore", "vegetarian", "vegan"],
               userId: VALID_USER_KEY,
             },
             params,
           });
         },
       );
-      done();
     });
 
-    it('should get item given the name as string', async () => {
-      const {
-        UserIngredients,
-      } = require('./userIngredients') as UserIngredientFile;
+    it("should get item given the name as string", async () => {
+      const { UserIngredients } = <UserIngredientFile>(
+        require("src/models/userIngredients")
+      );
 
       const userIngredient = new UserIngredients(
         VALID_USER_KEY,
         new AWS.DynamoDB.DocumentClient(OPTIONS),
       );
-      const results = await userIngredient.getItemByName('black pepper');
-      expect(results).to.deep.equal({
-        name: 'black pepper',
-        required: false,
-        style: ['black pepper'],
-        type: ['carnivore', 'vegetarian', 'vegan'],
-        userId: VALID_USER_KEY,
-      });
+      const results = await userIngredient.getItemByName("black pepper");
+      expect(results).to.deep.equal(
+        {
+          name: "black pepper",
+          required: false,
+          style: ["black pepper"],
+          type: ["carnivore", "vegetarian", "vegan"],
+          userId: VALID_USER_KEY,
+        },
+        "expect item to equals",
+      );
     });
 
-    afterEach(function() {
+    afterEach(() => {
       sinon.restore();
-      AWSMock.restore('DynamoDB.DocumentClient');
+      AWSMock.restore("DynamoDB.DocumentClient");
     });
   });
 
-  describe('#deleteByStyle', () => {
+  describe("#deleteByStyle", () => {
     const itemToDelete = {
-      name: 'meat',
+      name: "meat",
       required: false,
-      style: ['bacon'],
-      type: ['carnivore'],
+      style: ["bacon"],
+      type: ["carnivore"],
       userId: VALID_USER_KEY,
     };
     const itemToUpdate = {
-      name: 'meat',
+      name: "meat",
       required: false,
-      style: ['bacon', 'ham', 'sausage'],
-      type: ['carnivore'],
+      style: ["bacon", "ham", "sausage"],
+      type: ["carnivore"],
       userId: VALID_USER_KEY,
     };
     const updatedItem = {
-      name: 'meat',
+      name: "meat",
       required: false,
-      style: ['ham', 'sausage'],
-      type: ['carnivore'],
+      style: ["ham", "sausage"],
+      type: ["carnivore"],
       userId: VALID_USER_KEY,
     };
 
-    beforeEach((done) => {
+    beforeEach(() => {
       AWSMock.setSDKInstance(AWS);
       AWSMock.mock(
-        'DynamoDB.DocumentClient',
-        'get',
+        "DynamoDB.DocumentClient",
+        "get",
         (
           params: AWS.DynamoDB.QueryInput,
           callback: (something: any, otherthing: object) => any,
@@ -175,8 +177,8 @@ describe('user ingredients class', () => {
         },
       );
       AWSMock.mock(
-        'DynamoDB.DocumentClient',
-        'delete',
+        "DynamoDB.DocumentClient",
+        "delete",
         (
           params: AWS.DynamoDB.QueryInput,
           callback: (something: any, otherthing: object) => any,
@@ -188,8 +190,8 @@ describe('user ingredients class', () => {
         },
       );
       AWSMock.mock(
-        'DynamoDB.DocumentClient',
-        'update',
+        "DynamoDB.DocumentClient",
+        "update",
         (
           params: AWS.DynamoDB.QueryInput,
           callback: (something: null, queryResult: object) => any,
@@ -200,13 +202,12 @@ describe('user ingredients class', () => {
           });
         },
       );
-      done();
     });
 
-    it('should delete last item that matches given name and style', async () => {
-      const {
-        UserIngredients,
-      } = require('./userIngredients') as UserIngredientFile;
+    it("should delete last item that matches given name and style", async () => {
+      const { UserIngredients } = <UserIngredientFile>(
+        require("src/models/userIngredients")
+      );
       const userIngredient = new UserIngredients(
         VALID_USER_KEY,
         new AWS.DynamoDB.DocumentClient(OPTIONS),
@@ -219,10 +220,10 @@ describe('user ingredients class', () => {
       expect(results).to.deep.equal(itemToDelete);
     });
 
-    it('should update existing item styles given a valid name and style', async () => {
+    it("should update existing item styles given a valid name and style", async () => {
       AWSMock.remock(
-        'DynamoDB.DocumentClient',
-        'get',
+        "DynamoDB.DocumentClient",
+        "get",
         (
           params: AWS.DynamoDB.QueryInput,
           callback: (something: any, otherthing: object) => any,
@@ -234,9 +235,9 @@ describe('user ingredients class', () => {
         },
       );
 
-      const {
-        UserIngredients,
-      } = require('./userIngredients') as UserIngredientFile;
+      const { UserIngredients } = <UserIngredientFile>(
+        require("src/models/userIngredients")
+      );
       const userIngredient = new UserIngredients(
         VALID_USER_KEY,
         new AWS.DynamoDB.DocumentClient(OPTIONS),
@@ -250,20 +251,20 @@ describe('user ingredients class', () => {
     });
   });
 
-  describe('#createIngredient', () => {
+  describe("#createIngredient", () => {
     const itemToCreate = {
-      name: 'beer',
+      name: "beer",
       required: false,
-      style: ['ipa'],
-      type: ['carnivore', 'vegetarian', 'vegan'],
+      style: ["ipa"],
+      type: ["carnivore", "vegetarian", "vegan"],
       userId: VALID_USER_KEY,
     };
 
-    beforeEach((done) => {
+    beforeEach(() => {
       AWSMock.setSDKInstance(AWS);
       AWSMock.mock(
-        'DynamoDB.DocumentClient',
-        'put',
+        "DynamoDB.DocumentClient",
+        "put",
         (
           params: AWS.DynamoDB.QueryInput,
           callback: (something: any, otherthing: object) => any,
@@ -274,13 +275,12 @@ describe('user ingredients class', () => {
           });
         },
       );
-      done();
     });
 
-    it('should add a new item given an Ingredient object', async () => {
-      const {
-        UserIngredients,
-      } = require('./userIngredients') as UserIngredientFile;
+    it("should add a new item given an Ingredient object", async () => {
+      const { UserIngredients } = <UserIngredientFile>(
+        require("src/models/userIngredients")
+      );
       const userIngredient = new UserIngredients(
         VALID_USER_KEY,
         new AWS.DynamoDB.DocumentClient(OPTIONS),
@@ -291,24 +291,24 @@ describe('user ingredients class', () => {
     });
   });
 
-  describe('#getIngredientNameParams', () => {
+  describe("#getIngredientNameParams", () => {
     const params = {
       Key: {
-        name: 'item name',
-        userId: '1234',
+        name: "item name",
+        userId: "1234",
       },
       TableName: TABLES.USER_INGREDIENTS,
     };
 
-    it('should return a params object', () => {
-      const {
-        UserIngredients,
-      } = require('./userIngredients') as UserIngredientFile;
+    it("should return a params object", () => {
+      const { UserIngredients } = <UserIngredientFile>(
+        require("src/models/userIngredients")
+      );
       const userIngredient = new UserIngredients(
         VALID_USER_KEY,
         new AWS.DynamoDB.DocumentClient(OPTIONS),
       );
-      const result = userIngredient.getIngredientNameParams('item name');
+      const result = userIngredient.getIngredientNameParams("item name");
       expect(result).to.deep.equal(params);
     });
   });

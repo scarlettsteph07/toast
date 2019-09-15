@@ -1,9 +1,11 @@
-import { RecipeItem, Ingredient, DietPreference } from './types';
+import { RecipeItem, Ingredient, DietPreference } from "src/types";
 
+// tslint:disable-next-line: prefer-array-literal
 const getRandomArrayIndex = (array: Array<string | object>): number =>
+  // tslint:disable-next-line: insecure-random
   Math.floor(Math.random() * array.length);
 
-const DEFAULT_DIET_PREFERENCE = 'carnivore';
+const DEFAULT_DIET_PREFERENCE = "carnivore";
 
 export class Recipe {
   private readonly ingredients: Ingredient[];
@@ -20,11 +22,11 @@ export class Recipe {
   constructor(ingredients: Ingredient[], numOfItems: number) {
     this.ingredients = [...ingredients];
     this.numOfItems = numOfItems;
-    this.ignoreRequiredItems = new Array();
-    this.ignoreOptionalItems = new Array();
-    this.requestRequiredItems = new Array();
-    this.requestOptionalItems = new Array();
-    this.chosenIngredients = new Array();
+    this.ignoreRequiredItems = [];
+    this.ignoreOptionalItems = [];
+    this.requestRequiredItems = [];
+    this.requestOptionalItems = [];
+    this.chosenIngredients = [];
     this.dietPreference = DEFAULT_DIET_PREFERENCE;
     this.requiredIngredients = [
       ...this.filterRequiredIngredients(this.dietPreference),
@@ -140,9 +142,7 @@ export class Recipe {
           x.style.includes(ignoreRequiredItem.style)
         ) {
           if (x.style.length > 1) {
-            x.style = x.style.filter(
-              (y) => y !== ignoreRequiredItem.style,
-            );
+            x.style = x.style.filter((y) => y !== ignoreRequiredItem.style);
           }
         }
       });
@@ -180,17 +180,13 @@ export class Recipe {
 
   private filterOptionalIngredients(dietPreference: DietPreference) {
     return this.ingredients.filter(
-      (i) =>
-        !i.required &&
-        i.type.includes(dietPreference),
+      (i) => !i.required && i.type.includes(dietPreference),
     );
   }
 
   private filterRequiredIngredients(dietPreference: DietPreference) {
     return this.ingredients.filter(
-      (i) =>
-        i.required &&
-        i.type.includes(dietPreference),
+      (i) => i.required && i.type.includes(dietPreference),
     );
   }
 }

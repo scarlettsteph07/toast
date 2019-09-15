@@ -1,31 +1,29 @@
-// import { APIGatewayProxyEvent } from 'aws-lambda';
-
 import {
   AddIngredientEvent,
-  DeleteIngredientStyleEvent,
   BaseIngredientEvent,
-  NewRecipe,
-  FilteredEvent,
-  NewRecipeEvent,
-  Ingredient,
   DeleteIngredientStyle,
+  DeleteIngredientStyleEvent,
+  FilteredEvent,
+  Ingredient,
+  NewRecipe,
+  NewRecipeEvent,
   UserHeaders,
-} from './types';
+} from "src/types";
 
 export class EventSanitizer {
+  private readonly body: any;
   private readonly event: FilteredEvent;
   private readonly headers: any;
-  private readonly body: any;
 
-  constructor(event: FilteredEvent) {
+  public constructor(event: FilteredEvent) {
     this.event = event;
     const { headers, body } = this.parseEvent();
     this.headers = headers;
-    this.body = typeof body === 'string' ? JSON.parse(body) : body;
+    this.body = typeof body === "string" ? JSON.parse(body) : body;
   }
 
   public eventFilterAddIngredient(): AddIngredientEvent {
-    const { name, required, style, type } = this.body as Ingredient;
+    const { name, required, style, type } = <Ingredient>this.body;
     return {
       ingredient: {
         name,
@@ -39,7 +37,7 @@ export class EventSanitizer {
   }
 
   public eventFilterDeleteIngredientStyle(): DeleteIngredientStyleEvent {
-    const { name, style } = this.body as DeleteIngredientStyle;
+    const { name, style } = <DeleteIngredientStyle>this.body;
     return {
       name,
       style,
@@ -53,7 +51,7 @@ export class EventSanitizer {
       ignoredIngredients,
       numOfOptionalIngredients,
       requestedIngredients,
-    } = this.body as NewRecipe;
+    } = <NewRecipe>this.body;
 
     return {
       dietPreference,
@@ -70,33 +68,35 @@ export class EventSanitizer {
     return { userKey: this.getUserKey() };
   }
 
+  private getUserKey(): string {
+    if (!this.headers) {
+      throw new Error("User Key is required");
+    }
+
+    const headers = <UserHeaders>this.headers;
+    const userKey =
+      headers["X-User-Key"] !== undefined
+        ? headers["X-User-Key"]
+        : headers["x-user-key"];
+
+    if (userKey === undefined) {
+      throw new Error("User Key is required");
+    }
+
+    return userKey;
+  }
+
   private parseEvent(): FilteredEvent {
     return {
       body:
-        typeof this.event.body === 'string'
-          ? (JSON.parse(this.event.body) as object)
+        typeof this.event.body === "string"
+          ? <object>JSON.parse(this.event.body)
           : this.event.body,
       headers:
-        typeof this.event.headers === 'string'
-          ? (JSON.parse(this.event.headers) as object)
+        typeof this.event.headers === "string"
+          ? <object>JSON.parse(this.event.headers)
           : this.event.headers,
       ...this.event,
     };
-  }
-
-  private getUserKey(): string {
-    if (!this.headers) {
-      throw new Error('User Key is required');
-    }
-    const headers = this.headers as UserHeaders;
-    const userKey =
-      headers['X-User-Key'] !== undefined
-        ? headers['X-User-Key']
-        : headers['x-user-key'];
-
-    if (userKey === undefined) {
-      throw new Error('User Key is required');
-    }
-    return userKey;
   }
 }

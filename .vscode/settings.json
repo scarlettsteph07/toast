@@ -3,8 +3,28 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "files.exclude": {
     "**/.classpath": true,
+    "**/.dynamodb": true,
+    "**/.factorypath": true,
+    "**/.nyc_output": true,
     "**/.project": true,
-    "**/.settings": true,
-    "**/.factorypath": true
-  }
+    "**/.serverless": true,
+    "**/.settings": true
+  },
+  "java.configuration.checkProjectSettingsExclusions": false,
+  "editor.formatOnSave": true,
+  "editor.formatOnType": true,
+  "javascript.format.placeOpenBraceOnNewLineForFunctions": true,
+  "typescript.format.placeOpenBraceOnNewLineForFunctions": true,
+  "javascript.format.placeOpenBraceOnNewLineForControlBlocks": true,
+  "typescript.format.placeOpenBraceOnNewLineForControlBlocks": true,
+  "javascript.format.insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces": true,
+  "typescript.format.insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces": true,
+  "terminal.integrated.cursorStyle": "underline",
+  "terminal.integrated.cursorBlinking": true,
+  "html.format.indentHandlebars": true,
+  "editor.cursorStyle": "underline",
+  "editor.find.addExtraSpaceOnTop": false,
+  "editor.fontFamily": "'Input Mono', Menlo, Monaco, 'Courier New', monospace",
+  "editor.fontWeight": "300",
+  "terminal.integrated.fontWeight": "300"
 }

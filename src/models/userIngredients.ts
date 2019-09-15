@@ -1,17 +1,16 @@
-import * as AWS from 'aws-sdk';
+import * as AWS from "aws-sdk";
 
-import { TABLES } from './dynamodb';
-
+import { TABLES } from "src/utils/dynamodb";
 import {
   Ingredient,
   IngredientNameParams,
   UserIngredient,
   Item,
-} from './types';
+} from "src/types";
 
 export class UserIngredients {
-  private readonly userKey: string;
   private readonly dynamoDbClient: AWS.DynamoDB.DocumentClient;
+  private readonly userKey: string;
 
   constructor(userKey: string, dynamoDbClient: AWS.DynamoDB.DocumentClient) {
     this.userKey = userKey;
@@ -22,12 +21,12 @@ export class UserIngredients {
   public async getAll(): Promise<Ingredient[]> {
     const params = {
       ExpressionAttributeNames: {
-        '#userId': 'userId',
+        "#userId": "userId",
       },
       ExpressionAttributeValues: {
-        ':userId': this.userKey,
+        ":userId": this.userKey,
       },
-      KeyConditionExpression: '#userId = :userId',
+      KeyConditionExpression: "#userId = :userId",
       TableName: TABLES.USER_INGREDIENTS,
     };
     const dynamoResponse = await this.dynamoDbClient.query(params).promise();
@@ -35,26 +34,27 @@ export class UserIngredients {
       if (dynamoResponse.Items !== undefined) {
         resolve(
           dynamoResponse.Items.map(
-            (item): Ingredient => {
+            (item: any): Ingredient => {
               if (item !== undefined) {
                 return {
-                  name: item.name as string,
-                  required: item.required as boolean,
-                  style: item.style as [],
-                  type: item.type as [],
+                  name: <string>item.name,
+                  required: <boolean>item.required,
+                  style: <[]>item.style,
+                  type: <[]>item.type,
                 };
               }
+
               return {
-                name: '',
+                name: "",
                 required: false,
                 style: [],
                 type: [],
               };
             },
-          ).filter((i) => i.name !== ''),
+          ).filter((i: Ingredient) => i.name !== ""),
         );
       }
-      reject({ error: 'no results returned' });
+      reject({ error: "no results returned" });
     });
   }
 
@@ -81,7 +81,7 @@ export class UserIngredients {
       if (result !== undefined) {
         resolve(true);
       }
-      reject('no items found');
+      reject("no items found");
     });
   }
 
@@ -95,9 +95,9 @@ export class UserIngredients {
         ingredient.Item !== undefined &&
         ingredient.Item.name === name
       ) {
-        resolve(ingredient.Item as Item);
+        resolve(<Item>ingredient.Item);
       }
-      reject('no items found');
+      reject("no items found");
     });
   }
 
@@ -110,7 +110,7 @@ export class UserIngredients {
     if (Object.keys(ingredient).length === 0) {
       return new Promise((resolve, reject) => {
         resolve({ userKey: this.userKey, ...ingredient });
-        reject({ error: 'no results returned' });
+        reject({ error: "no results returned" });
       });
     }
 
@@ -121,21 +121,21 @@ export class UserIngredients {
         .promise();
 
       return new Promise((resolve, reject) => {
-        resolve(deleteResult.Attributes as UserIngredient);
-        reject('error deleting item');
+        resolve(<UserIngredient>deleteResult.Attributes);
+        reject("error deleting item");
       });
     }
 
     const updateParams = {
       ...this.getIngredientNameParams(name),
       ExpressionAttributeNames: {
-        '#style': 'style',
+        "#style": "style",
       },
       ExpressionAttributeValues: {
-        ':styles': styles.filter((s: string) => s !== style),
+        ":styles": styles.filter((s: string) => s !== style),
       },
-      ReturnValues: 'ALL_NEW',
-      UpdateExpression: 'set #style = :styles',
+      ReturnValues: "ALL_NEW",
+      UpdateExpression: "set #style = :styles",
       name,
     };
 
@@ -144,8 +144,8 @@ export class UserIngredients {
       .promise();
 
     return new Promise((resolve, reject) => {
-      resolve(updateResult.Attributes as UserIngredient);
-      reject({ error: 'error updating from dynamo' });
+      resolve(<UserIngredient>updateResult.Attributes);
+      reject({ error: "error updating from dynamo" });
     });
   }
 
@@ -157,14 +157,14 @@ export class UserIngredients {
         ...ingredient,
         userId: this.userKey,
       },
-      ReturnValues: 'ALL_OLD',
+      ReturnValues: "ALL_OLD",
       TableName: TABLES.USER_INGREDIENTS,
     };
     const res = await this.dynamoDbClient.put(params).promise();
 
     return new Promise((resolve, reject) => {
-      resolve(res.Attributes as UserIngredient);
-      reject({ error: 'blah' });
+      resolve(<UserIngredient>res.Attributes);
+      reject({ error: "blah" });
     });
   }
 

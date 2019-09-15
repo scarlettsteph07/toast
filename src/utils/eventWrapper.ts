@@ -1,5 +1,5 @@
-import { APIGatewayProxyEvent, Context } from 'aws-lambda';
-import * as AWS from 'aws-sdk';
+import { APIGatewayProxyEvent, Context } from "aws-lambda";
+import * as AWS from "aws-sdk";
 
 import {
   GetNewRecipeFunc,
@@ -7,21 +7,21 @@ import {
   IngredientStyleFunc,
   GetIngredientsByUserIdFunc,
   ErrorMessage,
-} from './types';
+} from "src/types";
 
 const DEFAULT_HEADERS = {
-  'Access-Control-Allow-Credentials': true,
-  'Access-Control-Allow-Origin': '*',
-  'Content-Type': 'application/json',
+  "Access-Control-Allow-Credentials": true,
+  "Access-Control-Allow-Origin": "*",
+  "Content-Type": "application/json",
 };
 
 const options = {
-  endpoint: 'http://localhost:8000',
-  region: 'localhost',
+  endpoint: "http://localhost:8000",
+  region: "localhost",
 };
 
-const isOffline = function() {
-  if (process.env.hasOwnProperty('IS_OFFLINE')) {
+const isOffline = () => {
+  if (process.env.hasOwnProperty("IS_OFFLINE")) {
     return process.env.IS_OFFLINE;
   }
   // Depends on serverless-offline plugion which adds IS_OFFLINE to process.env when running offline
@@ -29,7 +29,7 @@ const isOffline = function() {
 };
 
 const dynamodb = () =>
-  (isOffline() as boolean)
+  <boolean>isOffline()
     ? new AWS.DynamoDB.DocumentClient(options)
     : new AWS.DynamoDB.DocumentClient();
 
@@ -42,31 +42,31 @@ export const eventWrapper = (
     | GetIngredientsByUserIdFunc,
 ) => async (event: APIGatewayProxyEvent, _context: Context) => {
   try {
-    const filteredEvent = event as FilteredEvent;
+    const filteredEvent = <FilteredEvent>event;
     const data = await originalFunction(filteredEvent, dynamoDbClient);
 
     if (Object.keys(data).length === 0) {
       return {
         body: JSON.stringify({
-          error: 'Item not found',
+          error: "Item not found",
         }),
         headers: DEFAULT_HEADERS,
-        statusCode: 404,
+        statusCode: "404",
       };
     }
     return {
       body: JSON.stringify(data),
       headers: DEFAULT_HEADERS,
-      statusCode: '200',
+      statusCode: "200",
     };
   } catch (e) {
-    const error = e as ErrorMessage;
+    const error = <ErrorMessage>e;
     return {
       body: JSON.stringify({
         error,
       }),
       headers: DEFAULT_HEADERS,
-      statusCode: '400',
+      statusCode: "400",
     };
   }
 };

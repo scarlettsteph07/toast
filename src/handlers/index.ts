@@ -1,13 +1,11 @@
-'use strict';
+import { DynamoDB } from "aws-sdk";
 
-import * as _ from 'lodash';
-
-import { Recipe } from './recipe';
-import { defaultIngredients } from './config';
-import { EventSanitizer } from './eventSanitizer';
-import { RequestValidator } from './schema';
-import { eventWrapper } from './utils';
-import { UserIngredients } from './userIngredients';
+import { Recipe } from "src/services/recipe";
+import { config } from "src/utils/config";
+import { EventSanitizer } from "src/utils/eventSanitizer";
+import { RequestValidator } from "src/utils/schema";
+import { eventWrapper } from "src/utils/eventWrapper";
+import { UserIngredients } from "src/models/userIngredients";
 
 import {
   RecipeItem,
@@ -15,11 +13,11 @@ import {
   Ingredient,
   FilteredEvent,
   NewRecipeEvent,
-} from './types';
+} from "src/types";
 
 const addIngredientEvent = async (
   event: FilteredEvent,
-  dynamoDbClient: AWS.DynamoDB.DocumentClient,
+  dynamoDbClient: DynamoDB.DocumentClient,
 ): Promise<UserIngredient> => {
   const { ingredient, userKey } = new EventSanitizer(
     event,
@@ -35,7 +33,7 @@ export const addIngredient = eventWrapper(addIngredientEvent);
 
 const deleteIngredientStyleEvent = async (
   event: FilteredEvent,
-  dynamoDbClient: AWS.DynamoDB.DocumentClient,
+  dynamoDbClient: DynamoDB.DocumentClient,
 ): Promise<UserIngredient> => {
   const { name, style, userKey } = new EventSanitizer(
     event,
@@ -52,7 +50,7 @@ export const deleteIngredientStyle = eventWrapper(deleteIngredientStyleEvent);
 
 const getIngredientsByUserIdEvent = async (
   event: FilteredEvent,
-  dynamoDbClient: AWS.DynamoDB.DocumentClient,
+  dynamoDbClient: DynamoDB.DocumentClient,
 ): Promise<Ingredient[]> => {
   const { userKey } = new EventSanitizer(event).listIngredientsParams();
 
@@ -63,7 +61,7 @@ export const getIngredientsByUserId = eventWrapper(getIngredientsByUserIdEvent);
 
 export const getNewRecipeEvent = async (
   event: FilteredEvent,
-  dynamoDbClient: AWS.DynamoDB.DocumentClient,
+  dynamoDbClient: DynamoDB.DocumentClient,
 ): Promise<RecipeItem[]> => {
   const {
     userKey,
@@ -89,8 +87,7 @@ export const getNewRecipeEvent = async (
   } catch (error) {
     userIngredients = [];
   }
-  const recipeItems =
-    userIngredients.length === 0 ? defaultIngredients() : userIngredients;
+  const recipeItems = userIngredients.length === 0 ? config() : userIngredients;
 
   const invalidStyles: RecipeItem[] = [];
   const invalidIngredients: RecipeItem[] = [];
@@ -100,7 +97,7 @@ export const getNewRecipeEvent = async (
       (r: Ingredient): boolean => r.name === i.name,
     );
 
-    if (_.isNil(ingredient) || _.isEmpty(ingredient)) {
+    if (ingredient === undefined) {
       invalidIngredients.push(i);
     } else {
       if (!ingredient.style.includes(i.style)) {
@@ -112,9 +109,9 @@ export const getNewRecipeEvent = async (
     }
   });
 
-  if (!_.isNil(invalidIngredients) && !_.isEmpty(invalidIngredients)) {
+  if (!invalidIngredients === undefined) {
     const invalidateIngredientString: string[] = invalidIngredients.map(
-      (i: RecipeItem) => i.style,
+      (i: RecipeItem) => i.name,
     );
     throw new Error(
       `Invalid name for [${invalidateIngredientString.toString()}]`,
@@ -130,7 +127,7 @@ export const getNewRecipeEvent = async (
 
   if (userIngredients.length === 0) {
     await new UserIngredients(userKey, dynamoDbClient).bulkCreateIngredients(
-      defaultIngredients(),
+      config(),
     );
   }
   const recipe = new Recipe(recipeItems, numOfOptionalIngredients);
@@ -140,7 +137,7 @@ export const getNewRecipeEvent = async (
 
   return new Promise((resolve, reject) => {
     resolve(recipe.recipe());
-    reject({ error: 'error generating new recipe' });
+    reject({ error: "error generating new recipe" });
   });
 };
 

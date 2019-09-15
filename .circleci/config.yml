@@ -3,9 +3,9 @@ jobs:
   build:
     docker:
       - image: circleci/node:8.10
-    
+
     working_directory: ~/repo
-    
+
     steps:
       - checkout
       # Download and cache dependencies
@@ -13,17 +13,17 @@ jobs:
       # Update npm
       - run:
           name: update-npm
-          command: 'sudo npm install -g npm@latest'
-      
+          command: "sudo npm install -g npm@latest"
+
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+            - v1-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
 
       - run: npm install
-      
+
       - save_cache:
           paths:
             - node_modules
@@ -32,18 +32,18 @@ jobs:
       # Run mocha
       - run:
           name: npm test
-          command: ./node_modules/.bin/nyc ./node_modules/.bin/ts-mocha --recursive --timeout=10000 --exit --reporter mocha-junit-reporter --reporter-options mochaFile=reports/mocha/test-results.xml *.spec.ts
+          command: ./node_modules/.bin/nyc ./node_modules/.bin/mocha -r ts-node/register -r tsconfig-paths/register --recursive --timeout=10000 --exit --reporter mocha-junit-reporter --reporter-options mochaFile=reports/mocha/test-results.xml **/*.spec.ts
           when: always
-      
+
       # Run eslint
       - run:
           name: tslint
           command: |
-              ./node_modules/.bin/tslint --format junit --out ./reports/tslint/tslint.xml *.ts 
+            ./node_modules/.bin/tslint --format junit --out ./reports/tslint/tslint.xml *.ts
           when: always
 
       # Upload results
-      
+
       - store_test_results:
           path: reports
 
@@ -55,7 +55,7 @@ jobs:
 
       - store_artifacts: # upload test coverage as artifact
           path: ./coverage
-  
+
   deploy-stage:
     docker:
       - image: circleci/node:8.10
@@ -66,9 +66,9 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+            - v1-dependencies-
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
 
       - run:
           name: Install Serverless CLI and dependencies
@@ -80,15 +80,15 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-
-      
+
       - run:
           name: Configure credentials
           command: sls config credentials --provider aws --key $AWS_ACCESS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY
-      
+
       - run:
           name: Deploy application
           command: sls deploy --stage staging --force
-    
+
   deploy-production:
     docker:
       - image: circleci/node:8.10
@@ -99,9 +99,9 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+            - v1-dependencies-
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
 
       - run:
           name: Install Serverless CLI and dependencies
@@ -113,11 +113,11 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-
-      
+
       - run:
           name: Configure credentials
           command: sls config credentials --provider aws --key $AWS_ACCESS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY
-          
+
       - run:
           name: Deploy application
           command: sls deploy --stage production --force
