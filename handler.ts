@@ -114,7 +114,7 @@ export const getNewRecipeEvent = async (
 
   if (!_.isNil(invalidIngredients) && !_.isEmpty(invalidIngredients)) {
     const invalidateIngredientString: string[] = invalidIngredients.map(
-      (i: RecipeItem) => i.style,
+      (i: RecipeItem) => i.name,
     );
     throw new Error(
       `Invalid name for [${invalidateIngredientString.toString()}]`,
