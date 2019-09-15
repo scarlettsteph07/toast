@@ -8,11 +8,11 @@ import { GetNewRecipeFunc, GetIngredientsByUserIdFunc } from "src/types";
 AWS.config.update({ region: "us-east-1" });
 
 const event: APIGatewayProxyEvent = {
-  body: "",
+  body: '{"foo":"bar"}',
   headers: {},
   httpMethod: "GET",
   isBase64Encoded: false,
-  path: "",
+  path: "/tst-path",
   pathParameters: {},
   queryStringParameters: null,
   stageVariables: {},
@@ -65,7 +65,11 @@ const context: Context = {
 describe("utils", () => {
   describe("#eventWrapper", () => {
     it("should return a json body", async () => {
-      const testFunc: GetNewRecipeFunc = async () => {
+      const testFunc: GetNewRecipeFunc = async (event) => {
+        expect(event.body).to.be.equal('{"foo":"bar"}');
+        expect(event.httpMethod).to.be.equal("GET");
+        expect(event.path).to.be.equal("/tst-path");
+
         return new Promise((resolve) => {
           resolve([
             {
@@ -91,6 +95,27 @@ describe("utils", () => {
         "headers should equal defaults",
       );
       expect(output.statusCode).to.be.equal("200");
+    });
+
+    it("should return 403 if not user key header is sent", async () => {
+      const testFunc: GetIngredientsByUserIdFunc = async () => {
+        throw new Error("User Key is required");
+      };
+      const eventWrapped = eventWrapper(testFunc);
+      const output = await eventWrapped(event, context);
+      expect(output.body).to.be.equal(
+        '{"message":"please provide user auth header"}',
+        "to return a json body payload",
+      );
+      expect(output.statusCode).to.be.equal("403");
+      expect(output.headers).to.be.deep.equal(
+        {
+          "Access-Control-Allow-Credentials": true,
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+        "headers should equal defaults",
+      );
     });
 
     it("should return 404 if no items are returned", async () => {
