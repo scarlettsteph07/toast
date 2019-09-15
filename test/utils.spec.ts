@@ -1,7 +1,6 @@
 import { expect } from "chai";
-import { APIGatewayProxyEvent } from "aws-lambda";
+import { APIGatewayProxyEvent, Context } from "aws-lambda";
 import * as AWS from "aws-sdk";
-import * as context from "aws-lambda-mock-context";
 
 import { eventWrapper } from "src/utils/eventWrapper";
 import { GetNewRecipeFunc, GetIngredientsByUserIdFunc } from "src/types";
@@ -48,6 +47,21 @@ const event: APIGatewayProxyEvent = {
   resource: "",
 };
 
+const context: Context = {
+  functionName: "test",
+  callbackWaitsForEmptyEventLoop: false,
+  functionVersion: "1.0",
+  invokedFunctionArn: "arn:test:me",
+  memoryLimitInMB: 1024,
+  awsRequestId: "1234",
+  logGroupName: "test log group",
+  logStreamName: "test",
+  getRemainingTimeInMillis: () => 30000,
+  done: () => {},
+  fail: () => {},
+  succeed: () => {},
+};
+
 describe("utils", () => {
   describe("#eventWrapper", () => {
     it("should return a json body", async () => {
@@ -62,9 +76,8 @@ describe("utils", () => {
           ]);
         });
       };
-      const ctx = context({ timeout: 10 });
       const eventWrapped = eventWrapper(testFunc);
-      const output = await eventWrapped(event, ctx);
+      const output = await eventWrapped(event, context);
       expect(output.body).to.be.equal(
         '[{"name":"name","required":false,"style":"style"}]',
         "to return a json body payload",
@@ -86,9 +99,8 @@ describe("utils", () => {
           resolve([]);
         });
       };
-      const ctx = context({ timeout: 10 });
       const eventWrapped = eventWrapper(testFunc);
-      const output = await eventWrapped(event, ctx);
+      const output = await eventWrapped(event, context);
       expect(output.body).to.be.equal(
         '{"error":"Item not found"}',
         "to return a json body payload",
