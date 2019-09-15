@@ -27,8 +27,8 @@ provider:
 
 custom:
   myStage: ${opt:stage, self:provider.stage}
-  webpack:
-    includeModules: true # enable auto-packing of external modules
+  # webpack:
+  #   includeModules: true # enable auto-packing of external modules
   dynamodb:
     start:
       port: 8000
