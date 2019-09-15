@@ -30,6 +30,8 @@ custom:
   # webpack:
   #   includeModules: true # enable auto-packing of external modules
   dynamodb:
+    stages:
+      - dev
     start:
       port: 8000
       inMemory: true
