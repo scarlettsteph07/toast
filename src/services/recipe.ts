@@ -1,4 +1,4 @@
-import { RecipeItem, Ingredient, DietPreference } from "types";
+import { RecipeItem, Ingredient, DietPreference } from "src/types";
 
 // tslint:disable-next-line: prefer-array-literal
 const getRandomArrayIndex = (array: Array<string | object>): number =>

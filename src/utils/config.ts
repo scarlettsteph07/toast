@@ -1,4 +1,4 @@
-import { Ingredient } from "types";
+import { Ingredient } from "src/types";
 
 export const config = (): Ingredient[] => [
   {

@@ -1,7 +1,12 @@
 import * as AWS from "aws-sdk";
 
-import { TABLES } from "dynamodb";
-import { Ingredient, IngredientNameParams, UserIngredient, Item } from "types";
+import { TABLES } from "src/utils/dynamodb";
+import {
+  Ingredient,
+  IngredientNameParams,
+  UserIngredient,
+  Item,
+} from "src/types";
 
 export class UserIngredients {
   private readonly dynamoDbClient: AWS.DynamoDB.DocumentClient;

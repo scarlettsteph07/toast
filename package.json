@@ -1,8 +1,8 @@
 {
-  "name": "my-service",
+  "name": "toast",
   "version": "1.0.0",
-  "description": "A project template to get started with Serverless Enterprise",
-  "main": "handler.js",
+  "description": "an api for avocado toast",
+  "main": "src/handlers/index.js",
   "scripts": {
     "lint": "tslint --project tsconfig.json --format stylish",
     "build": "tsc --watch",

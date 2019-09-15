@@ -7,7 +7,7 @@ import {
   IngredientStyleFunc,
   GetIngredientsByUserIdFunc,
   ErrorMessage,
-} from "types";
+} from "src/types";
 
 const DEFAULT_HEADERS = {
   "Access-Control-Allow-Credentials": true,

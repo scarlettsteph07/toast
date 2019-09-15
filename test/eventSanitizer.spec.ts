@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { EventSanitizer } from "eventSanitizer";
+import { EventSanitizer } from "src/utils/eventSanitizer";
 
 const VALID_USER_KEY = "1234";
 const headers = {

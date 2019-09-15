@@ -1,7 +1,7 @@
 import { validate } from "jsonschema";
 import * as yml from "js-yaml";
 
-import { UserIngredient, DeleteIngredientStyle, NewRecipe } from "types";
+import { UserIngredient, DeleteIngredientStyle, NewRecipe } from "src/types";
 
 const addIngredientsSchema = `
     type: object

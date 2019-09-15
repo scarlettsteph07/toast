@@ -27,8 +27,8 @@ provider:
 
 custom:
   myStage: ${opt:stage, self:provider.stage}
-  # webpack:
-  #   includeModules: true # enable auto-packing of external modules
+  webpack:
+    includeModules: true # enable auto-packing of external modules
   dynamodb:
     stages:
       - dev
@@ -38,14 +38,14 @@ custom:
       heapInitial: 200m
       heapMax: 1g
       migrate: true
-      seed: true
+      seed: false
       convertEmptyValues: true
 
 functions:
   removeIngredient:
     environment:
       tableName: ${self:service}-${self:custom.myStage}-Ingredients
-    handler: handler.deleteIngredientStyle
+    handler: src/handlers/index.deleteIngredientStyle
 
     events:
       - http:
@@ -56,7 +56,7 @@ functions:
   addIngredient:
     environment:
       tableName: ${self:service}-${self:custom.myStage}-Ingredients
-    handler: handler.addIngredient
+    handler: src/handlers/index.addIngredient
 
     events:
       - http:
@@ -67,7 +67,7 @@ functions:
   getIngredientsByUserId:
     environment:
       tableName: ${self:service}-${self:custom.myStage}-Ingredients
-    handler: handler.getIngredientsByUserId
+    handler: src/handlers/index.getIngredientsByUserId
 
     events:
       - http:
@@ -78,7 +78,7 @@ functions:
   getNewRecipe:
     environment:
       tableName: ${self:service}-${self:custom.myStage}-Ingredients
-    handler: handler.getNewRecipe
+    handler: src/handlers/index.getNewRecipe
 
     events:
       - http:
@@ -90,7 +90,7 @@ resources:
   Resources:
     IngredientsDynamoDbTable:
       Type: "AWS::DynamoDB::Table"
-      DeletionPolicy: Retain
+      # DeletionPolicy: Retain
       Properties:
         AttributeDefinitions:
           - AttributeName: userId

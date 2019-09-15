@@ -1,11 +1,11 @@
 import { DynamoDB } from "aws-sdk";
 
-import { Recipe } from "recipe";
-import { config } from "config";
-import { EventSanitizer } from "eventSanitizer";
-import { RequestValidator } from "schema";
-import { eventWrapper } from "utils";
-import { UserIngredients } from "userIngredients";
+import { Recipe } from "src/services/recipe";
+import { config } from "src/utils/config";
+import { EventSanitizer } from "src/utils/eventSanitizer";
+import { RequestValidator } from "src/utils/schema";
+import { eventWrapper } from "src/utils/eventWrapper";
+import { UserIngredients } from "src/models/userIngredients";
 
 import {
   RecipeItem,
@@ -13,7 +13,7 @@ import {
   Ingredient,
   FilteredEvent,
   NewRecipeEvent,
-} from "types";
+} from "src/types";
 
 const addIngredientEvent = async (
   event: FilteredEvent,

@@ -8,7 +8,7 @@ import {
   NewRecipe,
   NewRecipeEvent,
   UserHeaders,
-} from "types";
+} from "src/types";
 
 export class EventSanitizer {
   private readonly body: any;

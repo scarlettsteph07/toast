@@ -3,8 +3,8 @@ import tsSinon from "ts-sinon";
 import * as AWSMock from "aws-sdk-mock";
 import * as AWS from "aws-sdk";
 
-import { TABLES } from "dynamodb";
-import { FilteredEvent, IngredientHandler } from "types";
+import { TABLES } from "src/utils/dynamodb";
+import { FilteredEvent, IngredientHandler } from "src/types";
 
 AWS.config.update({ region: "us-east-1" });
 
@@ -55,7 +55,7 @@ describe("invalid new recipe events", () => {
       path: "/test",
     };
     try {
-      const { getNewRecipeEvent } = <IngredientHandler>require("./handler");
+      const { getNewRecipeEvent } = <IngredientHandler>require("src/handlers");
       await getNewRecipeEvent(payload, new AWS.DynamoDB.DocumentClient());
     } catch (e) {
       expect(e).to.eq("instance.numOfOptionalIngredients");
@@ -74,7 +74,7 @@ describe("invalid new recipe events", () => {
       path: "/test",
     };
     try {
-      const { getNewRecipeEvent } = <IngredientHandler>require("./handler");
+      const { getNewRecipeEvent } = <IngredientHandler>require("src/handlers");
       await getNewRecipeEvent(payload, new AWS.DynamoDB.DocumentClient());
     } catch (e) {
       expect(e).to.have.property("message", "User Key is required");
@@ -99,7 +99,7 @@ describe("valid new recipe events", () => {
 
   it("should return two required items numIngredients is 0", async () => {
     // Overwriting DynamoDB.DocumentClient.get()
-    const { getNewRecipeEvent } = <IngredientHandler>require("./handler");
+    const { getNewRecipeEvent } = <IngredientHandler>require("src/handlers");
     const payload: FilteredEvent = {
       body,
       headers,
@@ -131,7 +131,7 @@ describe("valid new recipe events", () => {
   });
 
   it("should throw an error for an invalid ingredient name", async () => {
-    const { getNewRecipeEvent } = <IngredientHandler>require("./handler");
+    const { getNewRecipeEvent } = <IngredientHandler>require("src/handlers");
     const payload: FilteredEvent = {
       body: {
         ...body,
@@ -158,7 +158,7 @@ describe("valid new recipe events", () => {
   });
 
   it("should throw an error for an invalid ingredient style", async () => {
-    const { getNewRecipeEvent } = <IngredientHandler>require("./handler");
+    const { getNewRecipeEvent } = <IngredientHandler>require("src/handlers");
     const payload: FilteredEvent = {
       body: {
         ...body,
@@ -185,7 +185,7 @@ describe("valid new recipe events", () => {
   });
 
   it("should return 5 ingredient items", async () => {
-    const { getNewRecipeEvent } = <IngredientHandler>require("./handler");
+    const { getNewRecipeEvent } = <IngredientHandler>require("src/handlers");
     const payload: FilteredEvent = {
       body: {
         ...body,
@@ -268,7 +268,7 @@ describe("valid new recipe events", () => {
       });
     };
     AWSMock.remock("DynamoDB.DocumentClient", "query", returnData);
-    const { getNewRecipeEvent } = <IngredientHandler>require("./handler");
+    const { getNewRecipeEvent } = <IngredientHandler>require("src/handlers");
     const payload: FilteredEvent = {
       body: {
         ...body,

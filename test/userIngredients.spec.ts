@@ -3,10 +3,10 @@ import * as AWSMock from "aws-sdk-mock";
 import * as AWS from "aws-sdk";
 import * as sinon from "sinon";
 
-import { config } from "config";
-import { TABLES } from "dynamodb";
+import { config } from "src/utils/config";
+import { TABLES } from "src/utils/dynamodb";
 
-import { UserIngredientFile } from "types";
+import { UserIngredientFile } from "src/types";
 
 AWS.config.update({ region: "us-east-1" });
 const VALID_USER_KEY = "1234";
@@ -43,7 +43,7 @@ describe("user ingredients class", () => {
 
     it("should get all user ingredients", async () => {
       const { UserIngredients } = <UserIngredientFile>(
-        require("./userIngredients")
+        require("src/models/userIngredients")
       );
 
       const userIngredient = new UserIngredients(
@@ -74,7 +74,7 @@ describe("user ingredients class", () => {
   describe("#bulkCreateIngredients", () => {
     it("should bulk create ingredients and return true", async () => {
       const { UserIngredients } = <UserIngredientFile>(
-        require("./userIngredients")
+        require("src/models/userIngredients")
       );
 
       const userIngredient = new UserIngredients(
@@ -112,7 +112,7 @@ describe("user ingredients class", () => {
 
     it("should get item given the name as string", async () => {
       const { UserIngredients } = <UserIngredientFile>(
-        require("./userIngredients")
+        require("src/models/userIngredients")
       );
 
       const userIngredient = new UserIngredients(
@@ -206,7 +206,7 @@ describe("user ingredients class", () => {
 
     it("should delete last item that matches given name and style", async () => {
       const { UserIngredients } = <UserIngredientFile>(
-        require("./userIngredients")
+        require("src/models/userIngredients")
       );
       const userIngredient = new UserIngredients(
         VALID_USER_KEY,
@@ -236,7 +236,7 @@ describe("user ingredients class", () => {
       );
 
       const { UserIngredients } = <UserIngredientFile>(
-        require("./userIngredients")
+        require("src/models/userIngredients")
       );
       const userIngredient = new UserIngredients(
         VALID_USER_KEY,
@@ -279,7 +279,7 @@ describe("user ingredients class", () => {
 
     it("should add a new item given an Ingredient object", async () => {
       const { UserIngredients } = <UserIngredientFile>(
-        require("./userIngredients")
+        require("src/models/userIngredients")
       );
       const userIngredient = new UserIngredients(
         VALID_USER_KEY,
@@ -302,7 +302,7 @@ describe("user ingredients class", () => {
 
     it("should return a params object", () => {
       const { UserIngredients } = <UserIngredientFile>(
-        require("./userIngredients")
+        require("src/models/userIngredients")
       );
       const userIngredient = new UserIngredients(
         VALID_USER_KEY,
