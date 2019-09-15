@@ -1,6 +1,7 @@
-import { validate } from 'jsonschema';
-import * as yml from 'js-yaml';
-import { UserIngredient, DeleteIngredientStyle, NewRecipe } from './types';
+import { validate } from "jsonschema";
+import * as yml from "js-yaml";
+
+import { UserIngredient, DeleteIngredientStyle, NewRecipe } from "types";
 
 const addIngredientsSchema = `
     type: object
@@ -95,17 +96,17 @@ export class RequestValidator {
   }
 
   public validateAddIngredient() {
-    const userIngredient = this.payload as UserIngredient;
+    const userIngredient = <UserIngredient>this.payload;
     return validateSchema(addIngredientsSchema)(userIngredient);
   }
 
   public validateDeleteIngredientStyle() {
-    const deleteIngredientStyle = this.payload as DeleteIngredientStyle;
+    const deleteIngredientStyle = <DeleteIngredientStyle>this.payload;
     return validateSchema(deleteIngredientsSchema)(deleteIngredientStyle);
   }
 
   public validateGetNewRecipeParams() {
-    const getNewRecipeParams = this.payload as NewRecipe;
+    const getNewRecipeParams = <NewRecipe>this.payload;
     return validateSchema(getNewRecipeSchema)(getNewRecipeParams);
   }
 }

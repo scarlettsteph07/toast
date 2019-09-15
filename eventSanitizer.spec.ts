@@ -1,29 +1,29 @@
-import { expect } from 'chai';
+import { expect } from "chai";
 
-import { EventSanitizer } from './eventSanitizer';
+import { EventSanitizer } from "eventSanitizer";
 
-const VALID_USER_KEY = '1234';
+const VALID_USER_KEY = "1234";
 const headers = {
-  'X-User-Key': VALID_USER_KEY,
+  "X-User-Key": VALID_USER_KEY,
 };
 const HTTP_METHODS = {
-  DELETE: 'DELETE',
-  GET: 'GET',
-  POST: 'POST',
+  DELETE: "DELETE",
+  GET: "GET",
+  POST: "POST",
 };
 const PATHS = {
-  INGREDIENTS: '/ingredients',
-  NEW_INGREDIENTS: '/ingredients/new',
-  RECIPES: '/recipes',
+  INGREDIENTS: "/ingredients",
+  NEW_INGREDIENTS: "/ingredients/new",
+  RECIPES: "/recipes",
 };
 
-describe('eventSanitizer class', () => {
-  describe('#eventFilterAddIngredient', () => {
+describe("eventSanitizer class", () => {
+  describe("#eventFilterAddIngredient", () => {
     const newIngredientObject = {
-      name: 'meat',
+      name: "meat",
       required: true,
-      style: ['bacon', 'sausage'],
-      type: ['carnivore', 'vegetarian', 'vegan'],
+      style: ["bacon", "sausage"],
+      type: ["carnivore", "vegetarian", "vegan"],
     };
     const newIngredientString =
       '{"name": "meat", "style": ["bacon", "sausage"], "type": ["carnivore", "vegetarian", "vegan"],"required": true}';
@@ -35,8 +35,8 @@ describe('eventSanitizer class', () => {
       userKey: VALID_USER_KEY,
     };
 
-    describe('given a new ingredient object', () => {
-      it('should return addIngredientEvent', () => {
+    describe("given a new ingredient object", () => {
+      it("should return addIngredientEvent", () => {
         const eventWithObject = {
           body: newIngredientObject,
           headers,
@@ -50,8 +50,8 @@ describe('eventSanitizer class', () => {
       });
     });
 
-    describe('given a new ingredient string', () => {
-      it('should return addIngredientEvent', () => {
+    describe("given a new ingredient string", () => {
+      it("should return addIngredientEvent", () => {
         const eventWithString = {
           body: newIngredientString,
           headers,
@@ -66,10 +66,10 @@ describe('eventSanitizer class', () => {
     });
   });
 
-  describe('#eventFilterDeleteIngredientStyle', () => {
+  describe("#eventFilterDeleteIngredientStyle", () => {
     const deleteIngredientObject = {
-      name: 'beer',
-      style: 'ipa',
+      name: "beer",
+      style: "ipa",
     };
     const deleteIngredientString = '{"name": "beer", "style": "ipa"}';
     const deleteIngredientStyleEvent = {
@@ -77,8 +77,8 @@ describe('eventSanitizer class', () => {
       userKey: VALID_USER_KEY,
     };
 
-    describe('given an ingredient object', () => {
-      it('should return deleteIngredientStyleEvent', () => {
+    describe("given an ingredient object", () => {
+      it("should return deleteIngredientStyleEvent", () => {
         const eventWithObject = {
           body: deleteIngredientObject,
           headers,
@@ -92,8 +92,8 @@ describe('eventSanitizer class', () => {
       });
     });
 
-    describe('given an ingredient string', () => {
-      it('should return deleteIngredientStyleEvent', () => {
+    describe("given an ingredient string", () => {
+      it("should return deleteIngredientStyleEvent", () => {
         const eventWithString = {
           body: deleteIngredientString,
           headers,
@@ -108,9 +108,9 @@ describe('eventSanitizer class', () => {
     });
   });
 
-  describe('#eventFilterNewRecipe', () => {
+  describe("#eventFilterNewRecipe", () => {
     const newRecipeObject = {
-      dietPreference: 'vegan',
+      dietPreference: "vegan",
       ignoredIngredients: [],
       numOfOptionalIngredients: 5,
       requestedIngredients: [],
@@ -122,8 +122,8 @@ describe('eventSanitizer class', () => {
       userKey: VALID_USER_KEY,
     };
 
-    describe('given an new recipe object', () => {
-      it('should return newRecipeEvent', () => {
+    describe("given an new recipe object", () => {
+      it("should return newRecipeEvent", () => {
         const eventWithObject = {
           body: newRecipeObject,
           headers,
@@ -137,8 +137,8 @@ describe('eventSanitizer class', () => {
       });
     });
 
-    describe('given an new recipe string', () => {
-      it('should return newRecipeEvent', () => {
+    describe("given an new recipe string", () => {
+      it("should return newRecipeEvent", () => {
         const eventWithObject = {
           body: newRecipeString,
           headers,
@@ -153,8 +153,8 @@ describe('eventSanitizer class', () => {
     });
   });
 
-  describe('#listIngredientsParams', () => {
-    it('should return an object with the given user key', () => {
+  describe("#listIngredientsParams", () => {
+    it("should return an object with the given user key", () => {
       const requestEvent = {
         body: {},
         headers,

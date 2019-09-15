@@ -16,17 +16,19 @@ provider:
   name: aws
   runtime: nodejs8.10
   iamRoleStatements:
-    -  Effect: "Allow"
-       Action:
-         - "dynamodb:Query"
-         - "dynamodb:BatchWriteItem"
-         - "dynamodb:PutItem"
-         - "dynamodb:DeleteItem"
-         - "dynamodb:GetItem"
-       Resource: "arn:aws:dynamodb:${self:provider.region}:373376418880:table/${self:service}-${self:custom.myStage}-Ingredients"
+    - Effect: "Allow"
+      Action:
+        - "dynamodb:Query"
+        - "dynamodb:BatchWriteItem"
+        - "dynamodb:PutItem"
+        - "dynamodb:DeleteItem"
+        - "dynamodb:GetItem"
+      Resource: "arn:aws:dynamodb:${self:provider.region}:373376418880:table/${self:service}-${self:custom.myStage}-Ingredients"
 
 custom:
   myStage: ${opt:stage, self:provider.stage}
+  webpack:
+    includeModules: true # enable auto-packing of external modules
   dynamodb:
     start:
       port: 8000
@@ -97,7 +99,7 @@ functions:
 
   getIngredientsByUserId:
     environment:
-      tableName: ${self:service}-${self:custom.myStage}-Ingredients 
+      tableName: ${self:service}-${self:custom.myStage}-Ingredients
     handler: handler.getIngredientsByUserId
 
     events:
@@ -121,7 +123,7 @@ functions:
 resources:
   Resources:
     IngredientsDynamoDbTable:
-      Type: 'AWS::DynamoDB::Table'
+      Type: "AWS::DynamoDB::Table"
       # DeletionPolicy: Retain
       Properties:
         AttributeDefinitions:
