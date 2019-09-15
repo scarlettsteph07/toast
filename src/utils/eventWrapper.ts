@@ -6,7 +6,6 @@ import {
   FilteredEvent,
   IngredientStyleFunc,
   GetIngredientsByUserIdFunc,
-  ErrorMessage,
 } from "src/types";
 
 const DEFAULT_HEADERS = {
@@ -60,10 +59,19 @@ export const eventWrapper = (
       statusCode: "200",
     };
   } catch (e) {
-    const error = <ErrorMessage>e;
+    if (e.message === "User Key is required") {
+      return {
+        body: JSON.stringify({
+          message: "please provide user auth header",
+        }),
+        headers: DEFAULT_HEADERS,
+        statusCode: "403",
+      };
+    }
+
     return {
       body: JSON.stringify({
-        error,
+        e,
       }),
       headers: DEFAULT_HEADERS,
       statusCode: "400",

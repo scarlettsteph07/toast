@@ -23,6 +23,7 @@ provider:
         - "dynamodb:PutItem"
         - "dynamodb:DeleteItem"
         - "dynamodb:GetItem"
+        - "dynamodb:UpdateItem"
       Resource: "arn:aws:dynamodb:${self:provider.region}:373376418880:table/${self:service}-${self:custom.myStage}-Ingredients"
 
 custom:

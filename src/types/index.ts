@@ -15,6 +15,7 @@ export type FilteredEvent = {
 export type ErrorMessage = {
   property: string;
   message: string;
+  name: string;
 };
 
 export type GetAll = () => Promise<Ingredient[]>;
