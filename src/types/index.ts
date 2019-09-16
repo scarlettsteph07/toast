@@ -74,7 +74,7 @@ export type GetNewRecipeFunc = (
 
 export type GetNewRecipe = (event: APIGatewayProxyEvent) => Promise<Response>;
 
-export type IngredientStyleFunc = (
+export type UserIngredientFunc = (
   event: FilteredEvent,
   dynamoDbClient: AWS.DynamoDB.DocumentClient,
 ) => Promise<UserIngredient>;
@@ -87,6 +87,7 @@ export type GetIngredientsByUserIdFunc = (
 export type IngredientHandler = {
   getNewRecipeEvent: GetNewRecipeFunc;
   getNewRecipe: GetNewRecipe;
+  addIngredientEvent: UserIngredientFunc;
 };
 
 export type Item = {
