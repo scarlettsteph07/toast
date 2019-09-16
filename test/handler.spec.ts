@@ -1,10 +1,12 @@
 import { expect } from "chai";
+import * as sinon from "ts-sinon";
 import tsSinon from "ts-sinon";
 import * as AWSMock from "aws-sdk-mock";
 import * as AWS from "aws-sdk";
 
 import { TABLES } from "src/utils/dynamodb";
 import { FilteredEvent, IngredientHandler } from "src/types";
+import { UserIngredients } from "src/models/userIngredients";
 
 AWS.config.update({ region: "us-east-1" });
 
@@ -31,6 +33,11 @@ beforeEach(() => {
   AWSMock.mock(
     "DynamoDB.DocumentClient",
     "batchWrite",
+    Promise.resolve({ foo: "bar" }),
+  );
+  AWSMock.mock(
+    "DynamoDB.DocumentClient",
+    "update",
     Promise.resolve({ foo: "bar" }),
   );
   AWSMock.mock(
@@ -98,6 +105,42 @@ describe("addIngredientEvent", () => {
     };
 
     const response = await addIngredientEvent(
+      payload,
+      new AWS.DynamoDB.DocumentClient(),
+    );
+
+    expect(response).to.deep.equal({ foo: "bar" });
+  });
+});
+
+describe("deleteIngredientStyleEvent", () => {
+  beforeEach(() => {
+    const test = new UserIngredients(
+      headers["X-User-Key"],
+      new AWS.DynamoDB.DocumentClient(),
+    );
+    const testStub = sinon.stubObject<UserIngredients>(test);
+
+    testStub.deleteByStyle.resolves({
+      userKey: "123",
+      name: "test",
+      style: ["test"],
+      type: [],
+      required: false,
+    });
+  });
+  it("should delete an ingredient for a user", async () => {
+    const { deleteIngredientStyleEvent } = <IngredientHandler>(
+      require("src/handlers")
+    );
+    const payload: FilteredEvent = {
+      body: '{"name": "test name","style": "test style"}',
+      headers,
+      httpMethod: "POST",
+      path: "/test",
+    };
+
+    const response = await deleteIngredientStyleEvent(
       payload,
       new AWS.DynamoDB.DocumentClient(),
     );
