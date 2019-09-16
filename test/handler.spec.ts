@@ -1,6 +1,5 @@
 import { expect } from "chai";
-import * as sinon from "ts-sinon";
-import tsSinon from "ts-sinon";
+import * as sinon from "sinon";
 import * as AWSMock from "aws-sdk-mock";
 import * as AWS from "aws-sdk";
 
@@ -35,11 +34,7 @@ beforeEach(() => {
     "batchWrite",
     Promise.resolve({ foo: "bar" }),
   );
-  AWSMock.mock(
-    "DynamoDB.DocumentClient",
-    "update",
-    Promise.resolve({ foo: "bar" }),
-  );
+
   AWSMock.mock(
     "DynamoDB.DocumentClient",
     "query",
@@ -54,7 +49,6 @@ beforeEach(() => {
     },
   );
 });
-
 describe("invalid new recipe events", () => {
   it("should error when numOptionalIngredients is not a number", async () => {
     const payload: FilteredEvent = {
@@ -114,22 +108,17 @@ describe("addIngredientEvent", () => {
 });
 
 describe("deleteIngredientStyleEvent", () => {
-  beforeEach(() => {
-    const test = new UserIngredients(
-      headers["X-User-Key"],
-      new AWS.DynamoDB.DocumentClient(),
-    );
-    const testStub = sinon.stubObject<UserIngredients>(test);
-
-    testStub.deleteByStyle.resolves({
-      userKey: "123",
-      name: "test",
-      style: ["test"],
-      type: [],
-      required: false,
-    });
-  });
   it("should delete an ingredient for a user", async () => {
+    const deleteResult = {
+      userKey: "123",
+      style: ["test style"],
+      name: "name",
+      type: ["test type"],
+      required: true,
+    };
+    sinon
+      .stub(UserIngredients.prototype, "deleteByStyle")
+      .resolves(deleteResult);
     const { deleteIngredientStyleEvent } = <IngredientHandler>(
       require("src/handlers")
     );
@@ -145,13 +134,13 @@ describe("deleteIngredientStyleEvent", () => {
       new AWS.DynamoDB.DocumentClient(),
     );
 
-    expect(response).to.deep.equal({ foo: "bar" });
+    expect(response).to.deep.equal(deleteResult);
   });
 });
 
 describe("valid new recipe events", () => {
   beforeEach(() => {
-    tsSinon.stub(Math, "random").returns(0);
+    sinon.stub(Math, "random").returns(0);
     AWSMock.remock(
       "DynamoDB.DocumentClient",
       "batchWrite",
@@ -370,7 +359,7 @@ describe("valid new recipe events", () => {
   });
 
   afterEach(() => {
-    tsSinon.restore();
+    sinon.restore();
     AWSMock.restore("DynamoDB.DocumentClient");
   });
 });
