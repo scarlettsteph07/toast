@@ -7,6 +7,7 @@ import { config } from "src/utils/config";
 import { TABLES } from "src/utils/dynamodb";
 
 import { UserIngredientFile } from "src/types";
+import { PutItemInput } from "aws-sdk/clients/dynamodb";
 
 AWS.config.update({ region: "us-east-1" });
 const VALID_USER_KEY = "1234";
@@ -252,26 +253,16 @@ describe("user ingredients class", () => {
   });
 
   describe("#createIngredient", () => {
-    const itemToCreate = {
-      name: "beer",
-      required: false,
-      style: ["ipa"],
-      type: ["carnivore", "vegetarian", "vegan"],
-      userId: VALID_USER_KEY,
-    };
-
     beforeEach(() => {
       AWSMock.setSDKInstance(AWS);
-      AWSMock.mock(
+      AWSMock.remock(
         "DynamoDB.DocumentClient",
         "put",
-        (
-          params: AWS.DynamoDB.QueryInput,
-          callback: (something: any, otherthing: object) => any,
-        ) => {
+        (params: PutItemInput, callback: Function) => {
           callback(null, {
-            Attributes: itemToCreate,
-            params,
+            Attributes: {
+              ...params.Item,
+            },
           });
         },
       );
@@ -286,8 +277,20 @@ describe("user ingredients class", () => {
         new AWS.DynamoDB.DocumentClient(OPTIONS),
       );
 
-      const result = await userIngredient.createIngredient(itemToCreate);
-      expect(result).to.deep.equal(itemToCreate);
+      const createIngredientPayload = {
+        name: "beer",
+        required: false,
+        style: ["ipa"],
+        type: ["carnivore", "vegetarian", "vegan"],
+      };
+
+      const result = await userIngredient.createIngredient(
+        createIngredientPayload,
+      );
+      expect(result).to.deep.equal({
+        userId: VALID_USER_KEY,
+        ...createIngredientPayload,
+      });
     });
   });
 

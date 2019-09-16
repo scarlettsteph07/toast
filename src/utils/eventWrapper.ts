@@ -4,7 +4,7 @@ import * as AWS from "aws-sdk";
 import {
   GetNewRecipeFunc,
   FilteredEvent,
-  IngredientStyleFunc,
+  UserIngredientFunc,
   GetIngredientsByUserIdFunc,
 } from "src/types";
 
@@ -37,7 +37,7 @@ export const dynamoDbClient = dynamodb();
 export const eventWrapper = (
   originalFunction:
     | GetNewRecipeFunc
-    | IngredientStyleFunc
+    | UserIngredientFunc
     | GetIngredientsByUserIdFunc,
 ) => async (event: APIGatewayProxyEvent, _context: Context) => {
   try {

@@ -15,7 +15,7 @@ import {
   NewRecipeEvent,
 } from "src/types";
 
-const addIngredientEvent = async (
+export const addIngredientEvent = async (
   event: FilteredEvent,
   dynamoDbClient: DynamoDB.DocumentClient,
 ): Promise<UserIngredient> => {

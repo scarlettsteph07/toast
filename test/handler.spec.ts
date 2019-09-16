@@ -25,6 +25,11 @@ beforeEach(() => {
   AWSMock.setSDKInstance(AWS);
   AWSMock.mock(
     "DynamoDB.DocumentClient",
+    "put",
+    Promise.resolve({ Attributes: { foo: "bar" } }),
+  );
+  AWSMock.mock(
+    "DynamoDB.DocumentClient",
     "batchWrite",
     Promise.resolve({ foo: "bar" }),
   );
@@ -79,6 +84,25 @@ describe("invalid new recipe events", () => {
     } catch (e) {
       expect(e).to.have.property("message", "User Key is required");
     }
+  });
+});
+
+describe("addIngredientEvent", () => {
+  it("should add a new ingredient for a user", async () => {
+    const { addIngredientEvent } = <IngredientHandler>require("src/handlers");
+    const payload: FilteredEvent = {
+      body: '{"name": "test name","style":["test style"]}',
+      headers,
+      httpMethod: "POST",
+      path: "/test",
+    };
+
+    const response = await addIngredientEvent(
+      payload,
+      new AWS.DynamoDB.DocumentClient(),
+    );
+
+    expect(response).to.deep.equal({ foo: "bar" });
   });
 });
 
