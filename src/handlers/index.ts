@@ -13,6 +13,7 @@ import {
   Ingredient,
   FilteredEvent,
   NewRecipeEvent,
+  RecipeIngredients,
 } from "src/types";
 
 export const addIngredientEvent = async (
@@ -62,7 +63,7 @@ export const getIngredientsByUserId = eventWrapper(getIngredientsByUserIdEvent);
 export const getNewRecipeEvent = async (
   event: FilteredEvent,
   dynamoDbClient: DynamoDB.DocumentClient,
-): Promise<RecipeItem[]> => {
+): Promise<RecipeIngredients> => {
   const {
     userKey,
     numOfOptionalIngredients,
@@ -136,7 +137,7 @@ export const getNewRecipeEvent = async (
   requestedIngredients.map((i: RecipeItem) => recipe.requestIngredient(i));
 
   return new Promise((resolve, reject) => {
-    resolve(recipe.recipe());
+    resolve({ ingredients: recipe.recipe() });
     reject({ error: "error generating new recipe" });
   });
 };

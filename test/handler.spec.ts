@@ -168,7 +168,7 @@ describe("valid new recipe events", () => {
       new AWS.DynamoDB.DocumentClient(),
     );
 
-    expect(recipeItems[0]).to.eql(
+    expect(recipeItems.ingredients[0]).to.eql(
       {
         name: "avocado",
         required: true,
@@ -176,7 +176,7 @@ describe("valid new recipe events", () => {
       },
       "expected recipe item",
     );
-    expect(recipeItems[1]).to.eql(
+    expect(recipeItems.ingredients[1]).to.eql(
       {
         name: "bread",
         required: true,
@@ -256,7 +256,7 @@ describe("valid new recipe events", () => {
       new AWS.DynamoDB.DocumentClient(),
     );
 
-    expect(recipeItems[0]).to.eql(
+    expect(recipeItems.ingredients[0]).to.eql(
       {
         name: "avocado",
         required: true,
@@ -264,7 +264,7 @@ describe("valid new recipe events", () => {
       },
       "returns first item ",
     );
-    expect(recipeItems[1]).to.eql(
+    expect(recipeItems.ingredients[1]).to.eql(
       {
         name: "bread",
         required: true,
@@ -272,7 +272,7 @@ describe("valid new recipe events", () => {
       },
       "returns second item",
     );
-    expect(recipeItems[2]).to.eql(
+    expect(recipeItems.ingredients[2]).to.eql(
       {
         name: "tomato",
         required: false,
@@ -280,7 +280,7 @@ describe("valid new recipe events", () => {
       },
       "returns third item",
     );
-    expect(recipeItems[3]).to.eql(
+    expect(recipeItems.ingredients[3]).to.eql(
       {
         name: "herbs",
         required: false,
@@ -288,7 +288,7 @@ describe("valid new recipe events", () => {
       },
       "returns fourth item",
     );
-    expect(recipeItems[4]).to.eql(
+    expect(recipeItems.ingredients[4]).to.eql(
       {
         name: "salt",
         required: false,
@@ -296,7 +296,7 @@ describe("valid new recipe events", () => {
       },
       "returns fifth item",
     );
-    expect(recipeItems).to.have.lengthOf(5);
+    expect(recipeItems.ingredients).to.have.lengthOf(5);
   });
 
   it("should return items from dynamo db if they exist", async () => {
@@ -341,21 +341,23 @@ describe("valid new recipe events", () => {
       new AWS.DynamoDB.DocumentClient(),
     );
     expect(recipeItems).to.eql(
-      [
-        {
-          name: "flower",
-          required: true,
-          style: "smoke",
-        },
-        {
-          name: "joint",
-          required: true,
-          style: "smoke",
-        },
-      ],
+      {
+        ingredients: [
+          {
+            name: "flower",
+            required: true,
+            style: "smoke",
+          },
+          {
+            name: "joint",
+            required: true,
+            style: "smoke",
+          },
+        ],
+      },
       "to have happpened",
     );
-    expect(recipeItems).to.have.lengthOf(2);
+    expect(recipeItems.ingredients).to.have.lengthOf(2);
   });
 
   afterEach(() => {
