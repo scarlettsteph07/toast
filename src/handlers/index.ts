@@ -31,7 +31,7 @@ export const addIngredientEvent = async (
 
 export const addIngredient = eventWrapper(addIngredientEvent);
 
-const deleteIngredientStyleEvent = async (
+export const deleteIngredientStyleEvent = async (
   event: FilteredEvent,
   dynamoDbClient: DynamoDB.DocumentClient,
 ): Promise<UserIngredient> => {

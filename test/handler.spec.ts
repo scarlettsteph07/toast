@@ -1,10 +1,11 @@
 import { expect } from "chai";
-import tsSinon from "ts-sinon";
+import * as sinon from "sinon";
 import * as AWSMock from "aws-sdk-mock";
 import * as AWS from "aws-sdk";
 
 import { TABLES } from "src/utils/dynamodb";
 import { FilteredEvent, IngredientHandler } from "src/types";
+import { UserIngredients } from "src/models/userIngredients";
 
 AWS.config.update({ region: "us-east-1" });
 
@@ -33,6 +34,7 @@ beforeEach(() => {
     "batchWrite",
     Promise.resolve({ foo: "bar" }),
   );
+
   AWSMock.mock(
     "DynamoDB.DocumentClient",
     "query",
@@ -47,7 +49,6 @@ beforeEach(() => {
     },
   );
 });
-
 describe("invalid new recipe events", () => {
   it("should error when numOptionalIngredients is not a number", async () => {
     const payload: FilteredEvent = {
@@ -106,9 +107,40 @@ describe("addIngredientEvent", () => {
   });
 });
 
+describe("deleteIngredientStyleEvent", () => {
+  it("should delete an ingredient for a user", async () => {
+    const deleteResult = {
+      userKey: "123",
+      style: ["test style"],
+      name: "name",
+      type: ["test type"],
+      required: true,
+    };
+    sinon
+      .stub(UserIngredients.prototype, "deleteByStyle")
+      .resolves(deleteResult);
+    const { deleteIngredientStyleEvent } = <IngredientHandler>(
+      require("src/handlers")
+    );
+    const payload: FilteredEvent = {
+      body: '{"name": "test name","style": "test style"}',
+      headers,
+      httpMethod: "POST",
+      path: "/test",
+    };
+
+    const response = await deleteIngredientStyleEvent(
+      payload,
+      new AWS.DynamoDB.DocumentClient(),
+    );
+
+    expect(response).to.deep.equal(deleteResult);
+  });
+});
+
 describe("valid new recipe events", () => {
   beforeEach(() => {
-    tsSinon.stub(Math, "random").returns(0);
+    sinon.stub(Math, "random").returns(0);
     AWSMock.remock(
       "DynamoDB.DocumentClient",
       "batchWrite",
@@ -327,7 +359,7 @@ describe("valid new recipe events", () => {
   });
 
   afterEach(() => {
-    tsSinon.restore();
+    sinon.restore();
     AWSMock.restore("DynamoDB.DocumentClient");
   });
 });

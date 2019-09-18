@@ -18,6 +18,34 @@ const PATHS = {
 };
 
 describe("eventSanitizer class", () => {
+  describe("#getUserKey", () => {
+    it("should throw an error when no headers are present on the event", async () => {
+      const eventWithObject = {
+        body: {},
+        headers: {},
+        httpMethod: HTTP_METHODS.POST,
+        path: PATHS.NEW_INGREDIENTS,
+      };
+      const eventSanitizer = new EventSanitizer(eventWithObject);
+      expect(
+        eventSanitizer.eventFilterAddIngredient.bind(eventSanitizer),
+      ).to.throw(/User Key is required/);
+    });
+
+    it("should throw an error when no the correct header is missing", async () => {
+      const eventWithObject = {
+        body: {},
+        headers: { JunkHeadr: "test" },
+        httpMethod: HTTP_METHODS.POST,
+        path: PATHS.NEW_INGREDIENTS,
+      };
+      const eventSanitizer = new EventSanitizer(eventWithObject);
+      expect(
+        eventSanitizer.eventFilterAddIngredient.bind(eventSanitizer),
+      ).to.throw(/User Key is required/);
+    });
+  });
+
   describe("#eventFilterAddIngredient", () => {
     const newIngredientObject = {
       name: "meat",
