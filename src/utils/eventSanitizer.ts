@@ -23,6 +23,7 @@ export class EventSanitizer {
   }
 
   public eventFilterAddIngredient(): AddIngredientEvent {
+    const userKey = this.getUserKey();
     const { name, required, style, type } = <Ingredient>this.body;
     return {
       ingredient: {
@@ -30,9 +31,9 @@ export class EventSanitizer {
         required,
         style,
         type,
-        userKey: this.getUserKey(),
+        userKey,
       },
-      userKey: this.getUserKey(),
+      userKey,
     };
   }
 
@@ -69,7 +70,7 @@ export class EventSanitizer {
   }
 
   private getUserKey(): string {
-    if (!this.headers) {
+    if (Object.keys(this.headers).length == 0) {
       throw new Error("User Key is required");
     }
 

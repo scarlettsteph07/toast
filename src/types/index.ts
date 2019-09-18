@@ -88,6 +88,7 @@ export type IngredientHandler = {
   getNewRecipeEvent: GetNewRecipeFunc;
   getNewRecipe: GetNewRecipe;
   addIngredientEvent: UserIngredientFunc;
+  deleteIngredientStyleEvent: UserIngredientFunc;
 };
 
 export type Item = {
