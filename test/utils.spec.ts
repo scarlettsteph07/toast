@@ -71,19 +71,22 @@ describe("utils", () => {
         expect(event.path).to.be.equal("/tst-path");
 
         return new Promise((resolve) => {
-          resolve([
-            {
-              name: "name",
-              required: false,
-              style: "style",
-            },
-          ]);
+          const data = {
+            ingredients: [
+              {
+                name: "name",
+                required: false,
+                style: "style",
+              },
+            ],
+          };
+          resolve(data);
         });
       };
       const eventWrapped = eventWrapper(testFunc);
       const output = await eventWrapped(event, context);
       expect(output.body).to.be.equal(
-        '[{"name":"name","required":false,"style":"style"}]',
+        '{"ingredients":[{"name":"name","required":false,"style":"style"}]}',
         "to return a json body payload",
       );
       expect(output.headers).to.be.deep.equal(

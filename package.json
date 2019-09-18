@@ -9,7 +9,7 @@
     "deploy": "npm run build && sls deploy",
     "debug": "export SLS_DEBUG=* && node --debug ./node_modules/.bin/serverless offline -s dev",
     "test": "nyc mocha -r ts-node/register -r tsconfig-paths/register **/*.spec.ts",
-    "watch": " mocha -r ts-node/register -r tsconfig-paths/register  **/*.spec.ts -watch-extensions ts --watch",
+    "test-watch": " mocha -r ts-node/register -r tsconfig-paths/register  **/*.spec.ts -watch-extensions ts --watch",
     "coverage": "tsc && nyc mocha",
     "tslint-check": "tslint-config-prettier-check ./tslint.json"
   },
