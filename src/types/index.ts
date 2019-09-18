@@ -70,7 +70,7 @@ export type EventSanitizerFile = {
 export type GetNewRecipeFunc = (
   event: FilteredEvent,
   dynamoDbClient: AWS.DynamoDB.DocumentClient,
-) => Promise<RecipeItem[]>;
+) => Promise<RecipeIngredients>;
 
 export type GetNewRecipe = (event: APIGatewayProxyEvent) => Promise<Response>;
 
@@ -155,6 +155,10 @@ export type NewRecipe = {
   ignoredIngredients: RecipeItem[];
   numOfOptionalIngredients: number;
   requestedIngredients: RecipeItem[];
+};
+
+export type RecipeIngredients = {
+  ingredients: RecipeItem[];
 };
 
 export type NewRecipeEvent = BaseIngredientEvent & {
