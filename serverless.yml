@@ -85,7 +85,11 @@ functions:
       - http:
           path: recipes
           method: post
-          cors: true
+          cors:
+            origin: "*"
+            headers:
+              - X-User-Key
+              - x-user-key
 
 resources:
   Resources:
