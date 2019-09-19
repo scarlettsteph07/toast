@@ -52,7 +52,11 @@ functions:
       - http:
           path: ingredients
           method: delete
-          cors: true
+          cors:
+            origin: "*"
+            headers:
+              - Content-Type
+              - X-User-Key
 
   addIngredient:
     environment:
@@ -63,7 +67,11 @@ functions:
       - http:
           path: ingredients/new
           method: post
-          cors: true
+          cors:
+            origin: "*"
+            headers:
+              - Content-Type
+              - X-User-Key
 
   getIngredientsByUserId:
     environment:
@@ -74,7 +82,11 @@ functions:
       - http:
           path: ingredients
           method: get
-          cors: true
+          cors:
+            origin: "*"
+            headers:
+              - Content-Type
+              - X-User-Key
 
   getNewRecipe:
     environment:
@@ -85,7 +97,11 @@ functions:
       - http:
           path: recipes
           method: post
-          cors: true
+          cors:
+            origin: "*"
+            headers:
+              - Content-Type
+              - X-User-Key
 
 resources:
   Resources:
