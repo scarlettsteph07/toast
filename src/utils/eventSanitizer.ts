@@ -1,6 +1,8 @@
 import {
   AddIngredientEvent,
   BaseIngredientEvent,
+  UpdateIngredientStyle,
+  UpdateIngredientStyleEvent,
   DeleteIngredientStyle,
   DeleteIngredientStyleEvent,
   FilteredEvent,
@@ -34,6 +36,16 @@ export class EventSanitizer {
         userKey,
       },
       userKey,
+    };
+  }
+
+  public eventFilterUpdateIngredientStyle(): UpdateIngredientStyleEvent {
+    const { name, currentStyle, style } = <UpdateIngredientStyle>this.body;
+    return {
+      name,
+      style,
+      currentStyle,
+      userKey: this.getUserKey(),
     };
   }
 

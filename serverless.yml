@@ -43,6 +43,21 @@ custom:
       convertEmptyValues: true
 
 functions:
+  updateIngredient:
+    environment:
+      tableName: ${self:service}-${self:custom.myStage}-Ingredients
+    handler: src/handlers/index.updateIngredientStyle
+
+    events:
+      - http:
+          path: ingredients
+          method: put
+          cors:
+            origin: "*"
+            headers:
+              - Content-Type
+              - X-User-Key
+
   removeIngredient:
     environment:
       tableName: ${self:service}-${self:custom.myStage}-Ingredients
