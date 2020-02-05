@@ -42,6 +42,17 @@ http -v POST https://api.toastandavocado.xyz/v1/ingredients/new X-User-Key:222 n
 http -v POST http://localhost:3000/ingredients/new X-User-Key:222 name=beer style:='["ipa", "lager"]' type:='["carnivore", "vegetarian", "vegan"]' required:=true
 ```
 
+### Update a Style from an Ingredient
+
+```bash
+http -v PUT https://api.toastandavocado.xyz/v1/ingredients/styles X-User-Key:222 name=beer currentStyle="ipa" style="india pale ale"
+
+```
+
+```bash
+http -v PUT http://localhost:3000/ingredients/styles X-User-Key:222 name=beer currentStyle="ipa" style="india pale ale"
+```
+
 ### Delete a Style from an Ingredient
 
 ```bash

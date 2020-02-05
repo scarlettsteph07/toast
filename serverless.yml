@@ -50,7 +50,7 @@ functions:
 
     events:
       - http:
-          path: ingredients
+          path: ingredients/styles
           method: put
           cors:
             origin: "*"
