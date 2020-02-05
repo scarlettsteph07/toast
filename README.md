@@ -42,6 +42,17 @@ http -v POST https://api.toastandavocado.xyz/v1/ingredients/new X-User-Key:222 n
 http -v POST http://localhost:3000/ingredients/new X-User-Key:222 name=beer style:='["ipa", "lager"]' type:='["carnivore", "vegetarian", "vegan"]' required:=true
 ```
 
+### Add a Style to an Ingredient
+
+```bash
+http -v POST https://api.toastandavocado.xyz/v1/ingredients/styles X-User-Key:222 name=beer style="hazy ipa"
+
+```
+
+```bash
+http -v POST http://localhost:3000/ingredients/styles X-User-Key:222 name=beer style="hazy ipa"
+```
+
 ### Update a Style from an Ingredient
 
 ```bash

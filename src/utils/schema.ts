@@ -5,6 +5,7 @@ import {
   UserIngredient,
   DeleteIngredientStyle,
   NewRecipe,
+  AddIngredientStyle,
   UpdateIngredientStyle,
 } from "src/types";
 
@@ -27,6 +28,18 @@ const addIngredientsSchema = `
       - name
       - style
   `;
+
+const addIngredientStyleSchema = `
+  type: object
+  properties:
+    name:
+      type: string
+    style:
+      type: string
+  required:
+    - name
+    - style
+`;
 
 const updateIngredientsSchema = `
     type: object
@@ -118,6 +131,11 @@ export class RequestValidator {
   public validateAddIngredient() {
     const userIngredient = <UserIngredient>this.payload;
     return validateSchema(addIngredientsSchema)(userIngredient);
+  }
+
+  public validateAddIngredientStyle() {
+    const addIngredientStyle = <AddIngredientStyle>this.payload;
+    return validateSchema(addIngredientStyleSchema)(addIngredientStyle);
   }
 
   public validateUpdateIngredientStyle() {

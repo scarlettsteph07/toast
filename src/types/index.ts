@@ -26,6 +26,7 @@ export type RequestValidatorClass = (
 ) => {
   payload: any;
   validateAddIngredient(): any;
+  validateAddIngredientStyle(): any;
   validateUpdateIngredientStyle(): any;
   validateDeleteIngredientStyle(): any;
   validateGetNewRecipeParams(): any;
@@ -43,6 +44,10 @@ export type UserIngredientClass = new (
   getAll(): Promise<Ingredient[]>;
   bulkCreateIngredients(defaultIngredients: Ingredient[]): Promise<boolean>;
   getItemByName(itemName: string): Promise<Item>;
+  addIngredientStyle(
+    itemName: string,
+    itemStyle: string,
+  ): Promise<UserIngredient>;
   updateByStyle(
     itemName: string,
     itemCurrentStyle: string,
@@ -62,6 +67,7 @@ export type EventSanitizerClass = new (event: FilteredEvent) => {
   headers: any;
   body: any;
   eventFilterAddIngredient(): AddIngredientEvent;
+  eventFilterAddIngredientStyle(): AddIngredientStyleEvent;
   eventFilterUpdateIngredientStyle(): UpdateIngredientStyleEvent;
   eventFilterDeleteIngredientStyle(): DeleteIngredientStyleEvent;
   eventFilterNewRecipe(): NewRecipeEvent;
@@ -147,6 +153,14 @@ export type AddIngredientEvent = {
   userKey: string;
   ingredient: UserIngredient;
 };
+
+export type AddIngredientStyleEvent = BaseIngredientEvent & AddIngredientStyle;
+
+export type AddIngredientStyle = {
+  name: string;
+  style: string;
+};
+
 export type UpdateIngredientStyleEvent = BaseIngredientEvent &
   UpdateIngredientStyle;
 
