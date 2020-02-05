@@ -138,7 +138,7 @@ export class UserIngredients {
     });
   }
 
-  public async updateByStyle(
+  public async updateIngredientsStyles(
     name: string,
     currentStyle: string,
     style: string,

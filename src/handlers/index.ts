@@ -65,7 +65,7 @@ export const updateIngredientStyleEvent = async (
     style,
   }).validateUpdateIngredientStyle();
 
-  return new UserIngredients(userKey, dynamoDbClient).updateByStyle(
+  return new UserIngredients(userKey, dynamoDbClient).updateIngredientsStyles(
     name,
     currentStyle,
     style,

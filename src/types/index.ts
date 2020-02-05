@@ -48,7 +48,7 @@ export type UserIngredientClass = new (
     itemName: string,
     itemStyle: string,
   ): Promise<UserIngredient>;
-  updateByStyle(
+  updateIngredientsStyles(
     itemName: string,
     itemCurrentStyle: string,
     itemStyle: string,
