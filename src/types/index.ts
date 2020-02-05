@@ -147,12 +147,8 @@ export type AddIngredientEvent = {
   userKey: string;
   ingredient: UserIngredient;
 };
-
-export type UpdateIngredientStyleEvent = BaseIngredientEvent & {
-  name: string;
-  currentStyle: string;
-  style: string;
-};
+export type UpdateIngredientStyleEvent = BaseIngredientEvent &
+  UpdateIngredientStyle;
 
 export type UpdateIngredientStyle = {
   name: string;
@@ -160,10 +156,8 @@ export type UpdateIngredientStyle = {
   style: string;
 };
 
-export type DeleteIngredientStyleEvent = BaseIngredientEvent & {
-  name: string;
-  style: string;
-};
+export type DeleteIngredientStyleEvent = BaseIngredientEvent &
+  DeleteIngredientStyle;
 
 export type DeleteIngredientStyle = {
   name: string;
