@@ -227,7 +227,7 @@ export class UserIngredients {
   public async createIngredient(
     ingredient: Ingredient,
   ): Promise<UserIngredient> {
-    const params = {
+    const createParams = {
       Item: {
         ...ingredient,
         userId: this.userKey,
@@ -235,10 +235,17 @@ export class UserIngredients {
       ReturnValues: "ALL_OLD",
       TableName: TABLES.USER_INGREDIENTS,
     };
-    const res = await this.dynamoDbClient.put(params).promise();
-
+    await this.dynamoDbClient.put(createParams).promise();
+    const getParams = {
+      Key: {
+        userId: this.userKey,
+        name: ingredient.name,
+      },
+      TableName: TABLES.USER_INGREDIENTS,
+    };
+    const res = await this.dynamoDbClient.get(getParams).promise();
     return new Promise((resolve, reject) => {
-      resolve(<UserIngredient>res.Attributes);
+      resolve(<UserIngredient>res.Item);
       reject({ error: "blah" });
     });
   }

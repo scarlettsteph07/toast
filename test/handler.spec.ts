@@ -103,7 +103,15 @@ describe("addIngredientEvent", () => {
       new AWS.DynamoDB.DocumentClient(),
     );
 
-    expect(response).to.deep.equal({ foo: "bar" });
+    const res = {
+      name: "meat",
+      required: false,
+      style: ["bacon", "ham", "sausage"],
+      type: ["carnivore"],
+      userId: "1234",
+    };
+
+    expect(response).to.deep.equal(res);
   });
 });
 

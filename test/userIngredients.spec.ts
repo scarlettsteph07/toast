@@ -278,10 +278,10 @@ describe("user ingredients class", () => {
       );
 
       const createIngredientPayload = {
-        name: "beer",
+        name: "meat",
         required: false,
-        style: ["ipa"],
-        type: ["carnivore", "vegetarian", "vegan"],
+        style: ["bacon", "ham", "sausage"],
+        type: ["carnivore"],
       };
 
       const result = await userIngredient.createIngredient(
