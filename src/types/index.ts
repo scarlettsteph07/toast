@@ -26,6 +26,8 @@ export type RequestValidatorClass = (
 ) => {
   payload: any;
   validateAddIngredient(): any;
+  validateAddIngredientStyle(): any;
+  validateUpdateIngredientStyle(): any;
   validateDeleteIngredientStyle(): any;
   validateGetNewRecipeParams(): any;
 };
@@ -42,6 +44,15 @@ export type UserIngredientClass = new (
   getAll(): Promise<Ingredient[]>;
   bulkCreateIngredients(defaultIngredients: Ingredient[]): Promise<boolean>;
   getItemByName(itemName: string): Promise<Item>;
+  addIngredientStyle(
+    itemName: string,
+    itemStyle: string,
+  ): Promise<UserIngredient>;
+  updateIngredientsStyles(
+    itemName: string,
+    itemCurrentStyle: string,
+    itemStyle: string,
+  ): Promise<UserIngredient>;
   deleteByStyle(itemName: string, itemStyle: string): Promise<UserIngredient>;
   createIngredient(ingredient: Ingredient): Promise<UserIngredient>;
   getIngredientNameParams(name: string): IngredientNameParams;
@@ -56,6 +67,8 @@ export type EventSanitizerClass = new (event: FilteredEvent) => {
   headers: any;
   body: any;
   eventFilterAddIngredient(): AddIngredientEvent;
+  eventFilterAddIngredientStyle(): AddIngredientStyleEvent;
+  eventFilterUpdateIngredientStyle(): UpdateIngredientStyleEvent;
   eventFilterDeleteIngredientStyle(): DeleteIngredientStyleEvent;
   eventFilterNewRecipe(): NewRecipeEvent;
   listIngredientsParams(): BaseIngredientEvent;
@@ -141,10 +154,24 @@ export type AddIngredientEvent = {
   ingredient: UserIngredient;
 };
 
-export type DeleteIngredientStyleEvent = BaseIngredientEvent & {
+export type AddIngredientStyleEvent = BaseIngredientEvent & AddIngredientStyle;
+
+export type AddIngredientStyle = {
   name: string;
   style: string;
 };
+
+export type UpdateIngredientStyleEvent = BaseIngredientEvent &
+  UpdateIngredientStyle;
+
+export type UpdateIngredientStyle = {
+  name: string;
+  currentStyle: string;
+  style: string;
+};
+
+export type DeleteIngredientStyleEvent = BaseIngredientEvent &
+  DeleteIngredientStyle;
 
 export type DeleteIngredientStyle = {
   name: string;

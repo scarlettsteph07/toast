@@ -1,7 +1,13 @@
 import { validate } from "jsonschema";
 import * as yml from "js-yaml";
 
-import { UserIngredient, DeleteIngredientStyle, NewRecipe } from "src/types";
+import {
+  UserIngredient,
+  DeleteIngredientStyle,
+  NewRecipe,
+  AddIngredientStyle,
+  UpdateIngredientStyle,
+} from "src/types";
 
 const addIngredientsSchema = `
     type: object
@@ -22,6 +28,33 @@ const addIngredientsSchema = `
       - name
       - style
   `;
+
+const addIngredientStyleSchema = `
+  type: object
+  properties:
+    name:
+      type: string
+    style:
+      type: string
+  required:
+    - name
+    - style
+`;
+
+const updateIngredientsSchema = `
+    type: object
+    properties:
+      name:
+        type: string
+      currentStyle:
+        type: string
+      style:
+        type: string
+    required:
+      - name
+      - currentStyle
+      - style
+`;
 
 const deleteIngredientsSchema = `
     type: object
@@ -98,6 +131,16 @@ export class RequestValidator {
   public validateAddIngredient() {
     const userIngredient = <UserIngredient>this.payload;
     return validateSchema(addIngredientsSchema)(userIngredient);
+  }
+
+  public validateAddIngredientStyle() {
+    const addIngredientStyle = <AddIngredientStyle>this.payload;
+    return validateSchema(addIngredientStyleSchema)(addIngredientStyle);
+  }
+
+  public validateUpdateIngredientStyle() {
+    const updateIngredientStyle = <UpdateIngredientStyle>this.payload;
+    return validateSchema(updateIngredientsSchema)(updateIngredientStyle);
   }
 
   public validateDeleteIngredientStyle() {

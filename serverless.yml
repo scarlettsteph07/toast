@@ -43,11 +43,38 @@ custom:
       convertEmptyValues: true
 
 functions:
+  addIngredientStyle:
+    environment:
+      tableName: ${self:service}-${self:custom.myStage}-Ingredients
+    handler: src/handlers/index.addIngredientStyle
+    events:
+      - http:
+          path: ingredients/styles
+          method: post
+          cors:
+            origin: "*"
+            headers:
+              - Content-Type
+              - X-User-Key
+
+  updateIngredient:
+    environment:
+      tableName: ${self:service}-${self:custom.myStage}-Ingredients
+    handler: src/handlers/index.updateIngredientStyle
+    events:
+      - http:
+          path: ingredients/styles
+          method: put
+          cors:
+            origin: "*"
+            headers:
+              - Content-Type
+              - X-User-Key
+
   removeIngredient:
     environment:
       tableName: ${self:service}-${self:custom.myStage}-Ingredients
     handler: src/handlers/index.deleteIngredientStyle
-
     events:
       - http:
           path: ingredients
@@ -62,7 +89,6 @@ functions:
     environment:
       tableName: ${self:service}-${self:custom.myStage}-Ingredients
     handler: src/handlers/index.addIngredient
-
     events:
       - http:
           path: ingredients/new
@@ -77,7 +103,6 @@ functions:
     environment:
       tableName: ${self:service}-${self:custom.myStage}-Ingredients
     handler: src/handlers/index.getIngredientsByUserId
-
     events:
       - http:
           path: ingredients
@@ -92,7 +117,6 @@ functions:
     environment:
       tableName: ${self:service}-${self:custom.myStage}-Ingredients
     handler: src/handlers/index.getNewRecipe
-
     events:
       - http:
           path: recipes

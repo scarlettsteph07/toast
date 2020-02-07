@@ -101,6 +101,81 @@ export class UserIngredients {
     });
   }
 
+  public async addIngredientStyle(
+    name: string,
+    style: string,
+  ): Promise<UserIngredient> {
+    const ingredient = await this.getItemByName(name);
+
+    if (Object.keys(ingredient).length === 0) {
+      return new Promise((resolve, reject) => {
+        resolve({ userKey: this.userKey, ...ingredient });
+        reject({ error: "no results returned" });
+      });
+    }
+
+    const { style: styles } = ingredient;
+    const updateParams = {
+      ...this.getIngredientNameParams(name),
+      ExpressionAttributeNames: {
+        "#style": "style",
+      },
+      ExpressionAttributeValues: {
+        ":styles": [...styles, style],
+      },
+      ReturnValues: "ALL_NEW",
+      UpdateExpression: "set #style = :styles",
+      name,
+    };
+
+    const updateResult = await this.dynamoDbClient
+      .update(updateParams)
+      .promise();
+
+    return new Promise((resolve, reject) => {
+      resolve(<UserIngredient>updateResult.Attributes);
+      reject({ error: "error updating from dynamo" });
+    });
+  }
+
+  public async updateIngredientsStyles(
+    name: string,
+    currentStyle: string,
+    style: string,
+  ): Promise<UserIngredient> {
+    const ingredient = await this.getItemByName(name);
+
+    if (Object.keys(ingredient).length === 0) {
+      return new Promise((resolve, reject) => {
+        resolve({ userKey: this.userKey, ...ingredient });
+        reject({ error: "no results returned" });
+      });
+    }
+
+    const { style: styles } = ingredient;
+    const updateParams = {
+      ...this.getIngredientNameParams(name),
+      ExpressionAttributeNames: {
+        "#style": "style",
+      },
+      ExpressionAttributeValues: {
+        ":styles": styles.map((s) => (s !== currentStyle ? s : style)),
+      },
+      ReturnValues: "ALL_NEW",
+      UpdateExpression: "set #style = :styles",
+      name,
+    };
+
+    const updateResult = await this.dynamoDbClient
+      .update(updateParams)
+      .promise();
+
+    return new Promise((resolve, reject) => {
+      resolve(<UserIngredient>updateResult.Attributes);
+      reject({ error: "error updating from dynamo" });
+    });
+  }
+
   public async deleteByStyle(
     name: string,
     style: string,

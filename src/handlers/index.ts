@@ -32,6 +32,48 @@ export const addIngredientEvent = async (
 
 export const addIngredient = eventWrapper(addIngredientEvent);
 
+export const addIngredientStyleEvent = async (
+  event: FilteredEvent,
+  dynamoDbClient: DynamoDB.DocumentClient,
+): Promise<UserIngredient> => {
+  const { name, style, userKey } = new EventSanitizer(
+    event,
+  ).eventFilterAddIngredientStyle();
+  new RequestValidator({
+    name,
+    style,
+  }).validateAddIngredientStyle();
+
+  return new UserIngredients(userKey, dynamoDbClient).addIngredientStyle(
+    name,
+    style,
+  );
+};
+
+export const addIngredientStyle = eventWrapper(addIngredientStyleEvent);
+
+export const updateIngredientStyleEvent = async (
+  event: FilteredEvent,
+  dynamoDbClient: DynamoDB.DocumentClient,
+): Promise<UserIngredient> => {
+  const { name, style, currentStyle, userKey } = new EventSanitizer(
+    event,
+  ).eventFilterUpdateIngredientStyle();
+  new RequestValidator({
+    name,
+    currentStyle,
+    style,
+  }).validateUpdateIngredientStyle();
+
+  return new UserIngredients(userKey, dynamoDbClient).updateIngredientsStyles(
+    name,
+    currentStyle,
+    style,
+  );
+};
+
+export const updateIngredientStyle = eventWrapper(updateIngredientStyleEvent);
+
 export const deleteIngredientStyleEvent = async (
   event: FilteredEvent,
   dynamoDbClient: DynamoDB.DocumentClient,
