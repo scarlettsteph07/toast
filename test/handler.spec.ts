@@ -89,7 +89,7 @@ describe("invalid new recipe events", () => {
 });
 
 describe("addIngredientEvent", () => {
-  it("should add a new ingredient for a user", async () => {
+  it.skip("should add a new ingredient for a user", async () => {
     const { addIngredientEvent } = <IngredientHandler>require("src/handlers");
     const payload: FilteredEvent = {
       body: '{"name": "test name","style":["test style"]}',
