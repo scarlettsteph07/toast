@@ -23,8 +23,5 @@
   "terminal.integrated.cursorBlinking": true,
   "html.format.indentHandlebars": true,
   "editor.cursorStyle": "underline",
-  "editor.find.addExtraSpaceOnTop": false,
-  "editor.fontFamily": "'Input Mono', Menlo, Monaco, 'Courier New', monospace",
-  "editor.fontWeight": "300",
-  "terminal.integrated.fontWeight": "300"
+  "editor.find.addExtraSpaceOnTop": false
 }
